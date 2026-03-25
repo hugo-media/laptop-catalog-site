@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { InsertLaptop, InsertUser, laptops, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -87,6 +87,38 @@ export async function getUserByOpenId(openId: string) {
   const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
 
   return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getAllLaptops() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(laptops).orderBy(desc(laptops.createdAt));
+}
+
+export async function getLaptopById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(laptops).where(eq(laptops.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createLaptop(data: InsertLaptop) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(laptops).values(data);
+  return result;
+}
+
+export async function updateLaptop(id: number, data: Partial<InsertLaptop>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.update(laptops).set(data).where(eq(laptops.id, id));
+}
+
+export async function deleteLaptop(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.delete(laptops).where(eq(laptops.id, id));
 }
 
 // TODO: add feature queries here as your schema grows.
