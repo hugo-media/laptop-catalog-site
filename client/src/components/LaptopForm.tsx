@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ImageUpload } from "./ImageUpload";
+import { Textarea } from "@/components/ui/textarea";
 import type { Laptop } from "../../../drizzle/schema";
 
 type Category = "promotions" | "refurbished" | "new" | "monitors" | "accessories" | "business";
@@ -27,6 +28,7 @@ interface LaptopFormProps {
     warranty: string;
     price: number;
     imageUrl?: string;
+    description?: string;
     category?: Category;
   }) => void;
   isLoading?: boolean;
@@ -45,10 +47,11 @@ export function LaptopForm({ initialData, onSubmit, isLoading = false }: LaptopF
     warranty: initialData?.warranty || "",
     price: initialData?.price || 0,
     imageUrl: initialData?.imageUrl || "",
+    description: initialData?.description || "",
     category: (initialData?.category || "new") as Category,
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -132,6 +135,18 @@ export function LaptopForm({ initialData, onSubmit, isLoading = false }: LaptopF
             </SelectContent>
           </Select>
         </div>
+      </div>
+
+      {/* Description Field */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Product Description</label>
+        <Textarea
+          name="description"
+          placeholder="Enter detailed product description, features, and benefits..."
+          value={formData.description}
+          onChange={handleChange}
+          className="min-h-32 resize-none"
+        />
       </div>
 
       <Button type="submit" disabled={isLoading} className="w-full">
