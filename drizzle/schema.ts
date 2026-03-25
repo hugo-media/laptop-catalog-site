@@ -38,6 +38,7 @@ export const laptops = mysqlTable("laptops", {
   warranty: varchar("warranty", { length: 100 }).notNull(),
   price: int("price").notNull(),
   imageUrl: text("imageUrl"),
+  category: mysqlEnum("category", ["promotions", "refurbished", "new", "monitors", "accessories", "business"]).default("new").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

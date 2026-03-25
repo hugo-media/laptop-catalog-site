@@ -1,7 +1,16 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Laptop } from "../../../drizzle/schema";
+
+type Category = "promotions" | "refurbished" | "new" | "monitors" | "accessories" | "business";
 
 interface LaptopFormProps {
   initialData?: Laptop;
@@ -16,6 +25,8 @@ interface LaptopFormProps {
     condition: string;
     warranty: string;
     price: number;
+    imageUrl?: string;
+    category?: Category;
   }) => void;
   isLoading?: boolean;
 }
@@ -32,6 +43,8 @@ export function LaptopForm({ initialData, onSubmit, isLoading = false }: LaptopF
     condition: initialData?.condition || "",
     warranty: initialData?.warranty || "",
     price: initialData?.price || 0,
+    imageUrl: initialData?.imageUrl || "",
+    category: (initialData?.category || "new") as Category,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,6 +52,13 @@ export function LaptopForm({ initialData, onSubmit, isLoading = false }: LaptopF
     setFormData((prev) => ({
       ...prev,
       [name]: name === "price" ? Number(value) : value,
+    }));
+  };
+
+  const handleCategoryChange = (value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      category: value as Category,
     }));
   };
 
@@ -58,6 +78,7 @@ export function LaptopForm({ initialData, onSubmit, isLoading = false }: LaptopF
     { label: "Condition", name: "condition", placeholder: "e.g., New" },
     { label: "Warranty", name: "warranty", placeholder: "e.g., 2 years official" },
     { label: "Price (zł)", name: "price", placeholder: "e.g., 5999", type: "number" },
+    { label: "Image URL", name: "imageUrl", placeholder: "e.g., https://example.com/image.jpg" },
   ];
 
   return (
@@ -72,13 +93,32 @@ export function LaptopForm({ initialData, onSubmit, isLoading = false }: LaptopF
               placeholder={field.placeholder}
               value={formData[field.name as keyof typeof formData]}
               onChange={handleChange}
-              required
+              required={field.name !== "imageUrl"}
             />
           </div>
         ))}
+
+        {/* Category Select */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Category</label>
+          <Select value={formData.category} onValueChange={handleCategoryChange}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="promotions">Акції</SelectItem>
+              <SelectItem value="refurbished">Ноутбуки після оренди</SelectItem>
+              <SelectItem value="new">Нові ноутбуки</SelectItem>
+              <SelectItem value="monitors">Монітори</SelectItem>
+              <SelectItem value="accessories">Аксесуари</SelectItem>
+              <SelectItem value="business">Пропозиція для компаній</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
+
       <Button type="submit" disabled={isLoading} className="w-full">
-        {isLoading ? "Saving..." : initialData ? "Update Laptop" : "Add Laptop"}
+        {isLoading ? "Saving..." : "Save Laptop"}
       </Button>
     </form>
   );

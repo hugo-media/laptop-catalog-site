@@ -1,0 +1,1 @@
+ALTER TABLE `laptops` ADD `category` enum('promotions','refurbished','new','monitors','accessories','business') DEFAULT 'new' NOT NULL;

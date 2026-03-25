@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE `laptops` ADD `category` enum('promotions','refurbished','new','monitors','accessories','business') DEFAULT 'new' NOT NULL;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway05.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3jhysCCZCwr2c72.root --database DMLwym6Zv6yd8JHAqkjkFj --execute ALTER TABLE `laptops` ADD `category` enum('promotions','refurbished','new','monitors','accessories','business') DEFAULT 'new' NOT NULL;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 310
+}

@@ -4,12 +4,27 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { useLocation } from "wouter";
+import { useState } from "react";
 import { Loader2, Shield, Truck, RotateCcw, Star } from "lucide-react";
+
+type Category = "promotions" | "refurbished" | "new" | "monitors" | "accessories" | "business";
+
+const CATEGORIES: { value: Category; label: string }[] = [
+  { value: "promotions", label: "Акції" },
+  { value: "refurbished", label: "Ноутбуки після оренди" },
+  { value: "new", label: "Нові ноутбуки" },
+  { value: "monitors", label: "Монітори" },
+  { value: "accessories", label: "Аксесуари" },
+  { value: "business", label: "Пропозиція для компаній" },
+];
 
 export default function Catalog() {
   const { data: laptops, isLoading } = trpc.laptops.list.useQuery();
   const { user } = useAuth();
   const [, navigate] = useLocation();
+  const [selectedCategory, setSelectedCategory] = useState<Category>("new");
+
+  const filteredLaptops = laptops?.filter((l) => l.category === selectedCategory) || [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -78,32 +93,17 @@ export default function Catalog() {
       <nav className="border-b border-border/40 bg-background/50 backdrop-blur-sm sticky top-16 z-40">
         <div className="container">
           <div className="flex overflow-x-auto gap-1 py-3 -mx-4 px-4 md:mx-0 md:px-0">
-            <Button variant="ghost" size="sm" className="whitespace-nowrap text-sm hover:text-accent">
-              Акції
-            </Button>
-            <Button variant="ghost" size="sm" className="whitespace-nowrap text-sm hover:text-accent">
-              Ноутбуки після оренди
-            </Button>
-            <Button variant="ghost" size="sm" className="whitespace-nowrap text-sm hover:text-accent">
-              Нові ноутбуки
-            </Button>
-            <Button variant="ghost" size="sm" className="whitespace-nowrap text-sm hover:text-accent">
-              Монітори
-            </Button>
-            <Button variant="ghost" size="sm" className="whitespace-nowrap text-sm hover:text-accent">
-              Аксесуари
-            </Button>
-            <Button variant="ghost" size="sm" className="whitespace-nowrap text-sm hover:text-accent">
-              Пропозиція для компаній
-            </Button>
-            <Button 
-              onClick={() => navigate("/about")} 
-              variant="ghost" 
-              size="sm" 
-              className="whitespace-nowrap text-sm hover:text-accent md:hidden"
-            >
-              Контакти
-            </Button>
+            {CATEGORIES.map((cat) => (
+              <Button
+                key={cat.value}
+                onClick={() => setSelectedCategory(cat.value)}
+                variant={selectedCategory === cat.value ? "default" : "ghost"}
+                size="sm"
+                className="whitespace-nowrap text-sm"
+              >
+                {cat.label}
+              </Button>
+            ))}
           </div>
         </div>
       </nav>
@@ -156,8 +156,10 @@ export default function Catalog() {
             </p>
             <div className="flex flex-wrap gap-4">
               <div className="text-sm">
-                <span className="font-bold text-accent text-lg">8</span>
-                <span className="text-muted-foreground ml-2">Premium Models Available</span>
+                <span className="font-bold text-accent text-lg">{filteredLaptops.length}</span>
+                <span className="text-muted-foreground ml-2">
+                  {CATEGORIES.find((c) => c.value === selectedCategory)?.label}
+                </span>
               </div>
             </div>
           </div>
@@ -170,15 +172,15 @@ export default function Catalog() {
           <div className="flex justify-center items-center py-20">
             <Loader2 className="h-8 w-8 animate-spin text-accent" />
           </div>
-        ) : laptops && laptops.length > 0 ? (
+        ) : filteredLaptops.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {laptops.map((laptop) => (
+            {filteredLaptops.map((laptop) => (
               <LaptopCard key={laptop.id} laptop={laptop} />
             ))}
           </div>
         ) : (
           <div className="text-center py-20">
-            <p className="text-muted-foreground text-lg">No laptops available at the moment.</p>
+            <p className="text-muted-foreground text-lg">No laptops available in this category.</p>
           </div>
         )}
       </main>
@@ -194,10 +196,16 @@ export default function Catalog() {
             <div>
               <h4 className="font-semibold text-foreground mb-4">Categories</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-accent transition">New Laptops</a></li>
-                <li><a href="#" className="hover:text-accent transition">Refurbished</a></li>
-                <li><a href="#" className="hover:text-accent transition">Workstations</a></li>
-                <li><a href="#" className="hover:text-accent transition">Gaming</a></li>
+                {CATEGORIES.map((cat) => (
+                  <li key={cat.value}>
+                    <button 
+                      onClick={() => setSelectedCategory(cat.value)}
+                      className="hover:text-accent transition"
+                    >
+                      {cat.label}
+                    </button>
+                  </li>
+                ))}
               </ul>
             </div>
             <div>
@@ -220,7 +228,7 @@ export default function Catalog() {
           </div>
           <div className="border-t border-border/40 pt-8">
             <p className="text-center text-sm text-muted-foreground">
-              &copy; 2025 Hugo Media. All rights reserved. Premium gadget showroom.
+              © 2025 Hugo Media. All rights reserved. Premium gadget showroom.
             </p>
           </div>
         </div>

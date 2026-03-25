@@ -14,6 +14,8 @@ const laptopSchema = z.object({
   condition: z.string().min(1, "Condition is required"),
   warranty: z.string().min(1, "Warranty is required"),
   price: z.number().positive("Price must be positive"),
+  imageUrl: z.string().optional(),
+  category: z.enum(["promotions", "refurbished", "new", "monitors", "accessories", "business"]).default("new"),
 });
 
 export const laptopsRouter = router({
@@ -46,7 +48,10 @@ export const laptopsRouter = router({
     })
     .input(laptopSchema)
     .mutation(async ({ input }) => {
-      return createLaptop(input);
+      return createLaptop({
+        ...input,
+        category: input.category || "new",
+      });
     }),
 
   update: protectedProcedure
@@ -62,7 +67,18 @@ export const laptopsRouter = router({
     .input(
       z.object({
         id: z.number(),
-        ...laptopSchema.partial().shape,
+        name: z.string().optional(),
+        processor: z.string().optional(),
+        graphicsCard: z.string().optional(),
+        ram: z.string().optional(),
+        storage: z.string().optional(),
+        display: z.string().optional(),
+        operatingSystem: z.string().optional(),
+        condition: z.string().optional(),
+        warranty: z.string().optional(),
+        price: z.number().optional(),
+        imageUrl: z.string().optional(),
+        category: z.enum(["promotions", "refurbished", "new", "monitors", "accessories", "business"]).optional(),
       })
     )
     .mutation(async ({ input }) => {
