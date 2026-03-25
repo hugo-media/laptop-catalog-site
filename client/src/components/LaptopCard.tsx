@@ -10,12 +10,20 @@ interface LaptopCardProps {
 export function LaptopCard({ laptop }: LaptopCardProps) {
   return (
     <div className="group h-full flex flex-col bg-card rounded-lg border border-border/60 hover:border-accent/40 hover:shadow-xl transition-all duration-300 overflow-hidden">
-      {/* Premium Image Placeholder Area */}
+      {/* Premium Image Area */}
       <div className="relative w-full h-56 bg-gradient-to-br from-secondary/50 via-secondary/30 to-secondary/20 flex items-center justify-center border-b border-border/40 overflow-hidden">
-        {/* Subtle animated gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-accent/8 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-        {/* Icon */}
-        <Laptop className="h-24 w-24 text-muted-foreground/25 group-hover:text-accent/35 transition-all duration-300 group-hover:scale-110" />
+        {laptop.imageUrl ? (
+          <img
+            src={laptop.imageUrl}
+            alt={laptop.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        ) : (
+          <>
+            <div className="absolute inset-0 bg-gradient-to-br from-accent/8 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <Laptop className="h-24 w-24 text-muted-foreground/25 group-hover:text-accent/35 transition-all duration-300 group-hover:scale-110" />
+          </>
+        )}
       </div>
 
       {/* Content Area */}

@@ -31,7 +31,7 @@ export default function Catalog() {
             </div>
 
             {/* Navigation */}
-            <nav className="flex items-center gap-3">
+            <nav className="hidden md:flex items-center gap-6">
               <Button 
                 onClick={() => navigate("/about")} 
                 variant="ghost" 
@@ -56,9 +56,57 @@ export default function Catalog() {
                 </Button>
               )}
             </nav>
+
+            {/* Mobile Menu */}
+            <div className="md:hidden flex items-center gap-2">
+              {user?.role === "admin" && (
+                <Button 
+                  onClick={() => navigate("/admin")} 
+                  variant="outline"
+                  size="sm"
+                  className="border-accent/30 hover:bg-accent/5"
+                >
+                  Admin
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </header>
+
+      {/* Category Navigation */}
+      <nav className="border-b border-border/40 bg-background/50 backdrop-blur-sm sticky top-16 z-40">
+        <div className="container">
+          <div className="flex overflow-x-auto gap-1 py-3 -mx-4 px-4 md:mx-0 md:px-0">
+            <Button variant="ghost" size="sm" className="whitespace-nowrap text-sm hover:text-accent">
+              Акції
+            </Button>
+            <Button variant="ghost" size="sm" className="whitespace-nowrap text-sm hover:text-accent">
+              Ноутбуки після оренди
+            </Button>
+            <Button variant="ghost" size="sm" className="whitespace-nowrap text-sm hover:text-accent">
+              Нові ноутбуки
+            </Button>
+            <Button variant="ghost" size="sm" className="whitespace-nowrap text-sm hover:text-accent">
+              Монітори
+            </Button>
+            <Button variant="ghost" size="sm" className="whitespace-nowrap text-sm hover:text-accent">
+              Аксесуари
+            </Button>
+            <Button variant="ghost" size="sm" className="whitespace-nowrap text-sm hover:text-accent">
+              Пропозиція для компаній
+            </Button>
+            <Button 
+              onClick={() => navigate("/about")} 
+              variant="ghost" 
+              size="sm" 
+              className="whitespace-nowrap text-sm hover:text-accent md:hidden"
+            >
+              Контакти
+            </Button>
+          </div>
+        </div>
+      </nav>
 
       {/* Trust Signals Banner */}
       <div className="bg-secondary/30 border-b border-border/40">
@@ -100,38 +148,37 @@ export default function Catalog() {
       <section className="border-b border-border/40 bg-gradient-to-b from-secondary/30 to-background">
         <div className="container py-16 md:py-24">
           <div className="max-w-3xl">
-            <h2 className="text-5xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
+            <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
               Premium Laptops & Workstations
-            </h2>
+            </h1>
             <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
               Hugo Media brings you a curated selection of high-performance laptops for professionals, creators, and gamers. Latest 2025 models with official warranties and expert support.
             </p>
-            <div className="flex items-center gap-2 text-sm font-semibold text-accent">
-              <span className="h-2 w-2 rounded-full bg-accent" />
-              {laptops ? `${laptops.length} Premium Models Available` : 'Loading...'}
+            <div className="flex flex-wrap gap-4">
+              <div className="text-sm">
+                <span className="font-bold text-accent text-lg">8</span>
+                <span className="text-muted-foreground ml-2">Premium Models Available</span>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Main Content */}
+      {/* Products Grid */}
       <main className="container py-16">
         {isLoading ? (
-          <div className="flex justify-center items-center min-h-96">
-            <Loader2 className="animate-spin h-8 w-8 text-accent" />
+          <div className="flex justify-center items-center py-20">
+            <Loader2 className="h-8 w-8 animate-spin text-accent" />
           </div>
         ) : laptops && laptops.length > 0 ? (
-          <div>
-            {/* Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-              {laptops.map((laptop) => (
-                <LaptopCard key={laptop.id} laptop={laptop} />
-              ))}
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {laptops.map((laptop) => (
+              <LaptopCard key={laptop.id} laptop={laptop} />
+            ))}
           </div>
         ) : (
           <div className="text-center py-20">
-            <p className="text-muted-foreground text-lg">No laptops available yet.</p>
+            <p className="text-muted-foreground text-lg">No laptops available at the moment.</p>
           </div>
         )}
       </main>
@@ -140,64 +187,37 @@ export default function Catalog() {
       <footer className="border-t border-border/40 bg-secondary/20 mt-20">
         <div className="container py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-            {/* Brand */}
-            <div className="space-y-3">
-              <h3 className="font-bold text-foreground text-lg">Hugo Media</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Premium selection of high-performance laptops and workstations for every need and budget.
-              </p>
-              <p className="text-xs text-muted-foreground">
-                Trusted by professionals and businesses across Poland.
-              </p>
+            <div>
+              <h3 className="font-bold text-foreground mb-4">Hugo Media</h3>
+              <p className="text-sm text-muted-foreground">Premium laptop solutions for professionals and creators worldwide.</p>
             </div>
-
-            {/* Quick Links */}
-            <div className="space-y-3">
-              <h4 className="font-semibold text-foreground text-sm">Quick Links</h4>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <button
-                    onClick={() => navigate("/")}
-                    className="text-muted-foreground hover:text-accent transition-colors"
-                  >
-                    Catalog
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={() => navigate("/about")}
-                    className="text-muted-foreground hover:text-accent transition-colors"
-                  >
-                    About Us
-                  </button>
-                </li>
+            <div>
+              <h4 className="font-semibold text-foreground mb-4">Categories</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><a href="#" className="hover:text-accent transition">New Laptops</a></li>
+                <li><a href="#" className="hover:text-accent transition">Refurbished</a></li>
+                <li><a href="#" className="hover:text-accent transition">Workstations</a></li>
+                <li><a href="#" className="hover:text-accent transition">Gaming</a></li>
               </ul>
             </div>
-
-            {/* Products */}
-            <div className="space-y-3">
-              <h4 className="font-semibold text-foreground text-sm">Categories</h4>
+            <div>
+              <h4 className="font-semibold text-foreground mb-4">Support</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>Gaming Laptops</li>
-                <li>Workstations</li>
-                <li>Business Ultrabooks</li>
-                <li>Professional Systems</li>
+                <li><a href="#" className="hover:text-accent transition">Contact Us</a></li>
+                <li><a href="#" className="hover:text-accent transition">Returns</a></li>
+                <li><a href="#" className="hover:text-accent transition">Warranty</a></li>
+                <li><a href="#" className="hover:text-accent transition">FAQ</a></li>
               </ul>
             </div>
-
-            {/* Contact */}
-            <div className="space-y-3">
-              <h4 className="font-semibold text-foreground text-sm">Contact</h4>
+            <div>
+              <h4 className="font-semibold text-foreground mb-4">Legal</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>Email: info@hugomedia.pl</li>
-                <li>Phone: +48 XXX XXX XXX</li>
-                <li>Support: 24/7 Available</li>
-                <li>Warranty: Official Coverage</li>
+                <li><a href="#" className="hover:text-accent transition">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-accent transition">Terms of Service</a></li>
+                <li><a href="#" className="hover:text-accent transition">Cookie Policy</a></li>
               </ul>
             </div>
           </div>
-
-          {/* Divider */}
           <div className="border-t border-border/40 pt-8">
             <p className="text-center text-sm text-muted-foreground">
               &copy; 2025 Hugo Media. All rights reserved. Premium gadget showroom.

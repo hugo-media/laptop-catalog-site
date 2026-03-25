@@ -37,6 +37,7 @@ export const laptops = mysqlTable("laptops", {
   condition: varchar("condition", { length: 50 }).notNull(),
   warranty: varchar("warranty", { length: 100 }).notNull(),
   price: int("price").notNull(),
+  imageUrl: text("imageUrl"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

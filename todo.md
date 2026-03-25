@@ -68,3 +68,21 @@
 - [x] Enhance footer with company information
 - [x] Add contact information section
 - [x] Polish design with grand-kom.pl inspired patterns
+
+## Navigation & Categories
+- [x] Add navigation menu with categories
+- [x] Add "Акції" (Promotions) category
+- [x] Add "Ноутбуки після оренди" (Refurbished) category
+- [x] Add "Нові ноутбуки" (New Laptops) category
+- [x] Add "Монітори" (Monitors) category
+- [x] Add "Аксесуари" (Accessories) category
+- [x] Add "Пропозиція для компаній" (Business Offers) category
+- [x] Add "Контакти" (Contacts) link to navigation
+
+## Laptop Images
+- [x] Add image_url field to laptops table
+- [x] Generate or find laptop images
+- [x] Upload images to S3 CDN
+- [x] Update laptop records with image URLs
+- [x] Display images on product cards
+- [x] Add image fallback for missing images
