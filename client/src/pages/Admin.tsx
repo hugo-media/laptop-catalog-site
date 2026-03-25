@@ -222,7 +222,7 @@ export default function Admin() {
                 {productType === "laptops" ? "Add New Laptop" : "Add New Monitor"}
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogContent key={`add-${productType}`} className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>{productType === "laptops" ? "Add New Laptop" : "Add New Monitor"}</DialogTitle>
               </DialogHeader>

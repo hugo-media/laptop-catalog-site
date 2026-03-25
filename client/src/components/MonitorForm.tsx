@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { Upload } from "lucide-react";
+import { useEffect } from "react";
 
 interface MonitorFormProps {
   monitorId?: number;
@@ -40,25 +41,27 @@ export default function MonitorForm({ monitorId, onSuccess }: MonitorFormProps) 
   );
 
   // Update form when monitor data is loaded
-  if (monitor && Object.keys(formData).length > 0 && !formData.name) {
-    setFormData({
-      name: monitor.name,
-      resolution: monitor.resolution,
-      panelType: monitor.panelType,
-      refreshRate: monitor.refreshRate,
-      brightness: monitor.brightness,
-      contrast: monitor.contrast,
-      responseTime: monitor.responseTime,
-      connectivity: monitor.connectivity,
-      size: monitor.size,
-      condition: monitor.condition,
-      warranty: monitor.warranty,
-      price: monitor.price,
-      imageUrl: monitor.imageUrl || "",
-      description: monitor.description || "",
-      category: monitor.category as any,
-    });
-  }
+  useEffect(() => {
+    if (monitor && !formData.name) {
+      setFormData({
+        name: monitor.name,
+        resolution: monitor.resolution,
+        panelType: monitor.panelType,
+        refreshRate: monitor.refreshRate,
+        brightness: monitor.brightness,
+        contrast: monitor.contrast,
+        responseTime: monitor.responseTime,
+        connectivity: monitor.connectivity,
+        size: monitor.size,
+        condition: monitor.condition,
+        warranty: monitor.warranty,
+        price: monitor.price,
+        imageUrl: monitor.imageUrl || "",
+        description: monitor.description || "",
+        category: monitor.category as any,
+      });
+    }
+  }, [monitor]);
 
   const createMutation = trpc.monitors.create.useMutation();
   const updateMutation = trpc.monitors.update.useMutation();
