@@ -11,9 +11,12 @@ import { useEffect } from "react";
 interface MonitorFormProps {
   monitorId?: number;
   onSuccess?: () => void;
+  selectedCategory?: string;
+  isLoading?: boolean;
+  onSubmit?: (data: any) => void;
 }
 
-export default function MonitorForm({ monitorId, onSuccess }: MonitorFormProps) {
+export default function MonitorForm({ monitorId, onSuccess, selectedCategory, isLoading: externalLoading, onSubmit }: MonitorFormProps) {
   const [formData, setFormData] = useState({
     name: "",
     resolution: "",
@@ -72,7 +75,13 @@ export default function MonitorForm({ monitorId, onSuccess }: MonitorFormProps) 
     setIsLoading(true);
 
     try {
-      if (monitorId) {
+      if (onSubmit) {
+        // Use custom onSubmit callback (for admin form with category)
+        onSubmit({
+          ...formData,
+          category: selectedCategory || formData.category,
+        });
+      } else if (monitorId) {
         await updateMutation.mutateAsync({
           id: monitorId,
           ...formData,
@@ -105,7 +114,7 @@ export default function MonitorForm({ monitorId, onSuccess }: MonitorFormProps) 
       toast.error("Failed to save monitor");
       console.error(error);
     } finally {
-      setIsLoading(false);
+      if (!onSubmit) setIsLoading(false);
     }
   };
 
