@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Upload, X, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
@@ -14,12 +13,12 @@ export function ImageUpload({ onImageUrl, initialImageUrl }: ImageUploadProps) {
   const [preview, setPreview] = useState<string | null>(initialImageUrl || null);
   const [isDragging, setIsDragging] = useState(false);
   const uploadMutation = trpc.system.uploadImage.useMutation({
-    onSuccess: (data) => {
+    onSuccess: (data: { url: string }) => {
       toast.success("Image uploaded successfully");
       onImageUrl(data.url);
       setPreview(data.url);
     },
-    onError: (error) => {
+    onError: (error: any) => {
       toast.error(error.message || "Failed to upload image");
     },
   });
@@ -44,10 +43,19 @@ export function ImageUpload({ onImageUrl, initialImageUrl }: ImageUploadProps) {
     };
     reader.readAsDataURL(file);
 
-    // Upload file
-    const formData = new FormData();
-    formData.append("file", file);
-    uploadMutation.mutate(formData as any);
+    // Convert file to base64 and upload
+    const fileReader = new FileReader();
+    fileReader.onload = async (event) => {
+      const base64String = event.target?.result as string;
+      const base64Data = base64String.split(",")[1]; // Remove data:image/... prefix
+
+      uploadMutation.mutate({
+        fileName: file.name,
+        fileData: base64Data,
+        mimeType: file.type,
+      });
+    };
+    fileReader.readAsDataURL(file);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -86,7 +94,7 @@ export function ImageUpload({ onImageUrl, initialImageUrl }: ImageUploadProps) {
             <p className="font-medium text-foreground">Drag and drop your image here</p>
             <p className="text-sm text-muted-foreground">or click to browse</p>
           </div>
-          <Input
+          <input
             type="file"
             accept="image/*"
             onChange={(e) => {

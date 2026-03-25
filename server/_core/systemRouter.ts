@@ -40,26 +40,30 @@ export const systemRouter = router({
       }
       return next({ ctx });
     })
-    .input(z.any())
+    .input(
+      z.object({
+        fileName: z.string(),
+        fileData: z.string(), // base64 encoded
+        mimeType: z.string(),
+      })
+    )
     .mutation(async ({ input }) => {
       try {
-        const formData = input as FormData;
-        const file = formData.get("file") as File;
+        const { fileName, fileData, mimeType } = input;
 
-        if (!file) {
-          throw new Error("No file provided");
+        if (!fileData) {
+          throw new Error("No file data provided");
         }
 
-        // Convert file to buffer
-        const buffer = await file.arrayBuffer();
-        const uint8Array = new Uint8Array(buffer);
+        // Convert base64 to buffer
+        const buffer = Buffer.from(fileData, "base64");
 
         // Generate unique filename
-        const ext = file.name.split(".").pop() || "jpg";
+        const ext = fileName.split(".").pop() || "jpg";
         const filename = `laptop-${nanoid()}.${ext}`;
 
         // Upload to S3
-        const { url } = await storagePut(filename, uint8Array, file.type);
+        const { url } = await storagePut(filename, buffer, mimeType);
 
         return { url };
       } catch (error) {
