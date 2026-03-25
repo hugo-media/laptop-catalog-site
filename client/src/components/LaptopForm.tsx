@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ImageUpload } from "./ImageUpload";
-import { Laptop } from "../../../drizzle/schema";
+import type { Laptop } from "../../../drizzle/schema";
 
 type Category = "promotions" | "refurbished" | "new" | "monitors" | "accessories" | "business";
 

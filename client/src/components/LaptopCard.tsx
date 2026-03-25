@@ -1,4 +1,4 @@
-import { Laptop as LaptopType } from "../../../drizzle/schema";
+import type { Laptop as LaptopType } from "../../../drizzle/schema";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Laptop, ArrowRight } from "lucide-react";
