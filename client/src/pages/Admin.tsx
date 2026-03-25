@@ -51,11 +51,13 @@ export default function Admin() {
   const [selectedCategory, setSelectedCategory] = useState<Category>("new");
 
   const { data: laptops, isLoading } = trpc.laptops.list.useQuery();
+  const utils = trpc.useUtils();
+
   const createMutation = trpc.laptops.create.useMutation({
     onSuccess: () => {
       toast.success("Laptop added successfully");
       setIsAddOpen(false);
-      trpc.useUtils().laptops.list.invalidate();
+      utils.laptops.list.invalidate();
     },
     onError: (error) => {
       toast.error(error.message || "Failed to add laptop");
@@ -66,7 +68,7 @@ export default function Admin() {
     onSuccess: () => {
       toast.success("Laptop updated successfully");
       setEditingId(null);
-      trpc.useUtils().laptops.list.invalidate();
+      utils.laptops.list.invalidate();
     },
     onError: (error) => {
       toast.error(error.message || "Failed to update laptop");
@@ -77,7 +79,7 @@ export default function Admin() {
     onSuccess: () => {
       toast.success("Laptop deleted successfully");
       setDeleteId(null);
-      trpc.useUtils().laptops.list.invalidate();
+      utils.laptops.list.invalidate();
     },
     onError: (error) => {
       toast.error(error.message || "Failed to delete laptop");
