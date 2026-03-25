@@ -153,14 +153,20 @@ export default function Admin() {
             </div>
             <div className="flex gap-2">
               <Button 
-                onClick={() => setProductType("laptops")} 
+                onClick={() => {
+                  setProductType("laptops");
+                  setIsAddOpen(false);
+                }}
                 variant={productType === "laptops" ? "default" : "outline"}
                 size="sm"
               >
                 Laptops
               </Button>
               <Button 
-                onClick={() => setProductType("monitors")} 
+                onClick={() => {
+                  setProductType("monitors");
+                  setIsAddOpen(false);
+                }}
                 variant={productType === "monitors" ? "default" : "outline"}
                 size="sm"
               >
