@@ -15,6 +15,7 @@ const laptopSchema = z.object({
   warranty: z.string().min(1, "Warranty is required"),
   price: z.number().positive("Price must be positive"),
   imageUrl: z.string().optional(),
+  description: z.string().optional(),
   category: z.enum(["promotions", "refurbished", "new", "monitors", "accessories", "business"]).default("new"),
 });
 
@@ -78,6 +79,7 @@ export const laptopsRouter = router({
         warranty: z.string().optional(),
         price: z.number().optional(),
         imageUrl: z.string().optional(),
+        description: z.string().optional(),
         category: z.enum(["promotions", "refurbished", "new", "monitors", "accessories", "business"]).optional(),
       })
     )

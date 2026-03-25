@@ -107,3 +107,26 @@
 - [x] Add drag-and-drop support
 - [x] Add file size validation
 - [x] Test image upload functionality
+
+
+## Search Functionality
+- [x] Implement search input component on catalog page
+- [x] Add search logic to filter products by name, brand, and specs
+- [x] Display search results with highlighting
+- [x] Add "no results" message when search returns empty
+
+## Product Detail Modal
+- [x] Create ProductDetailModal component
+- [x] Display full product information (specs, description, images)
+- [x] Add product description field to database schema
+- [x] Implement modal open/close functionality
+- [x] Style modal with responsive design
+- [x] Add close button and backdrop click to close
+
+## Inquiry/Order Form
+- [x] Create inquiry form component inside modal
+- [x] Add form fields (name, email, phone, message)
+- [x] Implement form submission to backend
+- [x] Add success/error notifications
+- [x] Send inquiry notifications to owner
+- [ ] Store inquiries in database for admin review (optional enhancement)

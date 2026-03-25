@@ -1,0 +1,1 @@
+ALTER TABLE `laptops` ADD `description` text;

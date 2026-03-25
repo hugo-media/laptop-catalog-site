@@ -2,12 +2,15 @@ import { trpc } from "@/lib/trpc";
 import { LaptopCard } from "@/components/LaptopCard";
 import { LaptopFilters, type LaptopFilterOptions } from "@/components/LaptopFilters";
 import { MonitorFilters, type MonitorFilterOptions } from "@/components/MonitorFilters";
+import { ProductDetailModal } from "@/components/ProductDetailModal";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { useLocation } from "wouter";
 import { useState, useMemo } from "react";
-import { Loader2, Shield, Truck, RotateCcw, Star } from "lucide-react";
+import { Loader2, Shield, Truck, RotateCcw, Star, Search, X } from "lucide-react";
+import type { Laptop as LaptopType } from "../../../drizzle/schema";
 
 type Category = "promotions" | "refurbished" | "new" | "monitors" | "accessories" | "business";
 
@@ -27,10 +30,22 @@ export default function Catalog() {
   const [selectedCategory, setSelectedCategory] = useState<Category>("new");
   const [laptopFilters, setLaptopFilters] = useState<LaptopFilterOptions>({});
   const [monitorFilters, setMonitorFilters] = useState<MonitorFilterOptions>({});
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedLaptop, setSelectedLaptop] = useState<LaptopType | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
-  // Filter laptops by category and applied filters
+  // Filter laptops by category, applied filters, and search query
   const filteredLaptops = useMemo(() => {
     let filtered = laptops?.filter((l) => l.category === selectedCategory) || [];
+
+    // Apply search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter((l) => {
+        const searchableText = `${l.name} ${l.processor} ${l.graphicsCard} ${l.ram} ${l.storage} ${l.display}`.toLowerCase();
+        return searchableText.includes(query);
+      });
+    }
 
     // Apply laptop-specific filters
     if (selectedCategory !== "monitors") {
@@ -66,7 +81,7 @@ export default function Catalog() {
     }
 
     return filtered;
-  }, [laptops, selectedCategory, laptopFilters, monitorFilters]);
+  }, [laptops, selectedCategory, laptopFilters, monitorFilters, searchQuery]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -142,6 +157,7 @@ export default function Catalog() {
                   setSelectedCategory(cat.value);
                   setLaptopFilters({});
                   setMonitorFilters({});
+                  setSearchQuery("");
                 }}
                 variant={selectedCategory === cat.value ? "default" : "ghost"}
                 size="sm"
@@ -204,14 +220,36 @@ export default function Catalog() {
 
           {/* Products Grid */}
           <div className="lg:col-span-3">
-            {/* Page Title */}
-            <div className="mb-8">
-              <h2 className="text-3xl font-bold text-foreground mb-2">
-                {CATEGORIES.find((c) => c.value === selectedCategory)?.label}
-              </h2>
-              <p className="text-muted-foreground">
-                {filteredLaptops.length} {selectedCategory === "monitors" ? "monitors" : "laptops"} available
-              </p>
+            {/* Page Title & Search */}
+            <div className="mb-8 space-y-4">
+              <div>
+                <h2 className="text-3xl font-bold text-foreground mb-2">
+                  {CATEGORIES.find((c) => c.value === selectedCategory)?.label}
+                </h2>
+                <p className="text-muted-foreground">
+                  {filteredLaptops.length} {selectedCategory === "monitors" ? "monitors" : "laptops"} available
+                </p>
+              </div>
+
+              {/* Search Bar */}
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  type="text"
+                  placeholder="Пошук за назвою, брендом, характеристиками..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 pr-10 border-border/40"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
             </div>
 
             {/* Loading State */}
@@ -221,27 +259,48 @@ export default function Catalog() {
               </div>
             ) : filteredLaptops.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-muted-foreground mb-4">No products found matching your filters</p>
+                <p className="text-muted-foreground mb-4">
+                  {searchQuery 
+                    ? "Товари не знайдені за вашим пошуком" 
+                    : "Товари не знайдені за вашими фільтрами"}
+                </p>
                 <Button 
                   onClick={() => {
                     setLaptopFilters({});
                     setMonitorFilters({});
+                    setSearchQuery("");
                   }}
                   variant="outline"
                 >
-                  Clear Filters
+                  Очистити фільтри
                 </Button>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredLaptops.map((laptop) => (
-                  <LaptopCard key={laptop.id} laptop={laptop} />
+                  <div
+                    key={laptop.id}
+                    onClick={() => {
+                      setSelectedLaptop(laptop);
+                      setModalOpen(true);
+                    }}
+                    className="cursor-pointer"
+                  >
+                    <LaptopCard laptop={laptop} />
+                  </div>
                 ))}
               </div>
             )}
           </div>
         </div>
       </main>
+
+      {/* Product Detail Modal */}
+      <ProductDetailModal
+        laptop={selectedLaptop}
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+      />
 
       {/* Footer */}
       <footer className="border-t border-border/40 bg-background/50 mt-16">
@@ -262,7 +321,10 @@ export default function Catalog() {
                     <Button 
                       variant="link" 
                       size="sm"
-                      onClick={() => setSelectedCategory(cat.value)}
+                      onClick={() => {
+                        setSelectedCategory(cat.value);
+                        setSearchQuery("");
+                      }}
                       className="p-0 h-auto text-muted-foreground hover:text-foreground"
                     >
                       {cat.label}
