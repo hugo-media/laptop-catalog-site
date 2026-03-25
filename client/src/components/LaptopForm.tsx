@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ImageUpload } from "./ImageUpload";
 import { Laptop } from "../../../drizzle/schema";
 
 type Category = "promotions" | "refurbished" | "new" | "monitors" | "accessories" | "business";
@@ -62,6 +63,13 @@ export function LaptopForm({ initialData, onSubmit, isLoading = false }: LaptopF
     }));
   };
 
+  const handleImageUrl = (url: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      imageUrl: url,
+    }));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
@@ -78,11 +86,20 @@ export function LaptopForm({ initialData, onSubmit, isLoading = false }: LaptopF
     { label: "Condition", name: "condition", placeholder: "e.g., New" },
     { label: "Warranty", name: "warranty", placeholder: "e.g., 2 years official" },
     { label: "Price (zł)", name: "price", placeholder: "e.g., 5999", type: "number" },
-    { label: "Image URL", name: "imageUrl", placeholder: "e.g., https://example.com/image.jpg" },
   ];
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Image Upload Section */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Product Image</label>
+        <ImageUpload 
+          onImageUrl={handleImageUrl} 
+          initialImageUrl={formData.imageUrl}
+        />
+      </div>
+
+      {/* Basic Fields */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {fields.map((field) => (
           <div key={field.name} className="space-y-2">
@@ -93,7 +110,7 @@ export function LaptopForm({ initialData, onSubmit, isLoading = false }: LaptopF
               placeholder={field.placeholder}
               value={formData[field.name as keyof typeof formData]}
               onChange={handleChange}
-              required={field.name !== "imageUrl"}
+              required
             />
           </div>
         ))}

@@ -97,3 +97,13 @@
 - [x] Enhance laptop edit form with all fields
 - [x] Add category selection dropdown
 - [x] Test all admin CRUD operations
+
+
+## Image Upload Feature
+- [x] Create image upload component with file input
+- [x] Implement backend API for S3 upload
+- [x] Add image preview in form
+- [x] Integrate upload into laptop form
+- [x] Add drag-and-drop support
+- [x] Add file size validation
+- [x] Test image upload functionality
