@@ -113,5 +113,29 @@
     "termsOfService": "Warunki Świadczenia Usług",
     "cookiePolicy": "Polityka Plików Cookie",
     "copyright": "© 2026 Hugo Media. Wszelkie prawa zastrzeżone."
+  },
+  "about": {
+    "title": "O nas",
+    "subtitle": "Twój zaufany partner w świecie laptopów premium",
+    "intro": "Hugo Media to wiodąca firma specjalizująca się w dostawie laptopów premium i sprzętu komputerowego dla profesjonalistów, twórców i graczy. Dzięki wieloletniemu doświadczeniu na rynku, jesteśmy dumni z naszej reputacji jako wiarygodnego partnera.",
+    "missionTitle": "Nasza Misja",
+    "missionDesc": "Dostarczać sprzęt komputerowy najwyższej jakości w uczciwych cenach, zapewniając wyjątkową obsługę i wsparcie każdemu klientowi.",
+    "valuesTitle": "Nasze Wartości",
+    "value1Title": "Jakość",
+    "value1Desc": "Oferujemy tylko zweryfikowane i certyfikowane produkty od światowych producentów.",
+    "value2Title": "Niezawodność",
+    "value2Desc": "Nasi klienci mogą liczyć na terminową dostawę i oficjalną gwarancję na wszystkie produkty.",
+    "value3Title": "Wsparcie",
+    "value3Desc": "Nasz zespół jest zawsze gotów pomóc w wyborze produktu i odpowiedzieć na wszelkie pytania.",
+    "whyChooseTitle": "Dlaczego wybrać Hugo Media",
+    "whyChoose1": "Oficjalna gwarancja na wszystkie produkty (2-3 lata)",
+    "whyChoose2": "Bezpłatna dostawa na terenie kraju dla zamówień powyżej 400 PLN",
+    "whyChoose3": "Zwrot produktu w ciągu 14 dni bez pytań",
+    "whyChoose4": "Duży wybór laptopów premium i monitorów",
+    "whyChoose5": "Profesjonalna konsultacja przed zakupem",
+    "whyChoose6": "Specjalne oferty dla klientów korporacyjnych",
+    "contactTitle": "Skontaktuj się z nami",
+    "contactDesc": "Masz pytania? Nasz zespół jest gotów Ci pomóc. Napisz do nas lub zadzwoń.",
+    "backToCatalog": "Powrót do Katalogu"
   }
 }

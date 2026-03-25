@@ -1,8 +1,11 @@
-import { Button } from "@/components/ui/button";
-import { useLocation } from "wouter";
-import { ArrowLeft, Mail, Phone, MapPin } from "lucide-react";
+import { useTranslation } from 'react-i18next';
+import { useLocation } from 'wouter';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export default function About() {
+  const { t } = useTranslation();
   const [, navigate] = useLocation();
 
   return (
@@ -10,155 +13,205 @@ export default function About() {
       {/* Header */}
       <header className="border-b border-border/40 sticky top-0 bg-background/95 backdrop-blur-md z-50">
         <div className="container py-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate("/")}
-            className="gap-2"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Catalog
-          </Button>
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-4">
+              <img 
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663402378754/DMLwym6Zv6yd8JHAqkjkFj/hugo-media-logo_da9d05f5.jpg" 
+                alt="Hugo Media" 
+                className="h-12 w-auto"
+              />
+              <div className="hidden sm:block">
+                <h1 className="text-xl font-bold text-foreground">Hugo Media</h1>
+                <p className="text-xs text-muted-foreground">Premium Laptop Solutions</p>
+              </div>
+            </div>
+
+            <Button 
+              onClick={() => navigate('/')} 
+              variant="outline"
+              size="sm"
+              className="border-accent/30 hover:bg-accent/5"
+            >
+              {t('about.backToCatalog')}
+            </Button>
+          </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="container py-12">
-        <div className="max-w-3xl mx-auto space-y-8">
-          {/* Hero Section */}
-          <section className="space-y-6">
-            <div>
-              <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-4">About Hugo Media</h1>
-              <p className="text-xl text-muted-foreground leading-relaxed">
-                Your trusted partner for premium laptop solutions and professional computing equipment.
-              </p>
-            </div>
-          </section>
-
-          {/* Company Story */}
-          <section className="space-y-6 py-8 border-y border-border/40">
-            <div>
-              <h2 className="text-3xl font-bold text-foreground mb-4">Our Story</h2>
-              <div className="space-y-4 text-muted-foreground leading-relaxed">
-                <p>
-                  Hugo Media was founded with a simple mission: to provide access to premium, high-performance laptops and workstations at competitive prices. We understand that quality computing equipment is essential for professionals, creators, and businesses—but it shouldn't break the bank.
-                </p>
-                <p>
-                  With years of experience in the technology sector, our team has developed deep expertise in sourcing, testing, and delivering the finest laptops and workstations. We partner with leading manufacturers and certified suppliers to ensure every device meets our rigorous quality standards.
-                </p>
-                <p>
-                  Today, Hugo Media serves thousands of satisfied customers across Poland, from individual professionals to large enterprises. We're proud of our reputation for reliability, transparency, and exceptional customer service.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* Why Choose Us */}
-          <section className="space-y-6">
-            <h2 className="text-3xl font-bold text-foreground">Why Choose Hugo Media?</h2>
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="space-y-3 p-6 rounded-lg bg-secondary/20 border border-border/40">
-                <h3 className="font-bold text-lg text-foreground">Curated Selection</h3>
-                <p className="text-muted-foreground">
-                  Every laptop in our catalog is carefully selected and tested to ensure it meets our high standards for performance, reliability, and value.
-                </p>
-              </div>
-              <div className="space-y-3 p-6 rounded-lg bg-secondary/20 border border-border/40">
-                <h3 className="font-bold text-lg text-foreground">Official Warranties</h3>
-                <p className="text-muted-foreground">
-                  All our products come with official manufacturer warranties and comprehensive coverage, giving you peace of mind with every purchase.
-                </p>
-              </div>
-              <div className="space-y-3 p-6 rounded-lg bg-secondary/20 border border-border/40">
-                <h3 className="font-bold text-lg text-foreground">Expert Support</h3>
-                <p className="text-muted-foreground">
-                  Our team of technology experts is available to answer questions, provide recommendations, and offer technical support throughout your ownership.
-                </p>
-              </div>
-              <div className="space-y-3 p-6 rounded-lg bg-secondary/20 border border-border/40">
-                <h3 className="font-bold text-lg text-foreground">Competitive Pricing</h3>
-                <p className="text-muted-foreground">
-                  We offer the best value in the market without compromising on quality, backed by our price-match guarantee and transparent pricing.
-                </p>
-              </div>
-              <div className="space-y-3 p-6 rounded-lg bg-secondary/20 border border-border/40">
-                <h3 className="font-bold text-lg text-foreground">Fast Delivery</h3>
-                <p className="text-muted-foreground">
-                  Free shipping on orders over 400 PLN with fast, reliable delivery across Poland. Track your order in real-time.
-                </p>
-              </div>
-              <div className="space-y-3 p-6 rounded-lg bg-secondary/20 border border-border/40">
-                <h3 className="font-bold text-lg text-foreground">Easy Returns</h3>
-                <p className="text-muted-foreground">
-                  14-day return policy with no questions asked. If you're not satisfied, we'll make it right with hassle-free returns and exchanges.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* Our Commitment */}
-          <section className="space-y-6 py-8 border-y border-border/40">
-            <h2 className="text-3xl font-bold text-foreground">Our Commitment</h2>
-            <div className="space-y-4 text-muted-foreground leading-relaxed">
-              <p>
-                We're committed to sustainability and responsible business practices. By offering premium refurbished and certified pre-owned laptops alongside new models, we help reduce electronic waste while providing exceptional value to our customers.
-              </p>
-              <p>
-                Every device is thoroughly tested, cleaned, and prepared to the highest standards. We believe in transparency—you'll always know exactly what you're getting, with detailed specifications and honest condition ratings.
-              </p>
-              <p>
-                Hugo Media isn't just about selling laptops. We're about building long-term relationships with our customers and becoming your trusted technology partner.
-              </p>
-            </div>
-          </section>
-
-          {/* Contact Section */}
-          <section className="space-y-6">
-            <h2 className="text-3xl font-bold text-foreground">Get in Touch</h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              <div className="flex gap-4 p-6 rounded-lg bg-secondary/20 border border-border/40">
-                <Mail className="h-6 w-6 text-accent flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-foreground mb-1">Email</h3>
-                  <p className="text-muted-foreground">info@hugomedia.pl</p>
-                </div>
-              </div>
-              <div className="flex gap-4 p-6 rounded-lg bg-secondary/20 border border-border/40">
-                <Phone className="h-6 w-6 text-accent flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-foreground mb-1">Phone</h3>
-                  <p className="text-muted-foreground">+48 XXX XXX XXX</p>
-                </div>
-              </div>
-              <div className="flex gap-4 p-6 rounded-lg bg-secondary/20 border border-border/40">
-                <MapPin className="h-6 w-6 text-accent flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-foreground mb-1">Support</h3>
-                  <p className="text-muted-foreground">24/7 Available</p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* CTA */}
-          <section className="text-center py-12">
-            <Button 
-              onClick={() => navigate("/")} 
-              size="lg"
-              className="bg-accent hover:bg-accent/90 gap-2"
-            >
-              Browse Our Catalog
-            </Button>
-          </section>
+      {/* Hero Section */}
+      <section className="bg-gradient-to-b from-accent/10 to-background py-16 md:py-24">
+        <div className="container">
+          <div className="max-w-3xl mx-auto text-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+              {t('about.title')}
+            </h1>
+            <p className="text-xl text-accent font-semibold mb-6">
+              {t('about.subtitle')}
+            </p>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              {t('about.intro')}
+            </p>
+          </div>
         </div>
-      </main>
+      </section>
+
+      {/* Mission Section */}
+      <section className="py-16 md:py-24">
+        <div className="container">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl font-bold text-foreground mb-6">
+                {t('about.missionTitle')}
+              </h2>
+              <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+                {t('about.missionDesc')}
+              </p>
+              <div className="space-y-4">
+                <div className="flex items-start gap-4">
+                  <CheckCircle2 className="h-6 w-6 text-accent flex-shrink-0 mt-1" />
+                  <div>
+                    <h3 className="font-semibold text-foreground mb-2">{t('about.value1Title')}</h3>
+                    <p className="text-muted-foreground">{t('about.value1Desc')}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4">
+                  <CheckCircle2 className="h-6 w-6 text-accent flex-shrink-0 mt-1" />
+                  <div>
+                    <h3 className="font-semibold text-foreground mb-2">{t('about.value2Title')}</h3>
+                    <p className="text-muted-foreground">{t('about.value2Desc')}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="bg-gradient-to-br from-accent/20 to-accent/5 rounded-lg p-12 h-96 flex items-center justify-center">
+              <div className="text-center">
+                <div className="text-6xl font-bold text-accent/20 mb-4">Hugo Media</div>
+                <p className="text-muted-foreground">{t('about.subtitle')}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Values Section */}
+      <section className="py-16 md:py-24 bg-background/50">
+        <div className="container">
+          <h2 className="text-3xl font-bold text-foreground mb-12 text-center">
+            {t('about.valuesTitle')}
+          </h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[1, 2, 3].map((i) => (
+              <Card key={i} className="border-border/40">
+                <CardContent className="p-8">
+                  <div className="flex items-center justify-center h-16 w-16 rounded-lg bg-accent/10 mb-6">
+                    <CheckCircle2 className="h-8 w-8 text-accent" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-foreground mb-4">
+                    {t(`about.value${i}Title`)}
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {t(`about.value${i}Desc`)}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Why Choose Us Section */}
+      <section className="py-16 md:py-24">
+        <div className="container">
+          <h2 className="text-3xl font-bold text-foreground mb-12 text-center">
+            {t('about.whyChooseTitle')}
+          </h2>
+          <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="flex items-start gap-4 p-6 rounded-lg border border-border/40 hover:border-accent/30 transition-colors">
+                <ArrowRight className="h-5 w-5 text-accent flex-shrink-0 mt-1" />
+                <p className="text-foreground leading-relaxed">
+                  {t(`about.whyChoose${i}`)}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 md:py-24 bg-gradient-to-r from-accent/10 to-accent/5">
+        <div className="container">
+          <div className="max-w-2xl mx-auto text-center">
+            <h2 className="text-3xl font-bold text-foreground mb-6">
+              {t('about.contactTitle')}
+            </h2>
+            <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+              {t('about.contactDesc')}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                onClick={() => navigate('/')} 
+                className="bg-accent hover:bg-accent/90"
+              >
+                {t('about.backToCatalog')}
+              </Button>
+              <Button 
+                variant="outline"
+                className="border-accent/30 hover:bg-accent/5"
+              >
+                {t('footer.contactUs')}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Footer */}
-      <footer className="border-t border-border/40 bg-secondary/20 mt-20">
-        <div className="container py-8">
-          <p className="text-center text-sm text-muted-foreground">
-            &copy; 2025 Hugo Media. All rights reserved. Premium gadget showroom.
-          </p>
+      <footer className="border-t border-border/40 bg-background/50 py-12">
+        <div className="container">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            {/* Brand */}
+            <div>
+              <h3 className="font-semibold text-foreground mb-4">{t('footer.brand')}</h3>
+              <p className="text-sm text-muted-foreground">{t('footer.brandDesc')}</p>
+            </div>
+
+            {/* Support */}
+            <div>
+              <h3 className="font-semibold text-foreground mb-4">{t('footer.support')}</h3>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><a href="#" className="hover:text-foreground">{t('footer.contactUs')}</a></li>
+                <li><a href="#" className="hover:text-foreground">{t('footer.shippingInfo')}</a></li>
+                <li><a href="#" className="hover:text-foreground">{t('footer.returns')}</a></li>
+                <li><a href="#" className="hover:text-foreground">{t('footer.faq')}</a></li>
+              </ul>
+            </div>
+
+            {/* Legal */}
+            <div>
+              <h3 className="font-semibold text-foreground mb-4">{t('footer.legal')}</h3>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><a href="#" className="hover:text-foreground">{t('footer.privacyPolicy')}</a></li>
+                <li><a href="#" className="hover:text-foreground">{t('footer.termsOfService')}</a></li>
+                <li><a href="#" className="hover:text-foreground">{t('footer.cookiePolicy')}</a></li>
+              </ul>
+            </div>
+
+            {/* Categories */}
+            <div>
+              <h3 className="font-semibold text-foreground mb-4">{t('footer.categories')}</h3>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><a href="/" className="hover:text-foreground">{t('categories.new')}</a></li>
+                <li><a href="/" className="hover:text-foreground">{t('categories.monitors')}</a></li>
+                <li><a href="/" className="hover:text-foreground">{t('categories.business')}</a></li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Copyright */}
+          <div className="border-t border-border/40 pt-8 text-center text-sm text-muted-foreground">
+            <p>{t('footer.copyright')}</p>
+          </div>
         </div>
       </footer>
     </div>

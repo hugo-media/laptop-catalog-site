@@ -113,5 +113,29 @@
     "termsOfService": "Terms of Service",
     "cookiePolicy": "Cookie Policy",
     "copyright": "© 2026 Hugo Media. All rights reserved."
+  },
+  "about": {
+    "title": "About Us",
+    "subtitle": "Your trusted partner in the world of premium laptops",
+    "intro": "Hugo Media is a leading company specializing in the supply of premium laptops and computer equipment for professionals, creators, and gamers. With years of experience in the market, we are proud of our reputation as a reliable partner.",
+    "missionTitle": "Our Mission",
+    "missionDesc": "To provide the highest quality computer equipment at fair prices, ensuring exceptional service and support to every customer.",
+    "valuesTitle": "Our Values",
+    "value1Title": "Quality",
+    "value1Desc": "We offer only verified and certified products from world-renowned manufacturers.",
+    "value2Title": "Reliability",
+    "value2Desc": "Our customers can rely on timely delivery and official warranty on all products.",
+    "value3Title": "Support",
+    "value3Desc": "Our team is always ready to help with product selection and answer any questions.",
+    "whyChooseTitle": "Why Choose Hugo Media",
+    "whyChoose1": "Official warranty on all products (2-3 years)",
+    "whyChoose2": "Free delivery throughout the country for orders over 400 PLN",
+    "whyChoose3": "14-day product return without questions",
+    "whyChoose4": "Large selection of premium laptops and monitors",
+    "whyChoose5": "Professional consultation before purchase",
+    "whyChoose6": "Special offers for corporate clients",
+    "contactTitle": "Contact Us",
+    "contactDesc": "Have questions? Our team is ready to help you. Write to us or call.",
+    "backToCatalog": "Back to Catalog"
   }
 }
