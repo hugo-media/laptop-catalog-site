@@ -3,6 +3,7 @@ import { LaptopCard } from "@/components/LaptopCard";
 import { LaptopFilters, type LaptopFilterOptions } from "@/components/LaptopFilters";
 import { MonitorFilters, type MonitorFilterOptions } from "@/components/MonitorFilters";
 import { ProductDetailModal } from "@/components/ProductDetailModal";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -10,20 +11,22 @@ import { getLoginUrl } from "@/const";
 import { useLocation } from "wouter";
 import { useState, useMemo } from "react";
 import { Loader2, Shield, Truck, RotateCcw, Star, Search, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import type { Laptop as LaptopType } from "../../../drizzle/schema";
 
 type Category = "promotions" | "refurbished" | "new" | "monitors" | "accessories" | "business";
 
-const CATEGORIES: { value: Category; label: string }[] = [
-  { value: "promotions", label: "Акції" },
-  { value: "refurbished", label: "Ноутбуки після оренди" },
-  { value: "new", label: "Нові ноутбуки" },
-  { value: "monitors", label: "Монітори" },
-  { value: "accessories", label: "Аксесуари" },
-  { value: "business", label: "Пропозиція для компаній" },
+const getCATEGORIES = (t: any): { value: Category; label: string }[] => [
+  { value: "promotions", label: t("categories.promotions") },
+  { value: "refurbished", label: t("categories.refurbished") },
+  { value: "new", label: t("categories.new") },
+  { value: "monitors", label: t("categories.monitors") },
+  { value: "accessories", label: t("categories.accessories") },
+  { value: "business", label: t("categories.business") },
 ];
 
 export default function Catalog() {
+  const { t } = useTranslation();
   const { data: laptops, isLoading } = trpc.laptops.list.useQuery();
   const { user } = useAuth();
   const [, navigate] = useLocation();
@@ -104,13 +107,14 @@ export default function Catalog() {
 
             {/* Navigation */}
             <nav className="hidden md:flex items-center gap-6">
+              <LanguageSwitcher />
               <Button 
                 onClick={() => navigate("/about")} 
                 variant="ghost" 
                 size="sm"
                 className="text-muted-foreground hover:text-foreground"
               >
-                About Us
+                {t("header.aboutUs")}
               </Button>
               {user?.role === "admin" && (
                 <Button 
@@ -119,18 +123,19 @@ export default function Catalog() {
                   size="sm"
                   className="border-accent/30 hover:bg-accent/5"
                 >
-                  Admin Panel
+                  {t("header.adminPanel")}
                 </Button>
               )}
               {!user && (
                 <Button asChild size="sm" className="bg-accent hover:bg-accent/90">
-                  <a href={getLoginUrl()}>Sign In</a>
+                  <a href={getLoginUrl()}>{t("header.signIn")}</a>
                 </Button>
               )}
             </nav>
 
             {/* Mobile Menu */}
             <div className="md:hidden flex items-center gap-2">
+              <LanguageSwitcher />
               {user?.role === "admin" && (
                 <Button 
                   onClick={() => navigate("/admin")} 
@@ -138,7 +143,7 @@ export default function Catalog() {
                   size="sm"
                   className="border-accent/30 hover:bg-accent/5"
                 >
-                  Admin
+                  {t("header.admin")}
                 </Button>
               )}
             </div>
@@ -150,7 +155,7 @@ export default function Catalog() {
       <nav className="border-b border-border/40 bg-background/50 backdrop-blur-sm sticky top-16 z-40">
         <div className="container">
           <div className="flex overflow-x-auto gap-1 py-3 -mx-4 px-4 md:mx-0 md:px-0">
-            {CATEGORIES.map((cat) => (
+            {getCATEGORIES(t).map((cat) => (
               <Button
                 key={cat.value}
                 onClick={() => {
@@ -177,29 +182,29 @@ export default function Catalog() {
             <div className="flex items-center gap-3">
               <Shield className="h-5 w-5 text-accent flex-shrink-0" />
               <div className="text-sm">
-                <p className="font-semibold text-foreground">Official Warranty</p>
-                <p className="text-xs text-muted-foreground">2-3 years coverage</p>
+                <p className="font-semibold text-foreground">{t("trustSignals.warranty")}</p>
+                <p className="text-xs text-muted-foreground">{t("trustSignals.warrantyDesc")}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Truck className="h-5 w-5 text-accent flex-shrink-0" />
               <div className="text-sm">
-                <p className="font-semibold text-foreground">Free Delivery</p>
-                <p className="text-xs text-muted-foreground">Over 400 PLN</p>
+                <p className="font-semibold text-foreground">{t("trustSignals.delivery")}</p>
+                <p className="text-xs text-muted-foreground">{t("trustSignals.deliveryDesc")}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <RotateCcw className="h-5 w-5 text-accent flex-shrink-0" />
               <div className="text-sm">
-                <p className="font-semibold text-foreground">14-Day Returns</p>
-                <p className="text-xs text-muted-foreground">No questions asked</p>
+                <p className="font-semibold text-foreground">{t("trustSignals.returns")}</p>
+                <p className="text-xs text-muted-foreground">{t("trustSignals.returnsDesc")}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Star className="h-5 w-5 text-accent flex-shrink-0" />
               <div className="text-sm">
-                <p className="font-semibold text-foreground">Trusted Seller</p>
-                <p className="text-xs text-muted-foreground">4.9/5 rating</p>
+                <p className="font-semibold text-foreground">{t("trustSignals.trusted")}</p>
+                <p className="text-xs text-muted-foreground">{t("trustSignals.trustedDesc")}</p>
               </div>
             </div>
           </div>
@@ -224,10 +229,10 @@ export default function Catalog() {
             <div className="mb-8 space-y-4">
               <div>
                 <h2 className="text-3xl font-bold text-foreground mb-2">
-                  {CATEGORIES.find((c) => c.value === selectedCategory)?.label}
+                  {getCATEGORIES(t).find((c: any) => c.value === selectedCategory)?.label}
                 </h2>
                 <p className="text-muted-foreground">
-                  {filteredLaptops.length} {selectedCategory === "monitors" ? "monitors" : "laptops"} available
+                  {filteredLaptops.length} {t(selectedCategory === "monitors" ? "catalog.monitors" : "catalog.laptops")}
                 </p>
               </div>
 
@@ -236,7 +241,7 @@ export default function Catalog() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   type="text"
-                  placeholder="Пошук за назвою, брендом, характеристиками..."
+                  placeholder={t("catalog.search")}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10 pr-10 border-border/40"
@@ -261,8 +266,8 @@ export default function Catalog() {
               <div className="text-center py-12">
                 <p className="text-muted-foreground mb-4">
                   {searchQuery 
-                    ? "Товари не знайдені за вашим пошуком" 
-                    : "Товари не знайдені за вашими фільтрами"}
+                    ? t("catalog.noResultsSearch") 
+                    : t("catalog.noResultsFilters")}
                 </p>
                 <Button 
                   onClick={() => {
@@ -272,7 +277,7 @@ export default function Catalog() {
                   }}
                   variant="outline"
                 >
-                  Очистити фільтри
+                  {t("catalog.clearFilters")}
                 </Button>
               </div>
             ) : (
@@ -308,15 +313,15 @@ export default function Catalog() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             {/* Brand */}
             <div>
-              <h3 className="font-semibold text-foreground mb-4">Hugo Media</h3>
-              <p className="text-sm text-muted-foreground">Premium laptop solutions for professionals, creators, and gamers.</p>
+              <h3 className="font-semibold text-foreground mb-4">{t("footer.brand")}</h3>
+              <p className="text-sm text-muted-foreground">{t("footer.brandDesc")}</p>
             </div>
 
             {/* Categories */}
             <div>
-              <h3 className="font-semibold text-foreground mb-4">Categories</h3>
+              <h3 className="font-semibold text-foreground mb-4">{t("footer.categories")}</h3>
               <ul className="space-y-2 text-sm">
-                {CATEGORIES.map((cat) => (
+                {getCATEGORIES(t).map((cat) => (
                   <li key={cat.value}>
                     <Button 
                       variant="link" 
@@ -336,29 +341,29 @@ export default function Catalog() {
 
             {/* Support */}
             <div>
-              <h3 className="font-semibold text-foreground mb-4">Support</h3>
+              <h3 className="font-semibold text-foreground mb-4">{t("footer.support")}</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground">Contact Us</a></li>
-                <li><a href="#" className="hover:text-foreground">Shipping Info</a></li>
-                <li><a href="#" className="hover:text-foreground">Returns</a></li>
-                <li><a href="#" className="hover:text-foreground">FAQ</a></li>
+                <li><a href="#" className="hover:text-foreground">{t("footer.contactUs")}</a></li>
+                <li><a href="#" className="hover:text-foreground">{t("footer.shippingInfo")}</a></li>
+                <li><a href="#" className="hover:text-foreground">{t("footer.returns")}</a></li>
+                <li><a href="#" className="hover:text-foreground">{t("footer.faq")}</a></li>
               </ul>
             </div>
 
             {/* Legal */}
             <div>
-              <h3 className="font-semibold text-foreground mb-4">Legal</h3>
+              <h3 className="font-semibold text-foreground mb-4">{t("footer.legal")}</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-foreground">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-foreground">Cookie Policy</a></li>
+                <li><a href="#" className="hover:text-foreground">{t("footer.privacyPolicy")}</a></li>
+                <li><a href="#" className="hover:text-foreground">{t("footer.termsOfService")}</a></li>
+                <li><a href="#" className="hover:text-foreground">{t("footer.cookiePolicy")}</a></li>
               </ul>
             </div>
           </div>
 
           {/* Copyright */}
           <div className="border-t border-border/40 pt-8 text-center text-sm text-muted-foreground">
-            <p>&copy; 2026 Hugo Media. All rights reserved.</p>
+            <p>{t("footer.copyright")}</p>
           </div>
         </div>
       </footer>

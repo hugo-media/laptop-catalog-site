@@ -136,3 +136,14 @@
 - [x] Add description textarea for product information
 - [x] Update form state to handle description
 - [x] Integrate description with product modal display
+
+
+## Multi-Language Support
+- [x] Install i18n library (i18next)
+- [x] Create translation files for Ukrainian, English, Polish
+- [x] Create language context and provider
+- [x] Add language switcher component to header
+- [x] Translate all UI text in components
+- [x] Add language persistence (localStorage)
+- [x] Test all language switches
+- [x] Verify translations display correctly
