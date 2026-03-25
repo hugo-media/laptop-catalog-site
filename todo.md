@@ -156,3 +156,13 @@
 - [x] Style About Us page with company story, mission, values
 - [x] Add team section or company highlights
 - [x] Test page on all three languages
+
+
+## Monitor Product Type
+- [x] Create monitors table in database schema with specific fields
+- [x] Add monitor CRUD procedures (create, read, update, delete)
+- [x] Create MonitorForm component for admin panel
+- [x] Add monitor management tabs to admin panel
+- [x] Implement monitor category filtering
+- [x] Add monitor edit/delete functionality
+- [x] Test all monitor functionality

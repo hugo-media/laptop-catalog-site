@@ -1,6 +1,6 @@
 import { eq, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertLaptop, InsertUser, laptops, users } from "../drizzle/schema";
+import { InsertLaptop, InsertUser, InsertMonitor, laptops, users, monitors } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -119,6 +119,38 @@ export async function deleteLaptop(id: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   return db.delete(laptops).where(eq(laptops.id, id));
+}
+
+export async function getAllMonitors() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(monitors).orderBy(desc(monitors.createdAt));
+}
+
+export async function getMonitorById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(monitors).where(eq(monitors.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createMonitor(data: InsertMonitor) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(monitors).values(data);
+  return result;
+}
+
+export async function updateMonitor(id: number, data: Partial<InsertMonitor>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.update(monitors).set(data).where(eq(monitors.id, id));
+}
+
+export async function deleteMonitor(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.delete(monitors).where(eq(monitors.id, id));
 }
 
 // TODO: add feature queries here as your schema grows.

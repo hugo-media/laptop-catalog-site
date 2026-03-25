@@ -47,4 +47,28 @@ export const laptops = mysqlTable("laptops", {
 export type Laptop = typeof laptops.$inferSelect;
 export type InsertLaptop = typeof laptops.$inferInsert;
 
+export const monitors = mysqlTable("monitors", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  resolution: varchar("resolution", { length: 100 }).notNull(), // e.g., "1920x1080", "2560x1440"
+  panelType: varchar("panelType", { length: 100 }).notNull(), // e.g., "IPS", "VA", "TN", "OLED"
+  refreshRate: varchar("refreshRate", { length: 100 }).notNull(), // e.g., "60Hz", "144Hz", "240Hz"
+  brightness: varchar("brightness", { length: 100 }).notNull(), // e.g., "300 nits"
+  contrast: varchar("contrast", { length: 100 }).notNull(), // e.g., "1000:1"
+  responseTime: varchar("responseTime", { length: 100 }).notNull(), // e.g., "1ms", "5ms"
+  connectivity: varchar("connectivity", { length: 255 }).notNull(), // e.g., "HDMI, DisplayPort, USB-C"
+  size: varchar("size", { length: 50 }).notNull(), // e.g., "27 inch", "32 inch"
+  condition: varchar("condition", { length: 50 }).notNull(),
+  warranty: varchar("warranty", { length: 100 }).notNull(),
+  price: int("price").notNull(),
+  imageUrl: text("imageUrl"),
+  description: text("description"),
+  category: mysqlEnum("category", ["promotions", "refurbished", "new", "gaming", "professional", "budget"]).default("new").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Monitor = typeof monitors.$inferSelect;
+export type InsertMonitor = typeof monitors.$inferInsert;
+
 // TODO: Add your tables here

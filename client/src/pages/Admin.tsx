@@ -12,6 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { LaptopForm } from "@/components/LaptopForm";
+import MonitorForm from "@/components/MonitorForm";
 import {
   Table,
   TableBody,
@@ -32,6 +33,7 @@ import { Loader2, Trash2, Edit2, Plus } from "lucide-react";
 import { toast } from "sonner";
 
 type Category = "promotions" | "refurbished" | "new" | "monitors" | "accessories" | "business";
+type ProductType = "laptops" | "monitors";
 
 const CATEGORIES: { value: Category; label: string }[] = [
   { value: "promotions", label: "Акції" },
@@ -42,6 +44,15 @@ const CATEGORIES: { value: Category; label: string }[] = [
   { value: "business", label: "Пропозиція для компаній" },
 ];
 
+const MONITOR_CATEGORIES = [
+  { value: "new", label: "Нові монітори" },
+  { value: "refurbished", label: "Відновлені монітори" },
+  { value: "gaming", label: "Ігрові монітори" },
+  { value: "professional", label: "Професійні монітори" },
+  { value: "budget", label: "Бюджетні монітори" },
+  { value: "promotions", label: "Акції" },
+];
+
 export default function Admin() {
   const { user, loading: authLoading } = useAuth();
   const [, navigate] = useLocation();
@@ -49,9 +60,13 @@ export default function Admin() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<Category>("new");
+  const [productType, setProductType] = useState<ProductType>("laptops");
+  const [selectedMonitorCategory, setSelectedMonitorCategory] = useState("new");
 
-  const { data: laptops, isLoading } = trpc.laptops.list.useQuery();
+  const { data: laptops, isLoading: laptopsLoading } = trpc.laptops.list.useQuery();
+  const { data: monitors, isLoading: monitorsLoading } = trpc.monitors.list.useQuery();
   const utils = trpc.useUtils();
+  const isLoading = productType === "laptops" ? laptopsLoading : monitorsLoading;
 
   const createMutation = trpc.laptops.create.useMutation({
     onSuccess: () => {
@@ -75,7 +90,7 @@ export default function Admin() {
     },
   });
 
-  const deleteMutation = trpc.laptops.delete.useMutation({
+  const deleteLaptopMutation = trpc.laptops.delete.useMutation({
     onSuccess: () => {
       toast.success("Laptop deleted successfully");
       setDeleteId(null);
@@ -85,6 +100,19 @@ export default function Admin() {
       toast.error(error.message || "Failed to delete laptop");
     },
   });
+
+  const deleteMonitorMutation = trpc.monitors.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Monitor deleted successfully");
+      setDeleteId(null);
+      utils.monitors.list.invalidate();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to delete monitor");
+    },
+  });
+
+  const deleteMutation = productType === "laptops" ? deleteLaptopMutation : deleteMonitorMutation;
 
   useEffect(() => {
     if (authLoading) return;
@@ -110,6 +138,8 @@ export default function Admin() {
   }
 
   const filteredLaptops = laptops?.filter((l) => l.category === selectedCategory) || [];
+  const filteredMonitors = monitors?.filter((m) => m.category === selectedMonitorCategory) || [];
+  const currentItems = productType === "laptops" ? filteredLaptops : filteredMonitors;
 
   return (
     <div className="min-h-screen bg-background">
@@ -119,7 +149,23 @@ export default function Admin() {
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-2xl font-bold text-foreground">Admin Panel</h1>
-              <p className="text-sm text-muted-foreground">Manage your laptop inventory</p>
+              <p className="text-sm text-muted-foreground">Manage your inventory</p>
+            </div>
+            <div className="flex gap-2">
+              <Button 
+                onClick={() => setProductType("laptops")} 
+                variant={productType === "laptops" ? "default" : "outline"}
+                size="sm"
+              >
+                Laptops
+              </Button>
+              <Button 
+                onClick={() => setProductType("monitors")} 
+                variant={productType === "monitors" ? "default" : "outline"}
+                size="sm"
+              >
+                Monitors
+              </Button>
             </div>
             <Button 
               onClick={() => navigate("/")} 
@@ -136,56 +182,76 @@ export default function Admin() {
       <nav className="border-b border-border/40 bg-background/50 backdrop-blur-sm sticky top-16 z-40">
         <div className="container">
           <div className="flex overflow-x-auto gap-1 py-3 -mx-4 px-4 md:mx-0 md:px-0">
-            {CATEGORIES.map((cat) => (
-              <Button
-                key={cat.value}
-                onClick={() => setSelectedCategory(cat.value)}
-                variant={selectedCategory === cat.value ? "default" : "ghost"}
-                size="sm"
-                className="whitespace-nowrap text-sm"
-              >
-                {cat.label}
-              </Button>
-            ))}
+            {productType === "laptops" ? (
+              CATEGORIES.map((cat) => (
+                <Button
+                  key={cat.value}
+                  onClick={() => setSelectedCategory(cat.value)}
+                  variant={selectedCategory === cat.value ? "default" : "ghost"}
+                  size="sm"
+                  className="whitespace-nowrap text-sm"
+                >
+                  {cat.label}
+                </Button>
+              ))
+            ) : (
+              MONITOR_CATEGORIES.map((cat) => (
+                <Button
+                  key={cat.value}
+                  onClick={() => setSelectedMonitorCategory(cat.value)}
+                  variant={selectedMonitorCategory === cat.value ? "default" : "ghost"}
+                  size="sm"
+                  className="whitespace-nowrap text-sm"
+                >
+                  {cat.label}
+                </Button>
+              ))
+            )}
           </div>
         </div>
       </nav>
 
       {/* Main Content */}
       <main className="container py-8">
-        {/* Add New Laptop Button */}
+        {/* Add New Product Button */}
         <div className="mb-8">
           <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
             <DialogTrigger asChild>
               <Button className="gap-2 bg-accent hover:bg-accent/90">
                 <Plus className="h-4 w-4" />
-                Add New Laptop
+                {productType === "laptops" ? "Add New Laptop" : "Add New Monitor"}
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>Add New Laptop</DialogTitle>
+                <DialogTitle>{productType === "laptops" ? "Add New Laptop" : "Add New Monitor"}</DialogTitle>
               </DialogHeader>
               <div className="overflow-y-auto pr-4">
-                <LaptopForm
-                  onSubmit={(data) => {
-                    createMutation.mutate({
-                      ...data,
-                      category: selectedCategory,
-                    });
-                  }}
-                  isLoading={createMutation.isPending}
-                />
+                {productType === "laptops" ? (
+                  <LaptopForm
+                    onSubmit={(data) => {
+                      createMutation.mutate({
+                        ...data,
+                        category: selectedCategory,
+                      });
+                    }}
+                    isLoading={createMutation.isPending}
+                  />
+                ) : (
+                  <MonitorForm onSuccess={() => setIsAddOpen(false)} />
+                )}
               </div>
             </DialogContent>
           </Dialog>
         </div>
 
-        {/* Laptops Table */}
+        {/* Products Table */}
         <Card>
           <CardHeader>
             <CardTitle>
-              {CATEGORIES.find((c) => c.value === selectedCategory)?.label} ({filteredLaptops.length})
+              {productType === "laptops" 
+                ? CATEGORIES.find((c) => c.value === selectedCategory)?.label 
+                : MONITOR_CATEGORIES.find((c) => c.value === selectedMonitorCategory)?.label} ({currentItems.length})
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -193,60 +259,64 @@ export default function Admin() {
               <div className="flex justify-center py-8">
                 <Loader2 className="h-6 w-6 animate-spin text-accent" />
               </div>
-            ) : filteredLaptops.length === 0 ? (
-              <p className="text-center text-muted-foreground py-8">No laptops in this category</p>
+            ) : currentItems.length === 0 ? (
+              <p className="text-center text-muted-foreground py-8">No products in this category</p>
             ) : (
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead>Name</TableHead>
-                      <TableHead>Processor</TableHead>
+                      <TableHead>{productType === "laptops" ? "Processor" : "Resolution"}</TableHead>
                       <TableHead>Price</TableHead>
                       <TableHead>Condition</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredLaptops.map((laptop) => (
-                      <TableRow key={laptop.id}>
-                        <TableCell className="font-medium">{laptop.name}</TableCell>
-                        <TableCell className="text-sm">{laptop.processor}</TableCell>
-                        <TableCell>{laptop.price} zł</TableCell>
-                        <TableCell>{laptop.condition}</TableCell>
+                    {currentItems.map((item: any) => (
+                      <TableRow key={item.id}>
+                        <TableCell className="font-medium">{item.name}</TableCell>
+                        <TableCell className="text-sm">{productType === "laptops" ? item.processor : item.resolution}</TableCell>
+                        <TableCell>{item.price} zł</TableCell>
+                        <TableCell>{item.condition}</TableCell>
                         <TableCell className="space-x-2">
                           <Dialog>
                             <DialogTrigger asChild>
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => setEditingId(laptop.id)}
+                                onClick={() => setEditingId(item.id)}
                               >
                                 <Edit2 className="h-4 w-4" />
                               </Button>
                             </DialogTrigger>
                             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                               <DialogHeader>
-                                <DialogTitle>Edit Laptop</DialogTitle>
+                                <DialogTitle>Edit {productType === "laptops" ? "Laptop" : "Monitor"}</DialogTitle>
                               </DialogHeader>
                               <div className="overflow-y-auto pr-4">
-                                <LaptopForm
-                                  initialData={laptop}
-                                  onSubmit={(data) => {
-                                    updateMutation.mutate({
-                                      id: laptop.id,
-                                      ...data,
-                                    });
-                                  }}
-                                  isLoading={updateMutation.isPending}
-                                />
+                                {productType === "laptops" ? (
+                                  <LaptopForm
+                                    initialData={item}
+                                    onSubmit={(data) => {
+                                      updateMutation.mutate({
+                                        id: item.id,
+                                        ...data,
+                                      });
+                                    }}
+                                    isLoading={updateMutation.isPending}
+                                  />
+                                ) : (
+                                  <MonitorForm monitorId={item.id} onSuccess={() => setEditingId(null)} />
+                                )}
                               </div>
                             </DialogContent>
                           </Dialog>
                           <Button
                             variant="destructive"
                             size="sm"
-                            onClick={() => setDeleteId(laptop.id)}
+                            onClick={() => setDeleteId(item.id)}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -264,9 +334,9 @@ export default function Admin() {
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={deleteId !== null} onOpenChange={(open) => !open && setDeleteId(null)}>
         <AlertDialogContent>
-          <AlertDialogTitle>Delete Laptop</AlertDialogTitle>
+          <AlertDialogTitle>Delete {productType === "laptops" ? "Laptop" : "Monitor"}</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete this laptop? This action cannot be undone.
+            Are you sure you want to delete this {productType === "laptops" ? "laptop" : "monitor"}? This action cannot be undone.
           </AlertDialogDescription>
           <div className="flex gap-3 justify-end">
             <AlertDialogCancel>Cancel</AlertDialogCancel>
