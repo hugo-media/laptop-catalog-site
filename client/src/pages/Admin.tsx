@@ -99,8 +99,12 @@ export default function Admin() {
     );
   }
 
-  if (user?.role !== "admin") {
-    return null;
+  if (!user || user.role !== "admin") {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-muted-foreground">Access denied. Admin only.</p>
+      </div>
+    );
   }
 
   const filteredLaptops = laptops?.filter((l) => l.category === selectedCategory) || [];
