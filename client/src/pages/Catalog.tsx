@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { useLocation } from "wouter";
-import { Loader2, Zap } from "lucide-react";
+import { Loader2, Shield, Truck, RotateCcw, Star } from "lucide-react";
 
 export default function Catalog() {
   const { data: laptops, isLoading } = trpc.laptops.list.useQuery();
@@ -13,16 +13,21 @@ export default function Catalog() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Premium Header */}
+      {/* Premium Header with Logo */}
       <header className="border-b border-border/40 sticky top-0 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/80 z-50">
-        <div className="container py-5">
+        <div className="container py-4">
           <div className="flex justify-between items-center">
-            {/* Logo / Brand */}
-            <div className="flex items-center gap-2">
-              <div className="h-10 w-10 rounded-lg bg-accent/10 flex items-center justify-center">
-                <Zap className="h-6 w-6 text-accent" />
+            {/* Hugo Media Logo & Branding */}
+            <div className="flex items-center gap-4">
+              <img 
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663402378754/DMLwym6Zv6yd8JHAqkjkFj/hugo-media-logo_da9d05f5.jpg" 
+                alt="Hugo Media" 
+                className="h-12 w-auto"
+              />
+              <div className="hidden sm:block">
+                <h1 className="text-xl font-bold text-foreground">Hugo Media</h1>
+                <p className="text-xs text-muted-foreground">Premium Laptop Solutions</p>
               </div>
-              <h1 className="text-2xl font-bold text-foreground">Laptop Catalog</h1>
             </div>
 
             {/* Navigation */}
@@ -55,15 +60,51 @@ export default function Catalog() {
         </div>
       </header>
 
+      {/* Trust Signals Banner */}
+      <div className="bg-secondary/30 border-b border-border/40">
+        <div className="container py-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="flex items-center gap-3">
+              <Shield className="h-5 w-5 text-accent flex-shrink-0" />
+              <div className="text-sm">
+                <p className="font-semibold text-foreground">Official Warranty</p>
+                <p className="text-xs text-muted-foreground">2-3 years coverage</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Truck className="h-5 w-5 text-accent flex-shrink-0" />
+              <div className="text-sm">
+                <p className="font-semibold text-foreground">Free Delivery</p>
+                <p className="text-xs text-muted-foreground">Over 400 PLN</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <RotateCcw className="h-5 w-5 text-accent flex-shrink-0" />
+              <div className="text-sm">
+                <p className="font-semibold text-foreground">14-Day Returns</p>
+                <p className="text-xs text-muted-foreground">No questions asked</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Star className="h-5 w-5 text-accent flex-shrink-0" />
+              <div className="text-sm">
+                <p className="font-semibold text-foreground">Trusted Seller</p>
+                <p className="text-xs text-muted-foreground">4.9/5 rating</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Hero Section */}
       <section className="border-b border-border/40 bg-gradient-to-b from-secondary/30 to-background">
-        <div className="container py-16 md:py-20">
-          <div className="max-w-2xl">
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4 leading-tight">
+        <div className="container py-16 md:py-24">
+          <div className="max-w-3xl">
+            <h2 className="text-5xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
               Premium Laptops & Workstations
             </h2>
-            <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-              Curated selection of high-performance laptops for professionals, creators, and gamers. Latest 2025 models with official warranties.
+            <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+              Hugo Media brings you a curated selection of high-performance laptops for professionals, creators, and gamers. Latest 2025 models with official warranties and expert support.
             </p>
             <div className="flex items-center gap-2 text-sm font-semibold text-accent">
               <span className="h-2 w-2 rounded-full bg-accent" />
@@ -101,9 +142,12 @@ export default function Catalog() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             {/* Brand */}
             <div className="space-y-3">
-              <h3 className="font-bold text-foreground">Laptop Catalog</h3>
+              <h3 className="font-bold text-foreground text-lg">Hugo Media</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Premium selection of high-performance laptops for every need and budget.
+                Premium selection of high-performance laptops and workstations for every need and budget.
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Trusted by professionals and businesses across Poland.
               </p>
             </div>
 
@@ -141,14 +185,14 @@ export default function Catalog() {
               </ul>
             </div>
 
-            {/* Info */}
+            {/* Contact */}
             <div className="space-y-3">
-              <h4 className="font-semibold text-foreground text-sm">Why Choose Us</h4>
+              <h4 className="font-semibold text-foreground text-sm">Contact</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>Latest 2025 Technology</li>
-                <li>Official Warranties</li>
-                <li>Expert Selection</li>
-                <li>Competitive Pricing</li>
+                <li>Email: info@hugomedia.pl</li>
+                <li>Phone: +48 XXX XXX XXX</li>
+                <li>Support: 24/7 Available</li>
+                <li>Warranty: Official Coverage</li>
               </ul>
             </div>
           </div>
@@ -156,7 +200,7 @@ export default function Catalog() {
           {/* Divider */}
           <div className="border-t border-border/40 pt-8">
             <p className="text-center text-sm text-muted-foreground">
-              &copy; 2025 Laptop Catalog. All rights reserved. Premium gadget showroom.
+              &copy; 2025 Hugo Media. All rights reserved. Premium gadget showroom.
             </p>
           </div>
         </div>
