@@ -166,3 +166,7 @@
 - [x] Implement monitor category filtering
 - [x] Add monitor edit/delete functionality
 - [x] Test all monitor functionality
+
+
+## UI Layout Improvements
+- [x] Center navigation tabs in catalog page

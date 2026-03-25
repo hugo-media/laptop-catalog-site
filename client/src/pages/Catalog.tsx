@@ -154,7 +154,7 @@ export default function Catalog() {
       {/* Category Navigation */}
       <nav className="border-b border-border/40 bg-background/50 backdrop-blur-sm sticky top-16 z-40">
         <div className="container">
-          <div className="flex overflow-x-auto gap-1 py-3 -mx-4 px-4 md:mx-0 md:px-0">
+          <div className="flex justify-center overflow-x-auto gap-1 py-3 -mx-4 px-4 md:mx-0 md:px-0 md:justify-center">
             {getCATEGORIES(t).map((cat) => (
               <Button
                 key={cat.value}
