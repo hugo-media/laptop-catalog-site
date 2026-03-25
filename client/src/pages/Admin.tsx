@@ -244,7 +244,14 @@ export default function Admin() {
                     isLoading={createMutation.isPending}
                   />
                 ) : (
-                  <MonitorForm onSuccess={() => setIsAddOpen(false)} />
+                  <MonitorForm 
+                    selectedCategory={selectedMonitorCategory}
+                    onSubmit={(data) => {
+                      createMutation.mutate(data);
+                    }}
+                    isLoading={createMutation.isPending}
+                    onSuccess={() => setIsAddOpen(false)}
+                  />
                 )}
               </div>
             </DialogContent>
