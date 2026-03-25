@@ -1,10 +1,12 @@
 import { trpc } from "@/lib/trpc";
 import { LaptopCard } from "@/components/LaptopCard";
+import { LaptopFilters, type LaptopFilterOptions } from "@/components/LaptopFilters";
+import { MonitorFilters, type MonitorFilterOptions } from "@/components/MonitorFilters";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { useLocation } from "wouter";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Loader2, Shield, Truck, RotateCcw, Star } from "lucide-react";
 
 type Category = "promotions" | "refurbished" | "new" | "monitors" | "accessories" | "business";
@@ -23,8 +25,48 @@ export default function Catalog() {
   const { user } = useAuth();
   const [, navigate] = useLocation();
   const [selectedCategory, setSelectedCategory] = useState<Category>("new");
+  const [laptopFilters, setLaptopFilters] = useState<LaptopFilterOptions>({});
+  const [monitorFilters, setMonitorFilters] = useState<MonitorFilterOptions>({});
 
-  const filteredLaptops = laptops?.filter((l) => l.category === selectedCategory) || [];
+  // Filter laptops by category and applied filters
+  const filteredLaptops = useMemo(() => {
+    let filtered = laptops?.filter((l) => l.category === selectedCategory) || [];
+
+    // Apply laptop-specific filters
+    if (selectedCategory !== "monitors") {
+      if (laptopFilters.minPrice !== undefined) {
+        filtered = filtered.filter((l) => l.price >= laptopFilters.minPrice!);
+      }
+      if (laptopFilters.maxPrice !== undefined) {
+        filtered = filtered.filter((l) => l.price <= laptopFilters.maxPrice!);
+      }
+      if (laptopFilters.display) {
+        filtered = filtered.filter((l) => l.display?.includes(laptopFilters.display!));
+      }
+      if (laptopFilters.ram) {
+        filtered = filtered.filter((l) => l.ram?.includes(laptopFilters.ram!));
+      }
+      if (laptopFilters.processor) {
+        filtered = filtered.filter((l) => l.processor?.includes(laptopFilters.processor!));
+      }
+      if (laptopFilters.brand) {
+        filtered = filtered.filter((l) => l.name?.includes(laptopFilters.brand!));
+      }
+    }
+
+    // Apply monitor-specific filters
+    if (selectedCategory === "monitors") {
+      if (monitorFilters.minPrice !== undefined) {
+        filtered = filtered.filter((l) => l.price >= monitorFilters.minPrice!);
+      }
+      if (monitorFilters.maxPrice !== undefined) {
+        filtered = filtered.filter((l) => l.price <= monitorFilters.maxPrice!);
+      }
+      // Add more monitor-specific filters as needed
+    }
+
+    return filtered;
+  }, [laptops, selectedCategory, laptopFilters, monitorFilters]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -96,7 +138,11 @@ export default function Catalog() {
             {CATEGORIES.map((cat) => (
               <Button
                 key={cat.value}
-                onClick={() => setSelectedCategory(cat.value)}
+                onClick={() => {
+                  setSelectedCategory(cat.value);
+                  setLaptopFilters({});
+                  setMonitorFilters({});
+                }}
                 variant={selectedCategory === cat.value ? "default" : "ghost"}
                 size="sm"
                 className="whitespace-nowrap text-sm"
@@ -108,8 +154,8 @@ export default function Catalog() {
         </div>
       </nav>
 
-      {/* Trust Signals Banner */}
-      <div className="bg-secondary/30 border-b border-border/40">
+      {/* Trust Signals */}
+      <div className="border-b border-border/40 bg-background/30">
         <div className="container py-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="flex items-center gap-3">
@@ -144,92 +190,113 @@ export default function Catalog() {
         </div>
       </div>
 
-      {/* Hero Section */}
-      <section className="border-b border-border/40 bg-gradient-to-b from-secondary/30 to-background">
-        <div className="container py-16 md:py-24">
-          <div className="max-w-3xl">
-            <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
-              Premium Laptops & Workstations
-            </h1>
-            <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-              Hugo Media brings you a curated selection of high-performance laptops for professionals, creators, and gamers. Latest 2025 models with official warranties and expert support.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <div className="text-sm">
-                <span className="font-bold text-accent text-lg">{filteredLaptops.length}</span>
-                <span className="text-muted-foreground ml-2">
-                  {CATEGORIES.find((c) => c.value === selectedCategory)?.label}
-                </span>
-              </div>
+      {/* Main Content */}
+      <main className="container py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Filters Sidebar */}
+          <div className="lg:col-span-1">
+            {selectedCategory === "monitors" ? (
+              <MonitorFilters onFilterChange={setMonitorFilters} />
+            ) : (
+              <LaptopFilters onFilterChange={setLaptopFilters} />
+            )}
+          </div>
+
+          {/* Products Grid */}
+          <div className="lg:col-span-3">
+            {/* Page Title */}
+            <div className="mb-8">
+              <h2 className="text-3xl font-bold text-foreground mb-2">
+                {CATEGORIES.find((c) => c.value === selectedCategory)?.label}
+              </h2>
+              <p className="text-muted-foreground">
+                {filteredLaptops.length} {selectedCategory === "monitors" ? "monitors" : "laptops"} available
+              </p>
             </div>
+
+            {/* Loading State */}
+            {isLoading ? (
+              <div className="flex justify-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-accent" />
+              </div>
+            ) : filteredLaptops.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground mb-4">No products found matching your filters</p>
+                <Button 
+                  onClick={() => {
+                    setLaptopFilters({});
+                    setMonitorFilters({});
+                  }}
+                  variant="outline"
+                >
+                  Clear Filters
+                </Button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredLaptops.map((laptop) => (
+                  <LaptopCard key={laptop.id} laptop={laptop} />
+                ))}
+              </div>
+            )}
           </div>
         </div>
-      </section>
-
-      {/* Products Grid */}
-      <main className="container py-16">
-        {isLoading ? (
-          <div className="flex justify-center items-center py-20">
-            <Loader2 className="h-8 w-8 animate-spin text-accent" />
-          </div>
-        ) : filteredLaptops.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredLaptops.map((laptop) => (
-              <LaptopCard key={laptop.id} laptop={laptop} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-20">
-            <p className="text-muted-foreground text-lg">No laptops available in this category.</p>
-          </div>
-        )}
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border/40 bg-secondary/20 mt-20">
+      <footer className="border-t border-border/40 bg-background/50 mt-16">
         <div className="container py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            {/* Brand */}
             <div>
-              <h3 className="font-bold text-foreground mb-4">Hugo Media</h3>
-              <p className="text-sm text-muted-foreground">Premium laptop solutions for professionals and creators worldwide.</p>
+              <h3 className="font-semibold text-foreground mb-4">Hugo Media</h3>
+              <p className="text-sm text-muted-foreground">Premium laptop solutions for professionals, creators, and gamers.</p>
             </div>
+
+            {/* Categories */}
             <div>
-              <h4 className="font-semibold text-foreground mb-4">Categories</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <h3 className="font-semibold text-foreground mb-4">Categories</h3>
+              <ul className="space-y-2 text-sm">
                 {CATEGORIES.map((cat) => (
                   <li key={cat.value}>
-                    <button 
+                    <Button 
+                      variant="link" 
+                      size="sm"
                       onClick={() => setSelectedCategory(cat.value)}
-                      className="hover:text-accent transition"
+                      className="p-0 h-auto text-muted-foreground hover:text-foreground"
                     >
                       {cat.label}
-                    </button>
+                    </Button>
                   </li>
                 ))}
               </ul>
             </div>
+
+            {/* Support */}
             <div>
-              <h4 className="font-semibold text-foreground mb-4">Support</h4>
+              <h3 className="font-semibold text-foreground mb-4">Support</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-accent transition">Contact Us</a></li>
-                <li><a href="#" className="hover:text-accent transition">Returns</a></li>
-                <li><a href="#" className="hover:text-accent transition">Warranty</a></li>
-                <li><a href="#" className="hover:text-accent transition">FAQ</a></li>
+                <li><a href="#" className="hover:text-foreground">Contact Us</a></li>
+                <li><a href="#" className="hover:text-foreground">Shipping Info</a></li>
+                <li><a href="#" className="hover:text-foreground">Returns</a></li>
+                <li><a href="#" className="hover:text-foreground">FAQ</a></li>
               </ul>
             </div>
+
+            {/* Legal */}
             <div>
-              <h4 className="font-semibold text-foreground mb-4">Legal</h4>
+              <h3 className="font-semibold text-foreground mb-4">Legal</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-accent transition">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-accent transition">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-accent transition">Cookie Policy</a></li>
+                <li><a href="#" className="hover:text-foreground">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-foreground">Terms of Service</a></li>
+                <li><a href="#" className="hover:text-foreground">Cookie Policy</a></li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-border/40 pt-8">
-            <p className="text-center text-sm text-muted-foreground">
-              © 2025 Hugo Media. All rights reserved. Premium gadget showroom.
-            </p>
+
+          {/* Copyright */}
+          <div className="border-t border-border/40 pt-8 text-center text-sm text-muted-foreground">
+            <p>&copy; 2026 Hugo Media. All rights reserved.</p>
           </div>
         </div>
       </footer>

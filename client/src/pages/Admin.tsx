@@ -50,12 +50,12 @@ export default function Admin() {
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<Category>("new");
 
-  const { data: laptops, isLoading, refetch } = trpc.laptops.list.useQuery();
+  const { data: laptops, isLoading } = trpc.laptops.list.useQuery();
   const createMutation = trpc.laptops.create.useMutation({
     onSuccess: () => {
       toast.success("Laptop added successfully");
       setIsAddOpen(false);
-      refetch();
+      trpc.useUtils().laptops.list.invalidate();
     },
     onError: (error) => {
       toast.error(error.message || "Failed to add laptop");
@@ -66,7 +66,7 @@ export default function Admin() {
     onSuccess: () => {
       toast.success("Laptop updated successfully");
       setEditingId(null);
-      refetch();
+      trpc.useUtils().laptops.list.invalidate();
     },
     onError: (error) => {
       toast.error(error.message || "Failed to update laptop");
@@ -77,23 +77,23 @@ export default function Admin() {
     onSuccess: () => {
       toast.success("Laptop deleted successfully");
       setDeleteId(null);
-      refetch();
+      trpc.useUtils().laptops.list.invalidate();
     },
     onError: (error) => {
       toast.error(error.message || "Failed to delete laptop");
     },
   });
 
-  // Redirect non-admin users
   useEffect(() => {
-    if (!authLoading && user?.role !== "admin") {
+    if (authLoading) return;
+    if (!user || user.role !== "admin") {
       navigate("/");
     }
   }, [user, authLoading, navigate]);
 
   if (authLoading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="h-8 w-8 animate-spin text-accent" />
       </div>
     );
@@ -156,19 +156,21 @@ export default function Admin() {
                 Add New Laptop
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl">
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Add New Laptop</DialogTitle>
               </DialogHeader>
-              <LaptopForm
-                onSubmit={(data) => {
-                  createMutation.mutate({
-                    ...data,
-                    category: selectedCategory,
-                  });
-                }}
-                isLoading={createMutation.isPending}
-              />
+              <div className="overflow-y-auto pr-4">
+                <LaptopForm
+                  onSubmit={(data) => {
+                    createMutation.mutate({
+                      ...data,
+                      category: selectedCategory,
+                    });
+                  }}
+                  isLoading={createMutation.isPending}
+                />
+              </div>
             </DialogContent>
           </Dialog>
         </div>
@@ -183,12 +185,10 @@ export default function Admin() {
           <CardContent>
             {isLoading ? (
               <div className="flex justify-center py-8">
-                <Loader2 className="h-8 w-8 animate-spin text-accent" />
+                <Loader2 className="h-6 w-6 animate-spin text-accent" />
               </div>
             ) : filteredLaptops.length === 0 ? (
-              <p className="text-center text-muted-foreground py-8">
-                No laptops in this category. Add one to get started!
-              </p>
+              <p className="text-center text-muted-foreground py-8">No laptops in this category</p>
             ) : (
               <div className="overflow-x-auto">
                 <Table>
@@ -196,81 +196,54 @@ export default function Admin() {
                     <TableRow>
                       <TableHead>Name</TableHead>
                       <TableHead>Processor</TableHead>
-                      <TableHead>RAM</TableHead>
                       <TableHead>Price</TableHead>
                       <TableHead>Condition</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+                      <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {filteredLaptops.map((laptop) => (
                       <TableRow key={laptop.id}>
                         <TableCell className="font-medium">{laptop.name}</TableCell>
-                        <TableCell>{laptop.processor}</TableCell>
-                        <TableCell>{laptop.ram}</TableCell>
-                        <TableCell>{laptop.price.toLocaleString("pl-PL")} zł</TableCell>
+                        <TableCell className="text-sm">{laptop.processor}</TableCell>
+                        <TableCell>{laptop.price} zł</TableCell>
                         <TableCell>{laptop.condition}</TableCell>
-                        <TableCell className="text-right space-x-2">
-                          <Dialog open={editingId === laptop.id} onOpenChange={(open) => {
-                            if (!open) setEditingId(null);
-                          }}>
+                        <TableCell className="space-x-2">
+                          <Dialog>
                             <DialogTrigger asChild>
                               <Button
-                                onClick={() => setEditingId(laptop.id)}
                                 variant="outline"
                                 size="sm"
-                                className="gap-1"
+                                onClick={() => setEditingId(laptop.id)}
                               >
                                 <Edit2 className="h-4 w-4" />
-                                Edit
                               </Button>
                             </DialogTrigger>
-                            <DialogContent className="max-w-2xl">
+                            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                               <DialogHeader>
                                 <DialogTitle>Edit Laptop</DialogTitle>
                               </DialogHeader>
-                              <LaptopForm
-                                initialData={laptop}
-                                onSubmit={(data) => {
-                                  updateMutation.mutate({
-                                    id: laptop.id,
-                                    ...data,
-                                    category: selectedCategory,
-                                  });
-                                }}
-                                isLoading={updateMutation.isPending}
-                              />
+                              <div className="overflow-y-auto pr-4">
+                                <LaptopForm
+                                  initialData={laptop}
+                                  onSubmit={(data) => {
+                                    updateMutation.mutate({
+                                      id: laptop.id,
+                                      ...data,
+                                    });
+                                  }}
+                                  isLoading={updateMutation.isPending}
+                                />
+                              </div>
                             </DialogContent>
                           </Dialog>
-
-                          <AlertDialog open={deleteId === laptop.id} onOpenChange={(open) => {
-                            if (!open) setDeleteId(null);
-                          }}>
-                            <Button
-                              onClick={() => setDeleteId(laptop.id)}
-                              variant="destructive"
-                              size="sm"
-                              className="gap-1"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                              Delete
-                            </Button>
-                            <AlertDialogContent>
-                              <AlertDialogTitle>Delete Laptop</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Are you sure you want to delete "{laptop.name}"? This action cannot be undone.
-                              </AlertDialogDescription>
-                              <div className="flex gap-2 justify-end">
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction
-                                  onClick={() => deleteMutation.mutate({ id: laptop.id })}
-                                  className="bg-destructive hover:bg-destructive/90"
-                                >
-                                  Delete
-                                </AlertDialogAction>
-                              </div>
-                            </AlertDialogContent>
-                          </AlertDialog>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => setDeleteId(laptop.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -281,6 +254,36 @@ export default function Admin() {
           </CardContent>
         </Card>
       </main>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteId !== null} onOpenChange={(open) => !open && setDeleteId(null)}>
+        <AlertDialogContent>
+          <AlertDialogTitle>Delete Laptop</AlertDialogTitle>
+          <AlertDialogDescription>
+            Are you sure you want to delete this laptop? This action cannot be undone.
+          </AlertDialogDescription>
+          <div className="flex gap-3 justify-end">
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (deleteId) {
+                  deleteMutation.mutate({ id: deleteId });
+                }
+              }}
+              className="bg-destructive hover:bg-destructive/90"
+            >
+              {deleteMutation.isPending ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                "Delete"
+              )}
+            </AlertDialogAction>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
