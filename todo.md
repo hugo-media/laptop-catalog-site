@@ -170,3 +170,9 @@
 
 ## UI Layout Improvements
 - [x] Center navigation tabs in catalog page
+
+
+## Background Design Improvements
+- [x] Add gradient or pattern background to catalog page
+- [x] Improve visual hierarchy with background elements
+- [x] Ensure text readability with proper contrast

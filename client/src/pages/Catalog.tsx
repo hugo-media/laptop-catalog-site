@@ -87,7 +87,7 @@ export default function Catalog() {
   }, [laptops, selectedCategory, laptopFilters, monitorFilters, searchQuery]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-premium">
       {/* Premium Header with Logo */}
       <header className="border-b border-border/40 sticky top-0 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/80 z-50">
         <div className="container py-4">
