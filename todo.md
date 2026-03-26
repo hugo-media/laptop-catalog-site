@@ -297,3 +297,9 @@
 - [x] Move header to between promotions and trust signals on home page
 - [x] Make header sticky (fixed at top during scroll)
 - [x] Ensure proper spacing and alignment
+
+
+## Header Repositioning
+- [x] Move header back to top of page (sticky top-0)
+- [x] Center category navigation items in header
+- [x] Ensure header stays fixed during scroll
