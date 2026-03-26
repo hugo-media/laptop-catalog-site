@@ -12,7 +12,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { useLocation } from "wouter";
 import { useState, useMemo } from "react";
-import { Loader2, Shield, Truck, RotateCcw, Star, Search, X, ChevronLeft } from "lucide-react";
+import { Loader2, Shield, Truck, RotateCcw, Star, Search, X, ChevronLeft, ArrowRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import type { Laptop as LaptopType } from "../../../drizzle/schema";
 
@@ -69,7 +69,6 @@ export default function Catalog() {
   const [, navigate] = useLocation();
   const [params] = useLocation();
   
-  // Get product type from URL params or default to promotions
   const urlProductType = (params?.split('/').pop() || "promotions") as ProductType;
   const [productType, setProductType] = useState<ProductType>(() => {
     const type = params?.split('/').pop();
@@ -98,7 +97,6 @@ export default function Catalog() {
   const getCurrentData = () => {
     switch (productType) {
       case "promotions": {
-        // Aggregate all promotional items from all product types
         const allPromos: any[] = [];
         if (laptops) allPromos.push(...laptops.filter(l => l.category === "promotions"));
         if (monitors) allPromos.push(...monitors.filter(m => m.category === "promotions"));
@@ -115,7 +113,6 @@ export default function Catalog() {
     }
   };
 
-  // Get category list for current product type
   const getCategoryListForProductType = () => {
     switch (productType) {
       case "promotions": return [];
@@ -138,21 +135,17 @@ export default function Catalog() {
     }
   };
 
-  // Get product type label
   const getProductTypeLabel = () => {
     return PRODUCT_TYPES.find(t => t.value === productType)?.label || "Каталог";
   };
 
-  // Filter products by category, applied filters, and search query
   const filteredProducts = useMemo(() => {
     let filtered = getCurrentData() || [];
     
-    // For non-promotions, filter by category
     if (productType !== "promotions") {
       filtered = filtered.filter((p: any) => p.category === selectedCategory);
     }
 
-    // Apply search query
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter((p: any) => {
@@ -161,7 +154,6 @@ export default function Catalog() {
       });
     }
 
-    // Apply tablet-specific filters
     if (productType === "tablets") {
       if (tabletFilters.minPrice !== undefined) {
         filtered = filtered.filter((t: any) => t.price >= tabletFilters.minPrice!);
@@ -183,7 +175,6 @@ export default function Catalog() {
       }
     }
 
-    // Apply smart device-specific filters
     if (productType === "smartDevices") {
       if (smartDeviceFilters.minPrice !== undefined) {
         filtered = filtered.filter((s: any) => s.price >= smartDeviceFilters.minPrice!);
@@ -199,7 +190,6 @@ export default function Catalog() {
       }
     }
 
-    // Apply laptop-specific filters
     if (productType === "laptops") {
       if (laptopFilters.minPrice !== undefined) {
         filtered = filtered.filter((l: any) => l.price >= laptopFilters.minPrice!);
@@ -221,7 +211,6 @@ export default function Catalog() {
       }
     }
 
-    // Apply monitor-specific filters
     if (productType === "monitors") {
       if (monitorFilters.minPrice !== undefined) {
         filtered = filtered.filter((m: any) => m.price >= monitorFilters.minPrice!);
@@ -327,6 +316,31 @@ export default function Catalog() {
           <p className="text-muted-foreground">
             Переглядайте наш каталог та знайдіть найкращі пропозиції
           </p>
+        </div>
+      </div>
+
+      {/* Main Categories Navigation */}
+      <div className="border-b border-border/40 bg-background/50">
+        <div className="container py-6">
+          <p className="text-sm text-muted-foreground mb-4">Перейти до категорії:</p>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            {PRODUCT_TYPES.map((type) => (
+              <button
+                key={type.value}
+                onClick={() => navigate(`/catalog/${type.value}`)}
+                className={`group relative overflow-hidden rounded-lg border p-4 text-center transition-all duration-300 ${
+                  productType === type.value
+                    ? "border-accent bg-accent/10 text-accent font-semibold"
+                    : "border-border/40 bg-background/50 text-foreground hover:border-accent/50 hover:bg-accent/5"
+                }`}
+              >
+                <div className="text-sm font-medium flex items-center justify-between">
+                  <span>{type.label}</span>
+                  {productType === type.value && <ArrowRight className="h-4 w-4" />}
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 

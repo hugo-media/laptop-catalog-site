@@ -261,3 +261,9 @@
 - [x] Refactor Catalog.tsx to show specific category products (not home page)
 - [x] Update App.tsx routing to connect home and category pages properly
 - [x] Test full navigation flow: Home → Category → Products
+
+
+## Catalog Page Enhancement
+- [x] Add main category navigation block on catalog page (same as home page)
+- [x] Allow users to switch between categories without returning to home
+- [x] Display category buttons below category header on catalog page
