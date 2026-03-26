@@ -25,11 +25,39 @@ const PRODUCT_TYPES: { value: ProductType; label: string }[] = [
   { value: "smartDevices", label: "Смарт девайси" },
 ];
 
-const getCATEGORIES = (t: any): { value: CategoryType; label: string }[] => [
-  { value: "promotions", label: t("categories.promotions") },
-  { value: "refurbished", label: t("categories.refurbished") },
-  { value: "new", label: t("categories.new") },
-  { value: "business", label: t("categories.business") },
+const LAPTOP_CATEGORIES = [
+  { value: "promotions" as CategoryType, label: "Акції" },
+  { value: "refurbished" as CategoryType, label: "Ноутбуки після оренди" },
+  { value: "new" as CategoryType, label: "Нові ноутбуки" },
+  { value: "business" as CategoryType, label: "Пропозиція для компаній" },
+];
+
+const MONITOR_CATEGORIES = [
+  { value: "promotions" as CategoryType, label: "Акції" },
+  { value: "refurbished" as CategoryType, label: "Монітори після оренди" },
+  { value: "new" as CategoryType, label: "Нові монітори" },
+  { value: "business" as CategoryType, label: "Пропозиція для компаній" },
+];
+
+const ACCESSORY_CATEGORIES = [
+  { value: "promotions" as CategoryType, label: "Акції" },
+  { value: "refurbished" as CategoryType, label: "Відновлені" },
+  { value: "new" as CategoryType, label: "Нові" },
+  { value: "business" as CategoryType, label: "Для компаній" },
+];
+
+const TABLET_CATEGORIES = [
+  { value: "promotions" as CategoryType, label: "Акції" },
+  { value: "refurbished" as CategoryType, label: "Планшети після оренди" },
+  { value: "new" as CategoryType, label: "Нові планшети" },
+  { value: "business" as CategoryType, label: "Для компаній" },
+];
+
+const SMARTDEVICE_CATEGORIES = [
+  { value: "promotions" as CategoryType, label: "Акції" },
+  { value: "refurbished" as CategoryType, label: "Девайси після оренди" },
+  { value: "new" as CategoryType, label: "Нові девайси" },
+  { value: "business" as CategoryType, label: "Для компаній" },
 ];
 
 export default function Catalog() {
@@ -65,11 +93,11 @@ export default function Catalog() {
   // Get category list for current product type
   const getCategoryListForProductType = () => {
     switch (productType) {
-      case "laptops": return getCATEGORIES(t);
-      case "monitors": return getCATEGORIES(t);
-      case "accessories": return getCATEGORIES(t);
-      case "tablets": return getCATEGORIES(t);
-      case "smartDevices": return getCATEGORIES(t);
+      case "laptops": return LAPTOP_CATEGORIES;
+      case "monitors": return MONITOR_CATEGORIES;
+      case "accessories": return ACCESSORY_CATEGORIES;
+      case "tablets": return TABLET_CATEGORIES;
+      case "smartDevices": return SMARTDEVICE_CATEGORIES;
     }
   };
 
@@ -301,7 +329,7 @@ export default function Catalog() {
             <div className="mb-8 space-y-4">
               <div>
                 <h2 className="text-3xl font-bold text-foreground mb-2">
-                  {getCATEGORIES(t).find((c: any) => c.value === selectedCategory)?.label}
+                  {getCategoryListForProductType().find((c: any) => c.value === selectedCategory)?.label}
                 </h2>
                 <p className="text-muted-foreground">
                   {filteredProducts.length} {t("catalog.products")}

@@ -195,3 +195,4 @@
 - [x] Fix Catalog.tsx to show only relevant subcategories for selected product type
 - [x] Fix Admin.tsx to show only relevant subcategories for selected product type
 - [x] Test subcategory switching for all 5 product types
+- [x] Verified: Each product type shows its own subcategories
