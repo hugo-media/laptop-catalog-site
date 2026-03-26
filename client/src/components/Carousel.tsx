@@ -58,9 +58,9 @@ export function Carousel({
   const currentSlide = slides[currentIndex];
 
   return (
-    <div className="relative w-full overflow-hidden rounded-lg">
+    <div className="relative w-full overflow-hidden">
       {/* Carousel Container */}
-      <div className="relative h-96 md:h-96 lg:h-96 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-700">
+      <div className="relative h-64 md:h-72 lg:h-80 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-700">
         {/* Background Image */}
         <div
           className="absolute inset-0 bg-cover bg-center transition-opacity duration-500"

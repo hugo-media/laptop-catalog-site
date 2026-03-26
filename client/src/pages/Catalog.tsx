@@ -293,8 +293,7 @@ export default function Catalog() {
 
       {/* Hero Carousel - Show only on Promotions page */}
       {productType === "promotions" && (
-        <div className="py-6">
-          <div className="max-w-5xl mx-auto px-4">
+        <div className="w-full py-0">
             <Carousel
             slides={[
               {
@@ -333,12 +332,11 @@ export default function Catalog() {
             autoplay={true}
             autoplayInterval={6000}
             />
-          </div>
         </div>
       )}
 
       {/* Product Type Navigation */}
-      <nav className="border-b border-border/40 bg-background/50 backdrop-blur-sm sticky top-16 z-40">
+      <nav className="border-b border-border/40 bg-background sticky top-0 z-40">
         <div className="container">
           <div className="flex justify-center overflow-x-auto gap-1 py-3 -mx-4 px-4 md:mx-0 md:px-0">
             {PRODUCT_TYPES.map((type) => (

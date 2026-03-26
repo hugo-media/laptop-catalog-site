@@ -241,4 +241,6 @@
 - [ ] Test carousel navigation and autoplay
 
 - [x] Fix header logo click not navigating to home page
-- [x] Make carousel narrower/smaller
+- [x] Fix carousel width to full page
+- [x] Reduce carousel height
+- [x] Make category navigation bar sticky/fixed at top
