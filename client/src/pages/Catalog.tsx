@@ -88,6 +88,7 @@ export default function Catalog() {
   const [modalOpen, setModalOpen] = useState(false);
   const [sortBy, setSortBy] = useState<'price-asc' | 'price-desc' | 'popularity' | 'newest'>('newest');
   const [showSubcategoryAccordion, setShowSubcategoryAccordion] = useState(false);
+  const [expandedCategory, setExpandedCategory] = useState<ProductType | null>(null);
 
 
   // Sync productType state with URL parameter
@@ -363,7 +364,12 @@ export default function Catalog() {
             {PRODUCT_TYPES.map((type) => (
               <div key={type.value} className="relative inline-block">
                 <Button
-                  onClick={() => navigate(`/catalog/${type.value}`)}
+                  onClick={() => {
+                    navigate(`/catalog/${type.value}`);
+                    if (productType === type.value && getCategoryListForProductType().length > 0) {
+                      setExpandedCategory(expandedCategory === type.value ? null : type.value);
+                    }
+                  }}
                   variant={productType === type.value ? "default" : "outline"}
                   className={`justify-between ${
                     productType === type.value
@@ -373,12 +379,12 @@ export default function Catalog() {
                 >
                   <span>{type.label}</span>
                   {productType === type.value && getCategoryListForProductType().length > 0 && (
-                    <ArrowRight className={`h-4 w-4 ml-2 transition-transform ${showSubcategoryAccordion ? 'rotate-90' : ''}`} />
+                    <ArrowRight className={`h-4 w-4 ml-2 transition-transform ${expandedCategory === type.value ? 'rotate-90' : ''}`} />
                   )}
                 </Button>
                 
                 {/* Subcategory Dropdown - Only show for selected category */}
-                {productType === type.value && getCategoryListForProductType().length > 0 && (
+                {productType === type.value && getCategoryListForProductType().length > 0 && expandedCategory === type.value && (
                   <div className="absolute top-full left-0 mt-1 bg-white border border-border/40 rounded-lg shadow-lg z-50 min-w-max">
                     {getCategoryListForProductType().map((cat) => (
                       <button
@@ -390,6 +396,7 @@ export default function Catalog() {
                           setTabletFilters({});
                           setSmartDeviceFilters({});
                           setSearchQuery("");
+                          setExpandedCategory(null);
                         }}
                         className="block w-full text-left px-4 py-2 text-sm text-foreground hover:bg-accent/10 transition-colors first:rounded-t-lg last:rounded-b-lg"
                       >
@@ -502,6 +509,16 @@ export default function Catalog() {
                 </Select>
               </div>
             </div>
+
+            {/* Subcategory Header */}
+            {selectedCategory && selectedCategory !== "promotions" && (
+              <div className="mb-6 pb-4 border-b border-border/20">
+                <p className="text-sm text-muted-foreground">Категорія:</p>
+                <p className="text-lg font-semibold text-foreground">
+                  {getCategoryListForProductType().find(c => c.value === selectedCategory)?.label}
+                </p>
+              </div>
+            )}
 
             {/* Products */}
             {isLoading ? (
