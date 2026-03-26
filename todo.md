@@ -276,3 +276,10 @@
 - [x] Add sorting dropdown to catalog page (price ascending, price descending, popularity, newest)
 - [x] Implement sorting logic for all product types
 - [x] Display current sort option in dropdown
+
+
+## Promotions Section on Home Page
+- [x] Add promotions/deals section between trust signals and product categories
+- [x] Display featured promotional products from all categories
+- [x] Include discount badges or "Hot Deal" indicators
+- [x] Add CTA button to view all promotions

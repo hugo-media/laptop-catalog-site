@@ -173,6 +173,76 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Promotions Section */}
+      <section className="border-b border-border/40 bg-gradient-to-r from-accent/5 to-accent/10">
+        <div className="container py-12">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
+              🔥 Актуальні Акції
+            </h2>
+            <p className="text-muted-foreground text-lg">
+              Найкращі пропозиції та знижки на преміум техніку
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Promo Card 1 */}
+            <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-purple-600 to-purple-800 p-8 text-white shadow-lg hover:shadow-xl transition-shadow">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
+              <div className="relative z-10">
+                <div className="inline-block bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold mb-4">
+                  -30%
+                </div>
+                <h3 className="text-2xl font-bold mb-2">Ноутбуки Бізнес-класу</h3>
+                <p className="text-purple-100 mb-6">Потужні моделі для професіоналів</p>
+                <Button 
+                  onClick={() => handleCategoryClick("laptops")}
+                  className="bg-white text-purple-600 hover:bg-purple-50 font-semibold"
+                >
+                  Переглянути →
+                </Button>
+              </div>
+            </div>
+
+            {/* Promo Card 2 */}
+            <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-blue-600 to-blue-800 p-8 text-white shadow-lg hover:shadow-xl transition-shadow">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
+              <div className="relative z-10">
+                <div className="inline-block bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold mb-4">
+                  -25%
+                </div>
+                <h3 className="text-2xl font-bold mb-2">Професійні Монітори</h3>
+                <p className="text-blue-100 mb-6">Для роботи та творчості</p>
+                <Button 
+                  onClick={() => handleCategoryClick("monitors")}
+                  className="bg-white text-blue-600 hover:bg-blue-50 font-semibold"
+                >
+                  Переглянути →
+                </Button>
+              </div>
+            </div>
+
+            {/* Promo Card 3 */}
+            <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-indigo-600 to-indigo-800 p-8 text-white shadow-lg hover:shadow-xl transition-shadow">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
+              <div className="relative z-10">
+                <div className="inline-block bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold mb-4">
+                  -20%
+                </div>
+                <h3 className="text-2xl font-bold mb-2">Аксесуари та Гаджети</h3>
+                <p className="text-indigo-100 mb-6">Все для вашого робочого місця</p>
+                <Button 
+                  onClick={() => handleCategoryClick("accessories")}
+                  className="bg-white text-indigo-600 hover:bg-indigo-50 font-semibold"
+                >
+                  Переглянути →
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Categories Section */}
       <section className="border-b border-border/40 bg-background/50">
         <div className="container py-12">
