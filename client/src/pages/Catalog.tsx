@@ -366,14 +366,15 @@ export default function Catalog() {
                 <Button
                   onClick={() => {
                     navigate(`/catalog/${type.value}`);
+                    // Show dropdown immediately if this is the selected category with subcategories
                     if (productType === type.value && getCategoryListForProductType().length > 0) {
-                      setExpandedCategory(expandedCategory === type.value ? null : type.value);
+                      setExpandedCategory(type.value);
                     }
                   }}
                   variant={productType === type.value ? "default" : "outline"}
                   className={`justify-between ${
                     productType === type.value
-                      ? "border-accent bg-accent/10 text-accent"
+                      ? "border-accent bg-accent text-white"
                       : "border-border/40 hover:border-accent/50"
                   }`}
                 >
