@@ -5,7 +5,6 @@ import { MonitorFilters, type MonitorFilterOptions } from "@/components/MonitorF
 import { TabletFilters, type TabletFilterOptions } from "@/components/TabletFilters";
 import { SmartDeviceFilters, type SmartDeviceFilterOptions } from "@/components/SmartDeviceFilters";
 import { ProductDetailModal } from "@/components/ProductDetailModal";
-import { Carousel, type CarouselSlide } from "@/components/Carousel";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +12,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { useLocation } from "wouter";
 import { useState, useMemo } from "react";
-import { Loader2, Shield, Truck, RotateCcw, Star, Search, X } from "lucide-react";
+import { Loader2, Shield, Truck, RotateCcw, Star, Search, X, ChevronLeft } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import type { Laptop as LaptopType } from "../../../drizzle/schema";
 
@@ -68,8 +67,18 @@ export default function Catalog() {
   const { t } = useTranslation();
   const { user } = useAuth();
   const [, navigate] = useLocation();
-  const [productType, setProductType] = useState<ProductType>("promotions");
-  const [selectedCategory, setSelectedCategory] = useState<CategoryType>("promotions");
+  const [params] = useLocation();
+  
+  // Get product type from URL params or default to promotions
+  const urlProductType = (params?.split('/').pop() || "promotions") as ProductType;
+  const [productType, setProductType] = useState<ProductType>(() => {
+    const type = params?.split('/').pop();
+    if (type && ['promotions', 'laptops', 'monitors', 'accessories', 'tablets', 'smartDevices'].includes(type)) {
+      return type as ProductType;
+    }
+    return "promotions";
+  });
+  const [selectedCategory, setSelectedCategory] = useState<CategoryType>("new");
   const [laptopFilters, setLaptopFilters] = useState<LaptopFilterOptions>({});
   const [monitorFilters, setMonitorFilters] = useState<MonitorFilterOptions>({});
   const [tabletFilters, setTabletFilters] = useState<TabletFilterOptions>({});
@@ -127,6 +136,11 @@ export default function Catalog() {
       case "tablets": return tabletsLoading;
       case "smartDevices": return smartDevicesLoading;
     }
+  };
+
+  // Get product type label
+  const getProductTypeLabel = () => {
+    return PRODUCT_TYPES.find(t => t.value === productType)?.label || "Каталог";
   };
 
   // Filter products by category, applied filters, and search query
@@ -291,100 +305,58 @@ export default function Catalog() {
         </div>
       </header>
 
-      {/* Product Type Navigation */}
-      <nav className="border-b border-border/40 bg-background z-40">
-        <div className="container">
-          <div className="flex justify-center overflow-x-auto gap-1 py-3 -mx-4 px-4 md:mx-0 md:px-0">
-            {PRODUCT_TYPES.map((type) => (
-              <Button
-                key={type.value}
-                onClick={() => {
-                  setProductType(type.value);
-                  setSelectedCategory("new");
-                  setLaptopFilters({});
-                  setMonitorFilters({});
-                  setSearchQuery("");
-                }}
-                variant={productType === type.value ? "default" : "ghost"}
-                size="sm"
-                className="whitespace-nowrap text-sm"
-              >
-                {type.label}
-              </Button>
-            ))}
-          </div>
+      {/* Breadcrumb & Back Button */}
+      <div className="border-b border-border/40 bg-background/50">
+        <div className="container py-3">
+          <button
+            onClick={() => navigate("/")}
+            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            Назад на головну
+          </button>
         </div>
-      </nav>
+      </div>
 
-      {/* Hero Carousel - Show only on Promotions page */}
-      {productType === "promotions" && (
-        <div className="w-full py-0">
-            <Carousel
-            slides={[
-              {
-                id: "slide-1",
-                image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663402378754/DMLwym6Zv6yd8JHAqkjkFj/hugo-media-logo_da9d05f5.jpg",
-                title: "Бізнесові моделі в найкращих цінах",
-                subtitle: "Найновіші ноутбуки від провідних виробників",
-                brands: ["Latitude", "ThinkPad", "EliteBook", "Precision", "Zbook", "XPS"],
-                cta: {
-                  text: "Переглянути →",
-                  action: () => setProductType("laptops"),
-                },
-              },
-              {
-                id: "slide-2",
-                image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663402378754/DMLwym6Zv6yd8JHAqkjkFj/hugo-media-logo_da9d05f5.jpg",
-                title: "Професійні монітори",
-                subtitle: "Для роботи та розваг",
-                brands: ["Dell", "LG", "ASUS", "BenQ"],
-                cta: {
-                  text: "Переглянути →",
-                  action: () => setProductType("monitors"),
-                },
-              },
-              {
-                id: "slide-3",
-                image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663402378754/DMLwym6Zv6yd8JHAqkjkFj/hugo-media-logo_da9d05f5.jpg",
-                title: "Аксесуари та гаджети",
-                subtitle: "Все для вашого робочого місця",
-                cta: {
-                  text: "Переглянути →",
-                  action: () => setProductType("accessories"),
-                },
-              },
-            ]}
-            autoplay={true}
-            autoplayInterval={6000}
-            />
+      {/* Category Header */}
+      <div className="border-b border-border/40 bg-background/30">
+        <div className="container py-8">
+          <h1 className="text-4xl font-bold text-foreground mb-2">
+            {getProductTypeLabel()}
+          </h1>
+          <p className="text-muted-foreground">
+            Переглядайте наш каталог та знайдіть найкращі пропозиції
+          </p>
         </div>
-      )}
+      </div>
 
       {/* Subcategory Navigation - Only show when product type is selected */}
-      <nav className="border-b border-border/40 bg-background/30 backdrop-blur-sm z-39">
-        <div className="container">
-          <div className="flex justify-center overflow-x-auto gap-1 py-2 -mx-4 px-4 md:mx-0 md:px-0">
-            {getCategoryListForProductType().map((cat) => (
-              <Button
-                key={cat.value}
-                onClick={() => {
-                  setSelectedCategory(cat.value);
-                  setLaptopFilters({});
-                  setMonitorFilters({});
-                  setTabletFilters({});
-                  setSmartDeviceFilters({});
-                  setSearchQuery("");
-                }}
-                variant={selectedCategory === cat.value ? "default" : "ghost"}
-                size="sm"
-                className="whitespace-nowrap text-xs"
-              >
-                {cat.label}
-              </Button>
-            ))}
+      {getCategoryListForProductType().length > 0 && (
+        <nav className="border-b border-border/40 bg-background/30 backdrop-blur-sm z-39">
+          <div className="container">
+            <div className="flex justify-center overflow-x-auto gap-1 py-2 -mx-4 px-4 md:mx-0 md:px-0">
+              {getCategoryListForProductType().map((cat) => (
+                <Button
+                  key={cat.value}
+                  onClick={() => {
+                    setSelectedCategory(cat.value);
+                    setLaptopFilters({});
+                    setMonitorFilters({});
+                    setTabletFilters({});
+                    setSmartDeviceFilters({});
+                    setSearchQuery("");
+                  }}
+                  variant={selectedCategory === cat.value ? "default" : "ghost"}
+                  size="sm"
+                  className="whitespace-nowrap text-xs"
+                >
+                  {cat.label}
+                </Button>
+              ))}
+            </div>
           </div>
-        </div>
-      </nav>
+        </nav>
+      )}
 
       {/* Trust Signals */}
       <div className="border-b border-border/40 bg-background/30">
@@ -448,58 +420,57 @@ export default function Catalog() {
           <div className="lg:col-span-3">
             {/* Page Title & Search */}
             <div className="mb-8 space-y-4">
-              <div>
-                <h2 className="text-3xl font-bold text-foreground mb-2">
-                  {getCategoryListForProductType().find((c: any) => c.value === selectedCategory)?.label}
-                </h2>
-                <p className="text-muted-foreground">
-                  {filteredProducts.length} {t("catalog.products")}
-                </p>
-              </div>
-
-              {/* Search Bar */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <div className="flex items-center gap-2 bg-background border border-border/40 rounded-lg px-4 py-2">
+                <Search className="h-5 w-5 text-muted-foreground" />
                 <Input
                   type="text"
-                  placeholder={t("catalog.search")}
+                  placeholder={t("catalog.searchPlaceholder")}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-10 border-border/40"
+                  className="border-0 bg-transparent focus-visible:ring-0 flex-1"
                 />
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery("")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    className="text-muted-foreground hover:text-foreground transition-colors"
                   >
                     <X className="h-4 w-4" />
                   </button>
                 )}
               </div>
+              <p className="text-sm text-muted-foreground">
+                {filteredProducts.length} {filteredProducts.length === 1 ? "товар" : "товарів"}
+              </p>
             </div>
 
-            {/* Loading State */}
+            {/* Products */}
             {isLoading ? (
-              <div className="flex justify-center py-12">
+              <div className="flex items-center justify-center py-12">
                 <Loader2 className="h-8 w-8 animate-spin text-accent" />
               </div>
             ) : filteredProducts.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-muted-foreground mb-4">{t("catalog.noResults")}</p>
+                <p className="text-muted-foreground mb-4">Товари не знайдені</p>
+                <Button
+                  onClick={() => {
+                    setSearchQuery("");
+                    setLaptopFilters({});
+                    setMonitorFilters({});
+                    setTabletFilters({});
+                    setSmartDeviceFilters({});
+                  }}
+                  variant="outline"
+                >
+                  Очистити фільтри
+                </Button>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {filteredProducts.map((product: any) => (
-                  <div
+                  <LaptopCard
                     key={product.id}
-                    onClick={() => {
-                      setSelectedLaptop(product);
-                      setModalOpen(true);
-                    }}
-                    className="cursor-pointer"
-                  >
-                    <LaptopCard laptop={product} />
-                  </div>
+                    laptop={product}
+                  />
                 ))}
               </div>
             )}
@@ -508,50 +479,11 @@ export default function Catalog() {
       </main>
 
       {/* Product Detail Modal */}
-      {selectedLaptop && (
-        <ProductDetailModal
-          laptop={selectedLaptop}
-          open={modalOpen}
-          onOpenChange={(open) => {
-            setModalOpen(open);
-            if (!open) setSelectedLaptop(null);
-          }}
-        />
-      )}
-
-      {/* Footer */}
-      <footer className="border-t border-border/40 bg-background/50 mt-16">
-        <div className="container py-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <h3 className="font-semibold text-foreground mb-4">{t("footer.about")}</h3>
-              <p className="text-sm text-muted-foreground">{t("footer.aboutDesc")}</p>
-            </div>
-            <div>
-              <h3 className="font-semibold text-foreground mb-4">{t("footer.support")}</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground">{t("footer.faq")}</a></li>
-                <li><a href="#" className="hover:text-foreground">{t("footer.contact")}</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold text-foreground mb-4">{t("footer.legal")}</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground">{t("footer.privacy")}</a></li>
-                <li><a href="#" className="hover:text-foreground">{t("footer.terms")}</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold text-foreground mb-4">{t("footer.contact")}</h3>
-              <p className="text-sm text-muted-foreground">info@hugomedia.com</p>
-              <p className="text-sm text-muted-foreground">+48 123 456 789</p>
-            </div>
-          </div>
-          <div className="border-t border-border/40 mt-8 pt-8 text-center text-sm text-muted-foreground">
-            <p>&copy; 2026 Hugo Media. {t("footer.rights")}</p>
-          </div>
-        </div>
-      </footer>
+      <ProductDetailModal
+        laptop={selectedLaptop}
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+      />
     </div>
   );
 }

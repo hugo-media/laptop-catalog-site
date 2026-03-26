@@ -249,3 +249,15 @@
 ## Layout Reordering
 - [x] Move carousel below category navigation
 - [x] Fix category bar scrolling (removed sticky positioning so it scrolls with page)
+
+
+## Home Page Restructuring
+- [x] Create proper Home.tsx landing page with hero carousel
+- [x] Add category navigation buttons on home page (Акції, Ноутбуки, Монітори, Аксесуари, Планшети, Смарт девайси)
+- [x] Add "About Us" section on home page
+- [x] Add trust signals section (warranty, delivery, returns, trusted seller) on home page
+- [x] Make logo click navigate to home page (now working)
+- [x] Update category buttons to navigate to catalog with selected category
+- [x] Refactor Catalog.tsx to show specific category products (not home page)
+- [x] Update App.tsx routing to connect home and category pages properly
+- [x] Test full navigation flow: Home → Category → Products
