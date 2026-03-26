@@ -125,6 +125,23 @@ export default function Home() {
               )}
             </div>
           </div>
+
+          {/* Category Navigation Row */}
+          <div className="border-t border-border/40 py-3 overflow-x-auto">
+            <div className="flex gap-2 md:gap-4 whitespace-nowrap">
+              {PRODUCT_TYPES.map((type) => (
+                <Button
+                  key={type.value}
+                  onClick={() => handleCategoryClick(type.value)}
+                  variant="ghost"
+                  size="sm"
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent/10 flex-shrink-0"
+                >
+                  {type.label}
+                </Button>
+              ))}
+            </div>
+          </div>
         </div>
       </header>
 
@@ -243,41 +260,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Categories Section */}
-      <section className="border-b border-border/40 bg-background/50">
-        <div className="container py-12">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
-              Категорії товарів
-            </h2>
-            <p className="text-muted-foreground text-lg">
-              Знайдіть все що вам потрібно для вашого робочого місця
-            </p>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {PRODUCT_TYPES.map((type) => (
-              <button
-                key={type.value}
-                onClick={() => handleCategoryClick(type.value)}
-                className="group relative overflow-hidden rounded-lg border border-border/40 bg-gradient-to-br from-background to-background/50 p-6 hover:border-accent/50 transition-all duration-300 hover:shadow-lg text-left"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-xl font-semibold text-foreground group-hover:text-accent transition-colors">
-                      {type.label}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Переглянути каталог →
-                    </p>
-                  </div>
-                  <ArrowRight className="h-6 w-6 text-accent/60 group-hover:text-accent group-hover:translate-x-1 transition-all" />
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* About Section */}
       <section className="border-b border-border/40 bg-background/30">
