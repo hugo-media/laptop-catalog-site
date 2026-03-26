@@ -5,6 +5,7 @@ import { MonitorFilters, type MonitorFilterOptions } from "@/components/MonitorF
 import { TabletFilters, type TabletFilterOptions } from "@/components/TabletFilters";
 import { SmartDeviceFilters, type SmartDeviceFilterOptions } from "@/components/SmartDeviceFilters";
 import { ProductDetailModal } from "@/components/ProductDetailModal";
+import { Carousel, type CarouselSlide } from "@/components/Carousel";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -228,7 +229,10 @@ export default function Catalog() {
         <div className="container py-4">
           <div className="flex justify-between items-center">
             {/* Hugo Media Logo & Branding */}
-            <div className="flex items-center gap-4">
+            <button 
+              onClick={() => navigate("/")} 
+              className="flex items-center gap-4 hover:opacity-80 transition-opacity cursor-pointer"
+            >
               <img 
                 src="https://d2xsxph8kpxj0f.cloudfront.net/310519663402378754/DMLwym6Zv6yd8JHAqkjkFj/hugo-media-logo_da9d05f5.jpg" 
                 alt="Hugo Media" 
@@ -238,7 +242,7 @@ export default function Catalog() {
                 <h1 className="text-xl font-bold text-foreground">Hugo Media</h1>
                 <p className="text-xs text-muted-foreground">Premium Laptop Solutions</p>
               </div>
-            </div>
+            </button>
 
             {/* Navigation */}
             <nav className="hidden md:flex items-center gap-6">
@@ -285,6 +289,50 @@ export default function Catalog() {
           </div>
         </div>
       </header>
+
+      {/* Hero Carousel - Show only on Promotions page */}
+      {productType === "promotions" && (
+        <div className="container py-6">
+          <Carousel
+            slides={[
+              {
+                id: "slide-1",
+                image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663402378754/DMLwym6Zv6yd8JHAqkjkFj/hugo-media-logo_da9d05f5.jpg",
+                title: "Бізнесові моделі в найкращих цінах",
+                subtitle: "Найновіші ноутбуки від провідних виробників",
+                brands: ["Latitude", "ThinkPad", "EliteBook", "Precision", "Zbook", "XPS"],
+                cta: {
+                  text: "Переглянути →",
+                  action: () => setProductType("laptops"),
+                },
+              },
+              {
+                id: "slide-2",
+                image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663402378754/DMLwym6Zv6yd8JHAqkjkFj/hugo-media-logo_da9d05f5.jpg",
+                title: "Професійні монітори",
+                subtitle: "Для роботи та розваг",
+                brands: ["Dell", "LG", "ASUS", "BenQ"],
+                cta: {
+                  text: "Переглянути →",
+                  action: () => setProductType("monitors"),
+                },
+              },
+              {
+                id: "slide-3",
+                image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663402378754/DMLwym6Zv6yd8JHAqkjkFj/hugo-media-logo_da9d05f5.jpg",
+                title: "Аксесуари та гаджети",
+                subtitle: "Все для вашого робочого місця",
+                cta: {
+                  text: "Переглянути →",
+                  action: () => setProductType("accessories"),
+                },
+              },
+            ]}
+            autoplay={true}
+            autoplayInterval={6000}
+          />
+        </div>
+      )}
 
       {/* Product Type Navigation */}
       <nav className="border-b border-border/40 bg-background/50 backdrop-blur-sm sticky top-16 z-40">

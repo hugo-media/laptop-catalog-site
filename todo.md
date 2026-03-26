@@ -231,3 +231,11 @@
 
 ## Bug Fixes
 - [x] Fix category not being saved when editing products (category stays as "new" instead of selected value)
+
+
+## Header & Home Page Hero
+- [x] Make header logo and company name clickable to navigate to home page
+- [x] Create carousel component for home page
+- [x] Add carousel slides with promotional content
+- [x] Style carousel with hero section design
+- [ ] Test carousel navigation and autoplay
