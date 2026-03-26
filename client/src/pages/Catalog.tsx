@@ -231,7 +231,8 @@ export default function Catalog() {
             {/* Hugo Media Logo & Branding */}
             <button 
               onClick={() => navigate("/")} 
-              className="flex items-center gap-4 hover:opacity-80 transition-opacity cursor-pointer"
+              className="flex items-center gap-4 hover:opacity-80 transition-opacity cursor-pointer bg-transparent border-none p-0"
+              type="button"
             >
               <img 
                 src="https://d2xsxph8kpxj0f.cloudfront.net/310519663402378754/DMLwym6Zv6yd8JHAqkjkFj/hugo-media-logo_da9d05f5.jpg" 
@@ -292,8 +293,9 @@ export default function Catalog() {
 
       {/* Hero Carousel - Show only on Promotions page */}
       {productType === "promotions" && (
-        <div className="container py-6">
-          <Carousel
+        <div className="py-6">
+          <div className="max-w-5xl mx-auto px-4">
+            <Carousel
             slides={[
               {
                 id: "slide-1",
@@ -330,7 +332,8 @@ export default function Catalog() {
             ]}
             autoplay={true}
             autoplayInterval={6000}
-          />
+            />
+          </div>
         </div>
       )}
 

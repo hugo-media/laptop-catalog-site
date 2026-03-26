@@ -239,3 +239,6 @@
 - [x] Add carousel slides with promotional content
 - [x] Style carousel with hero section design
 - [ ] Test carousel navigation and autoplay
+
+- [x] Fix header logo click not navigating to home page
+- [x] Make carousel narrower/smaller
