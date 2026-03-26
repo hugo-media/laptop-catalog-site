@@ -199,10 +199,12 @@
 
 
 ## Promotions Category & Advanced Filters
-- [x] Change default category to "Акції" (Promotions) for laptops on main page
+- [x] Add "Акції" (Promotions) as main category in Catalog navigation
+- [x] Add "Акції" (Promotions) as main category in Admin navigation
+- [x] Implement logic to aggregate all promotional items from all product types
 - [x] Create TabletFilters component with display size, RAM, processor, brand filters
 - [x] Create SmartDeviceFilters component with device type (smartwatch, smart glasses, etc.)
 - [x] Update Catalog page to use new filter components for tablets and smart devices
-- [ ] Update Admin panel to use new filter components for tablets and smart devices
-- [ ] Test tablet and smart device filters work correctly in Catalog
-- [ ] Test tablet and smart device filters work correctly in Admin panel
+- [x] Update Admin panel to use new filter components for tablets and smart devices
+- [x] Test Promotions category shows items from all product types
+- [x] Test tablet and smart device filters work correctly

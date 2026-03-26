@@ -34,7 +34,7 @@ import {
 import { Loader2, Trash2, Edit2, Plus } from "lucide-react";
 import { toast } from "sonner";
 
-type ProductType = "laptops" | "monitors" | "accessories" | "tablets" | "smartDevices";
+type ProductType = "promotions" | "laptops" | "monitors" | "accessories" | "tablets" | "smartDevices";
 type LaptopCategory = "promotions" | "refurbished" | "new" | "business";
 type MonitorCategory = "promotions" | "refurbished" | "new" | "business";
 type AccessoryCategory = "promotions" | "refurbished" | "new" | "business";
@@ -100,6 +100,7 @@ export default function Admin() {
   // Get current category and items
   const getCurrentCategory = () => {
     switch (productType) {
+      case "promotions": return "promotions";
       case "laptops": return laptopCategory;
       case "monitors": return monitorCategory;
       case "accessories": return accessoryCategory;
@@ -110,7 +111,16 @@ export default function Admin() {
 
   const getCurrentItems = () => {
     const category = getCurrentCategory();
-    switch (productType) {
+    switch (productType as ProductType) {
+      case "promotions": {
+        const allPromos: any[] = [];
+        if (laptops) allPromos.push(...laptops.filter(l => l.category === "promotions"));
+        if (monitors) allPromos.push(...monitors.filter(m => m.category === "promotions"));
+        if (accessories) allPromos.push(...accessories.filter(a => a.category === "promotions"));
+        if (tablets) allPromos.push(...tablets.filter(t => t.category === "promotions"));
+        if (smartDevices) allPromos.push(...smartDevices.filter(s => s.category === "promotions"));
+        return allPromos;
+      }
       case "laptops": return laptops?.filter((l) => l.category === category) || [];
       case "monitors": return monitors?.filter((m) => m.category === category) || [];
       case "accessories": return accessories?.filter((a) => a.category === category) || [];
@@ -120,7 +130,8 @@ export default function Admin() {
   };
 
   const getCurrentLoading = () => {
-    switch (productType) {
+    switch (productType as ProductType) {
+      case "promotions": return laptopsLoading || monitorsLoading || accessoriesLoading || tabletsLoading || smartDevicesLoading;
       case "laptops": return laptopsLoading;
       case "monitors": return monitorsLoading;
       case "accessories": return accessoriesLoading;
@@ -130,7 +141,8 @@ export default function Admin() {
   };
 
   const getCurrentCategoryList = () => {
-    switch (productType) {
+    switch (productType as ProductType) {
+      case "promotions": return [];
       case "laptops": return LAPTOP_CATEGORIES;
       case "monitors": return MONITOR_CATEGORIES;
       case "accessories": return ACCESSORY_CATEGORIES;
@@ -140,7 +152,8 @@ export default function Admin() {
   };
 
   const setCurrentCategory = (cat: any) => {
-    switch (productType) {
+    switch (productType as ProductType) {
+      case "promotions": break;
       case "laptops": setLaptopCategory(cat); break;
       case "monitors": setMonitorCategory(cat); break;
       case "accessories": setAccessoryCategory(cat); break;
@@ -242,6 +255,7 @@ export default function Admin() {
 
   const getDeleteMutation = () => {
     switch (productType) {
+      case "promotions": return null;
       case "laptops": return deleteLaptopMutation;
       case "monitors": return deleteMonitorMutation;
       case "accessories": return deleteAccessoryMutation;
@@ -252,6 +266,7 @@ export default function Admin() {
 
   const getCreateMutation = () => {
     switch (productType) {
+      case "promotions": return null;
       case "laptops": return createLaptopMutation;
       case "monitors": return createMonitorMutation;
       case "accessories": return createAccessoryMutation;
@@ -287,8 +302,8 @@ export default function Admin() {
   const currentLoading = getCurrentLoading();
   const currentCategoryList = getCurrentCategoryList();
   const currentCategory = getCurrentCategory();
-  const createMutation = getCreateMutation();
-  const deleteMutation = getDeleteMutation();
+  const createMutation = getCreateMutation() as any;
+  const deleteMutation = getDeleteMutation() as any;
 
   const getProductTypeLabel = () => {
     switch (productType) {

@@ -16,10 +16,11 @@ import { Loader2, Shield, Truck, RotateCcw, Star, Search, X } from "lucide-react
 import { useTranslation } from "react-i18next";
 import type { Laptop as LaptopType } from "../../../drizzle/schema";
 
-type ProductType = "laptops" | "monitors" | "accessories" | "tablets" | "smartDevices";
+type ProductType = "promotions" | "laptops" | "monitors" | "accessories" | "tablets" | "smartDevices";
 type CategoryType = "promotions" | "refurbished" | "new" | "business";
 
 const PRODUCT_TYPES: { value: ProductType; label: string }[] = [
+  { value: "promotions", label: "Акції" },
   { value: "laptops", label: "Ноутбуки" },
   { value: "monitors", label: "Монітори" },
   { value: "accessories", label: "Аксесуари" },
@@ -66,7 +67,7 @@ export default function Catalog() {
   const { t } = useTranslation();
   const { user } = useAuth();
   const [, navigate] = useLocation();
-  const [productType, setProductType] = useState<ProductType>("laptops");
+  const [productType, setProductType] = useState<ProductType>("promotions");
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>("promotions");
   const [laptopFilters, setLaptopFilters] = useState<LaptopFilterOptions>({});
   const [monitorFilters, setMonitorFilters] = useState<MonitorFilterOptions>({});
@@ -86,6 +87,16 @@ export default function Catalog() {
   // Get current data based on product type
   const getCurrentData = () => {
     switch (productType) {
+      case "promotions": {
+        // Aggregate all promotional items from all product types
+        const allPromos: any[] = [];
+        if (laptops) allPromos.push(...laptops.filter(l => l.category === "promotions"));
+        if (monitors) allPromos.push(...monitors.filter(m => m.category === "promotions"));
+        if (accessories) allPromos.push(...accessories.filter(a => a.category === "promotions"));
+        if (tablets) allPromos.push(...tablets.filter(t => t.category === "promotions"));
+        if (smartDevices) allPromos.push(...smartDevices.filter(s => s.category === "promotions"));
+        return allPromos;
+      }
       case "laptops": return laptops || [];
       case "monitors": return monitors || [];
       case "accessories": return accessories || [];
@@ -97,6 +108,7 @@ export default function Catalog() {
   // Get category list for current product type
   const getCategoryListForProductType = () => {
     switch (productType) {
+      case "promotions": return [];
       case "laptops": return LAPTOP_CATEGORIES;
       case "monitors": return MONITOR_CATEGORIES;
       case "accessories": return ACCESSORY_CATEGORIES;
@@ -107,6 +119,7 @@ export default function Catalog() {
 
   const getCurrentLoading = () => {
     switch (productType) {
+      case "promotions": return laptopsLoading || monitorsLoading || accessoriesLoading || tabletsLoading || smartDevicesLoading;
       case "laptops": return laptopsLoading;
       case "monitors": return monitorsLoading;
       case "accessories": return accessoriesLoading;
@@ -117,7 +130,12 @@ export default function Catalog() {
 
   // Filter products by category, applied filters, and search query
   const filteredProducts = useMemo(() => {
-    let filtered = getCurrentData().filter((p: any) => p.category === selectedCategory) || [];
+    let filtered = getCurrentData() || [];
+    
+    // For non-promotions, filter by category
+    if (productType !== "promotions") {
+      filtered = filtered.filter((p: any) => p.category === selectedCategory);
+    }
 
     // Apply search query
     if (searchQuery.trim()) {
