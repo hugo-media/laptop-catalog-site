@@ -88,7 +88,7 @@ export default function Catalog() {
   const [modalOpen, setModalOpen] = useState(false);
   const [sortBy, setSortBy] = useState<'price-asc' | 'price-desc' | 'popularity' | 'newest'>('newest');
   const [showSubcategoryAccordion, setShowSubcategoryAccordion] = useState(false);
-  const [selectedSubcategories, setSelectedSubcategories] = useState<CategoryType[]>([]);
+
 
   // Sync productType state with URL parameter
   useEffect(() => {
@@ -379,77 +379,41 @@ export default function Catalog() {
         </div>
       </div>
 
-      {/* Subcategory Checkbox Filter - Only show when product type is selected */}
+      {/* Subcategory Dropdown Menu - Only show when product type is selected */}
       {getCategoryListForProductType().length > 0 && (
         <div className="border-b border-border/40 bg-background/30">
-          <div className="container py-4">
-            <div className="bg-white border border-border/40 rounded-lg p-4">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-foreground">Марк</h3>
-                <button
-                  onClick={() => setShowSubcategoryAccordion(!showSubcategoryAccordion)}
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <ArrowRight className={`h-5 w-5 transition-transform ${showSubcategoryAccordion ? 'rotate-180' : ''}`} />
-                </button>
-              </div>
+          <div className="container py-3">
+            <div className="relative inline-block">
+              <Button
+                onClick={() => setShowSubcategoryAccordion(!showSubcategoryAccordion)}
+                variant="outline"
+                size="sm"
+                className="justify-between gap-2"
+              >
+                <span>Підкатегорії</span>
+                <ArrowRight className={`h-4 w-4 transition-transform ${showSubcategoryAccordion ? 'rotate-90' : ''}`} />
+              </Button>
               
-              {/* Checkbox List */}
+              {/* Dropdown Menu */}
               {showSubcategoryAccordion && (
-                <div className="space-y-3 mb-4">
+                <div className="absolute top-full left-0 mt-1 bg-white border border-border/40 rounded-lg shadow-lg z-50 min-w-max">
                   {getCategoryListForProductType().map((cat) => (
-                    <label key={cat.value} className="flex items-center gap-3 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={selectedSubcategories.includes(cat.value)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setSelectedSubcategories([...selectedSubcategories, cat.value]);
-                          } else {
-                            setSelectedSubcategories(selectedSubcategories.filter(c => c !== cat.value));
-                          }
-                        }}
-                        className="w-4 h-4 rounded border-border/40 cursor-pointer"
-                      />
-                      <span className="text-sm text-foreground">{cat.label}</span>
-                    </label>
+                    <button
+                      key={cat.value}
+                      onClick={() => {
+                        setSelectedCategory(cat.value);
+                        setLaptopFilters({});
+                        setMonitorFilters({});
+                        setTabletFilters({});
+                        setSmartDeviceFilters({});
+                        setSearchQuery("");
+                        setShowSubcategoryAccordion(false);
+                      }}
+                      className="block w-full text-left px-4 py-2 text-sm text-foreground hover:bg-accent/10 transition-colors first:rounded-t-lg last:rounded-b-lg"
+                    >
+                      {cat.label}
+                    </button>
                   ))}
-                </div>
-              )}
-              
-              {/* Expand/Collapse Link */}
-              {!showSubcategoryAccordion && (
-                <button
-                  onClick={() => setShowSubcategoryAccordion(true)}
-                  className="text-sm text-accent hover:text-accent/80 font-medium mb-4"
-                >
-                  + Розгорнути
-                </button>
-              )}
-              
-              {/* Filter & Clear Buttons */}
-              {showSubcategoryAccordion && (
-                <div className="space-y-2">
-                  <Button
-                    onClick={() => {
-                      if (selectedSubcategories.length > 0) {
-                        setSelectedCategory(selectedSubcategories[0]);
-                      }
-                      setShowSubcategoryAccordion(false);
-                    }}
-                    className="w-full bg-accent hover:bg-accent/90 text-white"
-                  >
-                    Фільтр
-                  </Button>
-                  <button
-                    onClick={() => {
-                      setSelectedSubcategories([]);
-                      setSelectedCategory("new");
-                    }}
-                    className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
-                  >
-                    Очистити фільтри
-                  </button>
                 </div>
               )}
             </div>

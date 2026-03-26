@@ -305,10 +305,9 @@
 - [x] Ensure header stays fixed during scroll
 
 
-## Subcategory Checkbox Filter
-- [x] Replace accordion with checkbox filter (like filter panel)
-- [x] Show subcategories with checkboxes (Акції, Ноутбуки після оренди, Нові ноутбуки, Пропозиція для компаній)
-- [x] Allow multiple subcategory selection
-- [x] Add "Фільтр" button to apply filter
-- [x] Add "Очистити фільтри" button to clear selection
-- [x] Filter products based on selected subcategories
+## Subcategory Dropdown Menu
+- [x] Replace checkbox filter with simple dropdown menu
+- [x] Show dropdown when main category is clicked
+- [x] Display subcategories as list items
+- [x] Navigate to subcategory on click
+- [x] Close dropdown after selection
