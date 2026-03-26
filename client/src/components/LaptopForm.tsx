@@ -29,6 +29,7 @@ interface LaptopFormProps {
     price: number;
     imageUrl?: string;
     description?: string;
+    category: Category;
   }) => void;
   isLoading?: boolean;
 }

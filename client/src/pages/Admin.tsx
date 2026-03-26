@@ -464,12 +464,10 @@ export default function Admin() {
                         getUpdateMutation()?.mutate({
                           id: editingId,
                           ...data,
-                          category: laptopCategory,
                         } as any);
                       } else {
                         createMutation.mutate({
                           ...data,
-                          category: laptopCategory,
                         } as any);
                       }
                     }}

@@ -227,3 +227,7 @@
 - [x] Implement edit functionality for Monitors
 - [x] Implement edit functionality for Accessories, Tablets, Smart Devices
 - [x] Test edit functionality for all product types
+
+
+## Bug Fixes
+- [x] Fix category not being saved when editing products (category stays as "new" instead of selected value)
