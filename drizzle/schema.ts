@@ -71,4 +71,69 @@ export const monitors = mysqlTable("monitors", {
 export type Monitor = typeof monitors.$inferSelect;
 export type InsertMonitor = typeof monitors.$inferInsert;
 
+export const accessories = mysqlTable("accessories", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  type: varchar("type", { length: 100 }).notNull(), // e.g., "Mouse", "Keyboard", "Charger", "Bag"
+  brand: varchar("brand", { length: 100 }).notNull(),
+  compatibility: varchar("compatibility", { length: 255 }).notNull(), // e.g., "Universal", "Apple", "Lenovo"
+  color: varchar("color", { length: 100 }).notNull(),
+  condition: varchar("condition", { length: 50 }).notNull(),
+  warranty: varchar("warranty", { length: 100 }).notNull(),
+  price: int("price").notNull(),
+  imageUrl: text("imageUrl"),
+  description: text("description"),
+  category: mysqlEnum("category", ["promotions", "refurbished", "new", "business"]).default("new").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Accessory = typeof accessories.$inferSelect;
+export type InsertAccessory = typeof accessories.$inferInsert;
+
+export const tablets = mysqlTable("tablets", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  processor: varchar("processor", { length: 255 }).notNull(),
+  ram: varchar("ram", { length: 100 }).notNull(),
+  storage: varchar("storage", { length: 100 }).notNull(),
+  display: varchar("display", { length: 100 }).notNull(), // e.g., "10.9 inch"
+  operatingSystem: varchar("operatingSystem", { length: 100 }).notNull(),
+  battery: varchar("battery", { length: 100 }).notNull(), // e.g., "5000 mAh"
+  camera: varchar("camera", { length: 100 }).notNull(), // e.g., "12MP"
+  condition: varchar("condition", { length: 50 }).notNull(),
+  warranty: varchar("warranty", { length: 100 }).notNull(),
+  price: int("price").notNull(),
+  imageUrl: text("imageUrl"),
+  description: text("description"),
+  category: mysqlEnum("category", ["promotions", "refurbished", "new", "business"]).default("new").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Tablet = typeof tablets.$inferSelect;
+export type InsertTablet = typeof tablets.$inferInsert;
+
+export const smartDevices = mysqlTable("smartDevices", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  type: varchar("type", { length: 100 }).notNull(), // e.g., "Smartwatch", "Headphones", "Speaker", "Smart Home"
+  brand: varchar("brand", { length: 100 }).notNull(),
+  connectivity: varchar("connectivity", { length: 255 }).notNull(), // e.g., "Bluetooth 5.0", "WiFi"
+  battery: varchar("battery", { length: 100 }).notNull(), // e.g., "5 days", "20 hours"
+  features: varchar("features", { length: 255 }).notNull(), // e.g., "Water resistant, Heart rate monitor"
+  compatibility: varchar("compatibility", { length: 255 }).notNull(), // e.g., "iOS/Android"
+  condition: varchar("condition", { length: 50 }).notNull(),
+  warranty: varchar("warranty", { length: 100 }).notNull(),
+  price: int("price").notNull(),
+  imageUrl: text("imageUrl"),
+  description: text("description"),
+  category: mysqlEnum("category", ["promotions", "refurbished", "new", "business"]).default("new").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SmartDevice = typeof smartDevices.$inferSelect;
+export type InsertSmartDevice = typeof smartDevices.$inferInsert;
+
 // TODO: Add your tables here

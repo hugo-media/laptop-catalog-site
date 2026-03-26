@@ -176,3 +176,16 @@
 - [x] Add gradient or pattern background to catalog page
 - [x] Improve visual hierarchy with background elements
 - [x] Ensure text readability with proper contrast
+
+
+## Product Categories Restructure
+- [x] Create Accessories table in database schema
+- [x] Create Tablets table in database schema
+- [x] Create SmartDevices table in database schema
+- [x] Add CRUD procedures for Accessories, Tablets, SmartDevices
+- [x] Update admin panel to show 5 main product types (Laptops, Monitors, Accessories, Tablets, SmartDevices)
+- [x] Implement category-specific subcategories for each product type
+- [x] Remove cross-category tabs from admin panel
+- [x] Update catalog page to display all 5 product types
+- [x] Implement proper filtering logic for each product type
+- [ ] Test all product types in admin and catalog

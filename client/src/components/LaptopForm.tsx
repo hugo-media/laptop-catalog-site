@@ -12,7 +12,7 @@ import { ImageUpload } from "./ImageUpload";
 import { Textarea } from "@/components/ui/textarea";
 import type { Laptop } from "../../../drizzle/schema";
 
-type Category = "promotions" | "refurbished" | "new" | "monitors" | "accessories" | "business";
+type Category = "promotions" | "refurbished" | "new" | "business";
 
 interface LaptopFormProps {
   initialData?: Laptop;
@@ -29,7 +29,6 @@ interface LaptopFormProps {
     price: number;
     imageUrl?: string;
     description?: string;
-    category?: Category;
   }) => void;
   isLoading?: boolean;
 }

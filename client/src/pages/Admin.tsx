@@ -32,25 +32,46 @@ import {
 import { Loader2, Trash2, Edit2, Plus } from "lucide-react";
 import { toast } from "sonner";
 
-type Category = "promotions" | "refurbished" | "new" | "monitors" | "accessories" | "business";
-type ProductType = "laptops" | "monitors";
+type ProductType = "laptops" | "monitors" | "accessories" | "tablets" | "smartDevices";
+type LaptopCategory = "promotions" | "refurbished" | "new" | "business";
+type MonitorCategory = "promotions" | "refurbished" | "new" | "business";
+type AccessoryCategory = "promotions" | "refurbished" | "new" | "business";
+type TabletCategory = "promotions" | "refurbished" | "new" | "business";
+type SmartDeviceCategory = "promotions" | "refurbished" | "new" | "business";
 
-const CATEGORIES: { value: Category; label: string }[] = [
-  { value: "promotions", label: "Акції" },
-  { value: "refurbished", label: "Ноутбуки після оренди" },
-  { value: "new", label: "Нові ноутбуки" },
-  { value: "monitors", label: "Монітори" },
-  { value: "accessories", label: "Аксесуари" },
-  { value: "business", label: "Пропозиція для компаній" },
+const LAPTOP_CATEGORIES = [
+  { value: "promotions" as LaptopCategory, label: "Акції" },
+  { value: "refurbished" as LaptopCategory, label: "Відновлені" },
+  { value: "new" as LaptopCategory, label: "Нові" },
+  { value: "business" as LaptopCategory, label: "Для компаній" },
 ];
 
 const MONITOR_CATEGORIES = [
-  { value: "new", label: "Нові монітори" },
-  { value: "refurbished", label: "Відновлені монітори" },
-  { value: "gaming", label: "Ігрові монітори" },
-  { value: "professional", label: "Професійні монітори" },
-  { value: "budget", label: "Бюджетні монітори" },
-  { value: "promotions", label: "Акції" },
+  { value: "promotions" as MonitorCategory, label: "Акції" },
+  { value: "refurbished" as MonitorCategory, label: "Відновлені" },
+  { value: "new" as MonitorCategory, label: "Нові" },
+  { value: "business" as MonitorCategory, label: "Для компаній" },
+];
+
+const ACCESSORY_CATEGORIES = [
+  { value: "promotions" as AccessoryCategory, label: "Акції" },
+  { value: "refurbished" as AccessoryCategory, label: "Відновлені" },
+  { value: "new" as AccessoryCategory, label: "Нові" },
+  { value: "business" as AccessoryCategory, label: "Для компаній" },
+];
+
+const TABLET_CATEGORIES = [
+  { value: "promotions" as TabletCategory, label: "Акції" },
+  { value: "refurbished" as TabletCategory, label: "Відновлені" },
+  { value: "new" as TabletCategory, label: "Нові" },
+  { value: "business" as TabletCategory, label: "Для компаній" },
+];
+
+const SMARTDEVICE_CATEGORIES = [
+  { value: "promotions" as SmartDeviceCategory, label: "Акції" },
+  { value: "refurbished" as SmartDeviceCategory, label: "Відновлені" },
+  { value: "new" as SmartDeviceCategory, label: "Нові" },
+  { value: "business" as SmartDeviceCategory, label: "Для компаній" },
 ];
 
 export default function Admin() {
@@ -59,60 +80,183 @@ export default function Admin() {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [deleteId, setDeleteId] = useState<number | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<Category>("new");
   const [productType, setProductType] = useState<ProductType>("laptops");
-  const [selectedMonitorCategory, setSelectedMonitorCategory] = useState("new");
+  const [laptopCategory, setLaptopCategory] = useState<LaptopCategory>("new");
+  const [monitorCategory, setMonitorCategory] = useState<MonitorCategory>("new");
+  const [accessoryCategory, setAccessoryCategory] = useState<AccessoryCategory>("new");
+  const [tabletCategory, setTabletCategory] = useState<TabletCategory>("new");
+  const [smartDeviceCategory, setSmartDeviceCategory] = useState<SmartDeviceCategory>("new");
 
+  // Queries
   const { data: laptops, isLoading: laptopsLoading } = trpc.laptops.list.useQuery();
   const { data: monitors, isLoading: monitorsLoading } = trpc.monitors.list.useQuery();
+  const { data: accessories, isLoading: accessoriesLoading } = trpc.accessories.list.useQuery();
+  const { data: tablets, isLoading: tabletsLoading } = trpc.tablets.list.useQuery();
+  const { data: smartDevices, isLoading: smartDevicesLoading } = trpc.smartDevices.list.useQuery();
   const utils = trpc.useUtils();
-  const isLoading = productType === "laptops" ? laptopsLoading : monitorsLoading;
 
-  const createMutation = trpc.laptops.create.useMutation({
+  // Get current category and items
+  const getCurrentCategory = () => {
+    switch (productType) {
+      case "laptops": return laptopCategory;
+      case "monitors": return monitorCategory;
+      case "accessories": return accessoryCategory;
+      case "tablets": return tabletCategory;
+      case "smartDevices": return smartDeviceCategory;
+    }
+  };
+
+  const getCurrentItems = () => {
+    const category = getCurrentCategory();
+    switch (productType) {
+      case "laptops": return laptops?.filter((l) => l.category === category) || [];
+      case "monitors": return monitors?.filter((m) => m.category === category) || [];
+      case "accessories": return accessories?.filter((a) => a.category === category) || [];
+      case "tablets": return tablets?.filter((t) => t.category === category) || [];
+      case "smartDevices": return smartDevices?.filter((s) => s.category === category) || [];
+    }
+  };
+
+  const getCurrentLoading = () => {
+    switch (productType) {
+      case "laptops": return laptopsLoading;
+      case "monitors": return monitorsLoading;
+      case "accessories": return accessoriesLoading;
+      case "tablets": return tabletsLoading;
+      case "smartDevices": return smartDevicesLoading;
+    }
+  };
+
+  const getCurrentCategoryList = () => {
+    switch (productType) {
+      case "laptops": return LAPTOP_CATEGORIES;
+      case "monitors": return MONITOR_CATEGORIES;
+      case "accessories": return ACCESSORY_CATEGORIES;
+      case "tablets": return TABLET_CATEGORIES;
+      case "smartDevices": return SMARTDEVICE_CATEGORIES;
+    }
+  };
+
+  const setCurrentCategory = (cat: any) => {
+    switch (productType) {
+      case "laptops": setLaptopCategory(cat); break;
+      case "monitors": setMonitorCategory(cat); break;
+      case "accessories": setAccessoryCategory(cat); break;
+      case "tablets": setTabletCategory(cat); break;
+      case "smartDevices": setSmartDeviceCategory(cat); break;
+    }
+  };
+
+  // Mutations
+  const createLaptopMutation = trpc.laptops.create.useMutation({
     onSuccess: () => {
-      toast.success("Laptop added successfully");
+      toast.success("Laptop added");
       setIsAddOpen(false);
       utils.laptops.list.invalidate();
     },
-    onError: (error) => {
-      toast.error(error.message || "Failed to add laptop");
-    },
+    onError: (error) => toast.error(error.message || "Failed"),
   });
 
-  const updateMutation = trpc.laptops.update.useMutation({
+  const createMonitorMutation = trpc.monitors.create.useMutation({
     onSuccess: () => {
-      toast.success("Laptop updated successfully");
-      setEditingId(null);
-      utils.laptops.list.invalidate();
+      toast.success("Monitor added");
+      setIsAddOpen(false);
+      utils.monitors.list.invalidate();
     },
-    onError: (error) => {
-      toast.error(error.message || "Failed to update laptop");
+    onError: (error) => toast.error(error.message || "Failed"),
+  });
+
+  const createAccessoryMutation = trpc.accessories.create.useMutation({
+    onSuccess: () => {
+      toast.success("Accessory added");
+      setIsAddOpen(false);
+      utils.accessories.list.invalidate();
     },
+    onError: (error) => toast.error(error.message || "Failed"),
+  });
+
+  const createTabletMutation = trpc.tablets.create.useMutation({
+    onSuccess: () => {
+      toast.success("Tablet added");
+      setIsAddOpen(false);
+      utils.tablets.list.invalidate();
+    },
+    onError: (error) => toast.error(error.message || "Failed"),
+  });
+
+  const createSmartDeviceMutation = trpc.smartDevices.create.useMutation({
+    onSuccess: () => {
+      toast.success("Smart device added");
+      setIsAddOpen(false);
+      utils.smartDevices.list.invalidate();
+    },
+    onError: (error) => toast.error(error.message || "Failed"),
   });
 
   const deleteLaptopMutation = trpc.laptops.delete.useMutation({
     onSuccess: () => {
-      toast.success("Laptop deleted successfully");
+      toast.success("Laptop deleted");
       setDeleteId(null);
       utils.laptops.list.invalidate();
     },
-    onError: (error) => {
-      toast.error(error.message || "Failed to delete laptop");
-    },
+    onError: (error) => toast.error(error.message || "Failed"),
   });
 
   const deleteMonitorMutation = trpc.monitors.delete.useMutation({
     onSuccess: () => {
-      toast.success("Monitor deleted successfully");
+      toast.success("Monitor deleted");
       setDeleteId(null);
       utils.monitors.list.invalidate();
     },
-    onError: (error) => {
-      toast.error(error.message || "Failed to delete monitor");
-    },
+    onError: (error) => toast.error(error.message || "Failed"),
   });
 
-  const deleteMutation = productType === "laptops" ? deleteLaptopMutation : deleteMonitorMutation;
+  const deleteAccessoryMutation = trpc.accessories.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Accessory deleted");
+      setDeleteId(null);
+      utils.accessories.list.invalidate();
+    },
+    onError: (error) => toast.error(error.message || "Failed"),
+  });
+
+  const deleteTabletMutation = trpc.tablets.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Tablet deleted");
+      setDeleteId(null);
+      utils.tablets.list.invalidate();
+    },
+    onError: (error) => toast.error(error.message || "Failed"),
+  });
+
+  const deleteSmartDeviceMutation = trpc.smartDevices.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Smart device deleted");
+      setDeleteId(null);
+      utils.smartDevices.list.invalidate();
+    },
+    onError: (error) => toast.error(error.message || "Failed"),
+  });
+
+  const getDeleteMutation = () => {
+    switch (productType) {
+      case "laptops": return deleteLaptopMutation;
+      case "monitors": return deleteMonitorMutation;
+      case "accessories": return deleteAccessoryMutation;
+      case "tablets": return deleteTabletMutation;
+      case "smartDevices": return deleteSmartDeviceMutation;
+    }
+  };
+
+  const getCreateMutation = () => {
+    switch (productType) {
+      case "laptops": return createLaptopMutation;
+      case "monitors": return createMonitorMutation;
+      case "accessories": return createAccessoryMutation;
+      case "tablets": return createTabletMutation;
+      case "smartDevices": return createSmartDeviceMutation;
+    }
+  };
 
   useEffect(() => {
     if (authLoading) return;
@@ -137,44 +281,54 @@ export default function Admin() {
     );
   }
 
-  const filteredLaptops = laptops?.filter((l) => l.category === selectedCategory) || [];
-  const filteredMonitors = monitors?.filter((m) => m.category === selectedMonitorCategory) || [];
-  const currentItems = productType === "laptops" ? filteredLaptops : filteredMonitors;
+  const currentItems = getCurrentItems();
+  const currentLoading = getCurrentLoading();
+  const currentCategoryList = getCurrentCategoryList();
+  const currentCategory = getCurrentCategory();
+  const createMutation = getCreateMutation();
+  const deleteMutation = getDeleteMutation();
+
+  const getProductTypeLabel = () => {
+    switch (productType) {
+      case "laptops": return "Ноутбуки";
+      case "monitors": return "Монітори";
+      case "accessories": return "Аксесуари";
+      case "tablets": return "Планшети";
+      case "smartDevices": return "Смарт девайси";
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
       {/* Admin Header */}
       <header className="border-b border-border/40 bg-background/95 backdrop-blur-md sticky top-0 z-50">
         <div className="container py-4">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center gap-4">
             <div>
               <h1 className="text-2xl font-bold text-foreground">Admin Panel</h1>
               <p className="text-sm text-muted-foreground">Manage your inventory</p>
             </div>
-            <div className="flex gap-2">
-              <Button 
-                onClick={() => {
-                  setProductType("laptops");
-                  setIsAddOpen(false);
-                }}
-                variant={productType === "laptops" ? "default" : "outline"}
-                size="sm"
-              >
-                Laptops
-              </Button>
-              <Button 
-                onClick={() => {
-                  setProductType("monitors");
-                  setIsAddOpen(false);
-                }}
-                variant={productType === "monitors" ? "default" : "outline"}
-                size="sm"
-              >
-                Monitors
-              </Button>
+            <div className="flex gap-2 flex-wrap">
+              {(["laptops", "monitors", "accessories", "tablets", "smartDevices"] as ProductType[]).map((type) => (
+                <Button
+                  key={type}
+                  onClick={() => {
+                    setProductType(type);
+                    setIsAddOpen(false);
+                  }}
+                  variant={productType === type ? "default" : "outline"}
+                  size="sm"
+                >
+                  {type === "laptops" && "Ноутбуки"}
+                  {type === "monitors" && "Монітори"}
+                  {type === "accessories" && "Аксесуари"}
+                  {type === "tablets" && "Планшети"}
+                  {type === "smartDevices" && "Смарт девайси"}
+                </Button>
+              ))}
             </div>
-            <Button 
-              onClick={() => navigate("/")} 
+            <Button
+              onClick={() => navigate("/")}
               variant="outline"
               className="border-border/40"
             >
@@ -188,31 +342,17 @@ export default function Admin() {
       <nav className="border-b border-border/40 bg-background/50 backdrop-blur-sm sticky top-16 z-40">
         <div className="container">
           <div className="flex overflow-x-auto gap-1 py-3 -mx-4 px-4 md:mx-0 md:px-0">
-            {productType === "laptops" ? (
-              CATEGORIES.map((cat) => (
-                <Button
-                  key={cat.value}
-                  onClick={() => setSelectedCategory(cat.value)}
-                  variant={selectedCategory === cat.value ? "default" : "ghost"}
-                  size="sm"
-                  className="whitespace-nowrap text-sm"
-                >
-                  {cat.label}
-                </Button>
-              ))
-            ) : (
-              MONITOR_CATEGORIES.map((cat) => (
-                <Button
-                  key={cat.value}
-                  onClick={() => setSelectedMonitorCategory(cat.value)}
-                  variant={selectedMonitorCategory === cat.value ? "default" : "ghost"}
-                  size="sm"
-                  className="whitespace-nowrap text-sm"
-                >
-                  {cat.label}
-                </Button>
-              ))
-            )}
+            {currentCategoryList.map((cat) => (
+              <Button
+                key={cat.value}
+                onClick={() => setCurrentCategory(cat.value)}
+                variant={currentCategory === cat.value ? "default" : "ghost"}
+                size="sm"
+                className="whitespace-nowrap text-sm"
+              >
+                {cat.label}
+              </Button>
+            ))}
           </div>
         </div>
       </nav>
@@ -225,33 +365,42 @@ export default function Admin() {
             <DialogTrigger asChild>
               <Button className="gap-2 bg-accent hover:bg-accent/90">
                 <Plus className="h-4 w-4" />
-                {productType === "laptops" ? "Add New Laptop" : "Add New Monitor"}
+                Add New {getProductTypeLabel()}
               </Button>
             </DialogTrigger>
             <DialogContent key={`add-${productType}`} className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>{productType === "laptops" ? "Add New Laptop" : "Add New Monitor"}</DialogTitle>
+                <DialogTitle>Add New {getProductTypeLabel()}</DialogTitle>
               </DialogHeader>
               <div className="overflow-y-auto pr-4">
-                {productType === "laptops" ? (
+                {productType === "laptops" && (
                   <LaptopForm
                     onSubmit={(data) => {
                       createMutation.mutate({
                         ...data,
-                        category: selectedCategory,
-                      });
+                        category: laptopCategory,
+                      } as any);
                     }}
                     isLoading={createMutation.isPending}
                   />
-                ) : (
-                  <MonitorForm 
-                    selectedCategory={selectedMonitorCategory}
+                )}
+                {productType === "monitors" && (
+                  <MonitorForm
+                    selectedCategory={monitorCategory}
                     onSubmit={(data) => {
-                      createMutation.mutate(data);
+                      createMutation.mutate({
+                        ...data,
+                        category: monitorCategory,
+                      });
                     }}
                     isLoading={createMutation.isPending}
                     onSuccess={() => setIsAddOpen(false)}
                   />
+                )}
+                {(productType === "accessories" || productType === "tablets" || productType === "smartDevices") && (
+                  <div className="text-center py-8 text-muted-foreground">
+                    Form for {getProductTypeLabel()} coming soon
+                  </div>
                 )}
               </div>
             </DialogContent>
@@ -262,13 +411,11 @@ export default function Admin() {
         <Card>
           <CardHeader>
             <CardTitle>
-              {productType === "laptops" 
-                ? CATEGORIES.find((c) => c.value === selectedCategory)?.label 
-                : MONITOR_CATEGORIES.find((c) => c.value === selectedMonitorCategory)?.label} ({currentItems.length})
+              {currentCategoryList.find((c) => c.value === currentCategory)?.label} ({currentItems.length})
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {isLoading ? (
+            {currentLoading ? (
               <div className="flex justify-center py-8">
                 <Loader2 className="h-6 w-6 animate-spin text-accent" />
               </div>
@@ -280,7 +427,6 @@ export default function Admin() {
                   <TableHeader>
                     <TableRow>
                       <TableHead>Name</TableHead>
-                      <TableHead>{productType === "laptops" ? "Processor" : "Resolution"}</TableHead>
                       <TableHead>Price</TableHead>
                       <TableHead>Condition</TableHead>
                       <TableHead>Actions</TableHead>
@@ -290,42 +436,12 @@ export default function Admin() {
                     {currentItems.map((item: any) => (
                       <TableRow key={item.id}>
                         <TableCell className="font-medium">{item.name}</TableCell>
-                        <TableCell className="text-sm">{productType === "laptops" ? item.processor : item.resolution}</TableCell>
                         <TableCell>{item.price} zł</TableCell>
                         <TableCell>{item.condition}</TableCell>
                         <TableCell className="space-x-2">
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => setEditingId(item.id)}
-                              >
-                                <Edit2 className="h-4 w-4" />
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                              <DialogHeader>
-                                <DialogTitle>Edit {productType === "laptops" ? "Laptop" : "Monitor"}</DialogTitle>
-                              </DialogHeader>
-                              <div className="overflow-y-auto pr-4">
-                                {productType === "laptops" ? (
-                                  <LaptopForm
-                                    initialData={item}
-                                    onSubmit={(data) => {
-                                      updateMutation.mutate({
-                                        id: item.id,
-                                        ...data,
-                                      });
-                                    }}
-                                    isLoading={updateMutation.isPending}
-                                  />
-                                ) : (
-                                  <MonitorForm monitorId={item.id} onSuccess={() => setEditingId(null)} />
-                                )}
-                              </div>
-                            </DialogContent>
-                          </Dialog>
+                          <Button variant="outline" size="sm" disabled>
+                            <Edit2 className="h-4 w-4" />
+                          </Button>
                           <Button
                             variant="destructive"
                             size="sm"
@@ -342,37 +458,30 @@ export default function Admin() {
             )}
           </CardContent>
         </Card>
-      </main>
 
-      {/* Delete Confirmation Dialog */}
-      <AlertDialog open={deleteId !== null} onOpenChange={(open) => !open && setDeleteId(null)}>
-        <AlertDialogContent>
-          <AlertDialogTitle>Delete {productType === "laptops" ? "Laptop" : "Monitor"}</AlertDialogTitle>
-          <AlertDialogDescription>
-            Are you sure you want to delete this {productType === "laptops" ? "laptop" : "monitor"}? This action cannot be undone.
-          </AlertDialogDescription>
-          <div className="flex gap-3 justify-end">
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                if (deleteId) {
-                  deleteMutation.mutate({ id: deleteId });
-                }
-              }}
-              className="bg-destructive hover:bg-destructive/90"
-            >
-              {deleteMutation.isPending ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Deleting...
-                </>
-              ) : (
-                "Delete"
-              )}
-            </AlertDialogAction>
-          </div>
-        </AlertDialogContent>
-      </AlertDialog>
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={deleteId !== null} onOpenChange={(open) => !open && setDeleteId(null)}>
+          <AlertDialogContent>
+            <AlertDialogTitle>Delete Product</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this product? This action cannot be undone.
+            </AlertDialogDescription>
+            <div className="flex gap-2 justify-end">
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => {
+                  if (deleteId) {
+                    deleteMutation.mutate({ id: deleteId });
+                  }
+                }}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                Delete
+              </AlertDialogAction>
+            </div>
+          </AlertDialogContent>
+        </AlertDialog>
+      </main>
     </div>
   );
 }

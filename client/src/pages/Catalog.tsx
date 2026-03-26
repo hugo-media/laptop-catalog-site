@@ -14,77 +14,113 @@ import { Loader2, Shield, Truck, RotateCcw, Star, Search, X } from "lucide-react
 import { useTranslation } from "react-i18next";
 import type { Laptop as LaptopType } from "../../../drizzle/schema";
 
-type Category = "promotions" | "refurbished" | "new" | "monitors" | "accessories" | "business";
+type ProductType = "laptops" | "monitors" | "accessories" | "tablets" | "smartDevices";
+type CategoryType = "promotions" | "refurbished" | "new" | "business";
 
-const getCATEGORIES = (t: any): { value: Category; label: string }[] => [
+const PRODUCT_TYPES: { value: ProductType; label: string }[] = [
+  { value: "laptops", label: "Ноутбуки" },
+  { value: "monitors", label: "Монітори" },
+  { value: "accessories", label: "Аксесуари" },
+  { value: "tablets", label: "Планшети" },
+  { value: "smartDevices", label: "Смарт девайси" },
+];
+
+const getCATEGORIES = (t: any): { value: CategoryType; label: string }[] => [
   { value: "promotions", label: t("categories.promotions") },
   { value: "refurbished", label: t("categories.refurbished") },
   { value: "new", label: t("categories.new") },
-  { value: "monitors", label: t("categories.monitors") },
-  { value: "accessories", label: t("categories.accessories") },
   { value: "business", label: t("categories.business") },
 ];
 
 export default function Catalog() {
   const { t } = useTranslation();
-  const { data: laptops, isLoading } = trpc.laptops.list.useQuery();
   const { user } = useAuth();
   const [, navigate] = useLocation();
-  const [selectedCategory, setSelectedCategory] = useState<Category>("new");
+  const [productType, setProductType] = useState<ProductType>("laptops");
+  const [selectedCategory, setSelectedCategory] = useState<CategoryType>("new");
   const [laptopFilters, setLaptopFilters] = useState<LaptopFilterOptions>({});
   const [monitorFilters, setMonitorFilters] = useState<MonitorFilterOptions>({});
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLaptop, setSelectedLaptop] = useState<LaptopType | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-  // Filter laptops by category, applied filters, and search query
-  const filteredLaptops = useMemo(() => {
-    let filtered = laptops?.filter((l) => l.category === selectedCategory) || [];
+  // Queries for all product types
+  const { data: laptops, isLoading: laptopsLoading } = trpc.laptops.list.useQuery();
+  const { data: monitors, isLoading: monitorsLoading } = trpc.monitors.list.useQuery();
+  const { data: accessories, isLoading: accessoriesLoading } = trpc.accessories.list.useQuery();
+  const { data: tablets, isLoading: tabletsLoading } = trpc.tablets.list.useQuery();
+  const { data: smartDevices, isLoading: smartDevicesLoading } = trpc.smartDevices.list.useQuery();
+
+  // Get current data based on product type
+  const getCurrentData = () => {
+    switch (productType) {
+      case "laptops": return laptops || [];
+      case "monitors": return monitors || [];
+      case "accessories": return accessories || [];
+      case "tablets": return tablets || [];
+      case "smartDevices": return smartDevices || [];
+    }
+  };
+
+  const getCurrentLoading = () => {
+    switch (productType) {
+      case "laptops": return laptopsLoading;
+      case "monitors": return monitorsLoading;
+      case "accessories": return accessoriesLoading;
+      case "tablets": return tabletsLoading;
+      case "smartDevices": return smartDevicesLoading;
+    }
+  };
+
+  // Filter products by category, applied filters, and search query
+  const filteredProducts = useMemo(() => {
+    let filtered = getCurrentData().filter((p: any) => p.category === selectedCategory) || [];
 
     // Apply search query
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter((l) => {
-        const searchableText = `${l.name} ${l.processor} ${l.graphicsCard} ${l.ram} ${l.storage} ${l.display}`.toLowerCase();
+      filtered = filtered.filter((p: any) => {
+        const searchableText = `${p.name} ${p.brand || ""} ${p.type || ""}`.toLowerCase();
         return searchableText.includes(query);
       });
     }
 
     // Apply laptop-specific filters
-    if (selectedCategory !== "monitors") {
+    if (productType === "laptops") {
       if (laptopFilters.minPrice !== undefined) {
-        filtered = filtered.filter((l) => l.price >= laptopFilters.minPrice!);
+        filtered = filtered.filter((l: any) => l.price >= laptopFilters.minPrice!);
       }
       if (laptopFilters.maxPrice !== undefined) {
-        filtered = filtered.filter((l) => l.price <= laptopFilters.maxPrice!);
+        filtered = filtered.filter((l: any) => l.price <= laptopFilters.maxPrice!);
       }
       if (laptopFilters.display) {
-        filtered = filtered.filter((l) => l.display?.includes(laptopFilters.display!));
+        filtered = filtered.filter((l: any) => l.display?.includes(laptopFilters.display!));
       }
       if (laptopFilters.ram) {
-        filtered = filtered.filter((l) => l.ram?.includes(laptopFilters.ram!));
+        filtered = filtered.filter((l: any) => l.ram?.includes(laptopFilters.ram!));
       }
       if (laptopFilters.processor) {
-        filtered = filtered.filter((l) => l.processor?.includes(laptopFilters.processor!));
+        filtered = filtered.filter((l: any) => l.processor?.includes(laptopFilters.processor!));
       }
       if (laptopFilters.brand) {
-        filtered = filtered.filter((l) => l.name?.includes(laptopFilters.brand!));
+        filtered = filtered.filter((l: any) => l.name?.includes(laptopFilters.brand!));
       }
     }
 
     // Apply monitor-specific filters
-    if (selectedCategory === "monitors") {
+    if (productType === "monitors") {
       if (monitorFilters.minPrice !== undefined) {
-        filtered = filtered.filter((l) => l.price >= monitorFilters.minPrice!);
+        filtered = filtered.filter((m: any) => m.price >= monitorFilters.minPrice!);
       }
       if (monitorFilters.maxPrice !== undefined) {
-        filtered = filtered.filter((l) => l.price <= monitorFilters.maxPrice!);
+        filtered = filtered.filter((m: any) => m.price <= monitorFilters.maxPrice!);
       }
-      // Add more monitor-specific filters as needed
     }
 
     return filtered;
-  }, [laptops, selectedCategory, laptopFilters, monitorFilters, searchQuery]);
+  }, [getCurrentData(), selectedCategory, laptopFilters, monitorFilters, searchQuery, productType]);
+
+  const isLoading = getCurrentLoading();
 
   return (
     <div className="min-h-screen bg-premium">
@@ -151,10 +187,35 @@ export default function Catalog() {
         </div>
       </header>
 
-      {/* Category Navigation */}
+      {/* Product Type Navigation */}
       <nav className="border-b border-border/40 bg-background/50 backdrop-blur-sm sticky top-16 z-40">
         <div className="container">
-          <div className="flex justify-center overflow-x-auto gap-1 py-3 -mx-4 px-4 md:mx-0 md:px-0 md:justify-center">
+          <div className="flex justify-center overflow-x-auto gap-1 py-3 -mx-4 px-4 md:mx-0 md:px-0">
+            {PRODUCT_TYPES.map((type) => (
+              <Button
+                key={type.value}
+                onClick={() => {
+                  setProductType(type.value);
+                  setSelectedCategory("new");
+                  setLaptopFilters({});
+                  setMonitorFilters({});
+                  setSearchQuery("");
+                }}
+                variant={productType === type.value ? "default" : "ghost"}
+                size="sm"
+                className="whitespace-nowrap text-sm"
+              >
+                {type.label}
+              </Button>
+            ))}
+          </div>
+        </div>
+      </nav>
+
+      {/* Category Navigation */}
+      <nav className="border-b border-border/40 bg-background/30 backdrop-blur-sm sticky top-[68px] z-39">
+        <div className="container">
+          <div className="flex justify-center overflow-x-auto gap-1 py-2 -mx-4 px-4 md:mx-0 md:px-0">
             {getCATEGORIES(t).map((cat) => (
               <Button
                 key={cat.value}
@@ -166,7 +227,7 @@ export default function Catalog() {
                 }}
                 variant={selectedCategory === cat.value ? "default" : "ghost"}
                 size="sm"
-                className="whitespace-nowrap text-sm"
+                className="whitespace-nowrap text-xs"
               >
                 {cat.label}
               </Button>
@@ -216,7 +277,7 @@ export default function Catalog() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Filters Sidebar */}
           <div className="lg:col-span-1">
-            {selectedCategory === "monitors" ? (
+            {productType === "monitors" ? (
               <MonitorFilters onFilterChange={setMonitorFilters} />
             ) : (
               <LaptopFilters onFilterChange={setLaptopFilters} />
@@ -232,7 +293,7 @@ export default function Catalog() {
                   {getCATEGORIES(t).find((c: any) => c.value === selectedCategory)?.label}
                 </h2>
                 <p className="text-muted-foreground">
-                  {filteredLaptops.length} {t(selectedCategory === "monitors" ? "catalog.monitors" : "catalog.laptops")}
+                  {filteredProducts.length} {t("catalog.products")}
                 </p>
               </div>
 
@@ -262,36 +323,22 @@ export default function Catalog() {
               <div className="flex justify-center py-12">
                 <Loader2 className="h-8 w-8 animate-spin text-accent" />
               </div>
-            ) : filteredLaptops.length === 0 ? (
+            ) : filteredProducts.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-muted-foreground mb-4">
-                  {searchQuery 
-                    ? t("catalog.noResultsSearch") 
-                    : t("catalog.noResultsFilters")}
-                </p>
-                <Button 
-                  onClick={() => {
-                    setLaptopFilters({});
-                    setMonitorFilters({});
-                    setSearchQuery("");
-                  }}
-                  variant="outline"
-                >
-                  {t("catalog.clearFilters")}
-                </Button>
+                <p className="text-muted-foreground mb-4">{t("catalog.noResults")}</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredLaptops.map((laptop) => (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {filteredProducts.map((product: any) => (
                   <div
-                    key={laptop.id}
+                    key={product.id}
                     onClick={() => {
-                      setSelectedLaptop(laptop);
+                      setSelectedLaptop(product);
                       setModalOpen(true);
                     }}
                     className="cursor-pointer"
                   >
-                    <LaptopCard laptop={laptop} />
+                    <LaptopCard laptop={product} />
                   </div>
                 ))}
               </div>
@@ -301,69 +348,47 @@ export default function Catalog() {
       </main>
 
       {/* Product Detail Modal */}
-      <ProductDetailModal
-        laptop={selectedLaptop}
-        open={modalOpen}
-        onOpenChange={setModalOpen}
-      />
+      {selectedLaptop && (
+        <ProductDetailModal
+          laptop={selectedLaptop}
+          open={modalOpen}
+          onOpenChange={(open) => {
+            setModalOpen(open);
+            if (!open) setSelectedLaptop(null);
+          }}
+        />
+      )}
 
       {/* Footer */}
       <footer className="border-t border-border/40 bg-background/50 mt-16">
-        <div className="container py-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-            {/* Brand */}
+        <div className="container py-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <h3 className="font-semibold text-foreground mb-4">{t("footer.brand")}</h3>
-              <p className="text-sm text-muted-foreground">{t("footer.brandDesc")}</p>
+              <h3 className="font-semibold text-foreground mb-4">{t("footer.about")}</h3>
+              <p className="text-sm text-muted-foreground">{t("footer.aboutDesc")}</p>
             </div>
-
-            {/* Categories */}
-            <div>
-              <h3 className="font-semibold text-foreground mb-4">{t("footer.categories")}</h3>
-              <ul className="space-y-2 text-sm">
-                {getCATEGORIES(t).map((cat) => (
-                  <li key={cat.value}>
-                    <Button 
-                      variant="link" 
-                      size="sm"
-                      onClick={() => {
-                        setSelectedCategory(cat.value);
-                        setSearchQuery("");
-                      }}
-                      className="p-0 h-auto text-muted-foreground hover:text-foreground"
-                    >
-                      {cat.label}
-                    </Button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Support */}
             <div>
               <h3 className="font-semibold text-foreground mb-4">{t("footer.support")}</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground">{t("footer.contactUs")}</a></li>
-                <li><a href="#" className="hover:text-foreground">{t("footer.shippingInfo")}</a></li>
-                <li><a href="#" className="hover:text-foreground">{t("footer.returns")}</a></li>
                 <li><a href="#" className="hover:text-foreground">{t("footer.faq")}</a></li>
+                <li><a href="#" className="hover:text-foreground">{t("footer.contact")}</a></li>
               </ul>
             </div>
-
-            {/* Legal */}
             <div>
               <h3 className="font-semibold text-foreground mb-4">{t("footer.legal")}</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground">{t("footer.privacyPolicy")}</a></li>
-                <li><a href="#" className="hover:text-foreground">{t("footer.termsOfService")}</a></li>
-                <li><a href="#" className="hover:text-foreground">{t("footer.cookiePolicy")}</a></li>
+                <li><a href="#" className="hover:text-foreground">{t("footer.privacy")}</a></li>
+                <li><a href="#" className="hover:text-foreground">{t("footer.terms")}</a></li>
               </ul>
             </div>
+            <div>
+              <h3 className="font-semibold text-foreground mb-4">{t("footer.contact")}</h3>
+              <p className="text-sm text-muted-foreground">info@hugomedia.com</p>
+              <p className="text-sm text-muted-foreground">+48 123 456 789</p>
+            </div>
           </div>
-
-          {/* Copyright */}
-          <div className="border-t border-border/40 pt-8 text-center text-sm text-muted-foreground">
-            <p>{t("footer.copyright")}</p>
+          <div className="border-t border-border/40 mt-8 pt-8 text-center text-sm text-muted-foreground">
+            <p>&copy; 2026 Hugo Media. {t("footer.rights")}</p>
           </div>
         </div>
       </footer>

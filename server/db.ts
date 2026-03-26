@@ -1,6 +1,6 @@
 import { eq, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertLaptop, InsertUser, InsertMonitor, laptops, users, monitors } from "../drizzle/schema";
+import { InsertLaptop, InsertUser, InsertMonitor, InsertAccessory, InsertTablet, InsertSmartDevice, laptops, users, monitors, accessories, tablets, smartDevices } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -151,6 +151,102 @@ export async function deleteMonitor(id: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   return db.delete(monitors).where(eq(monitors.id, id));
+}
+
+export async function getAllAccessories() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(accessories).orderBy(desc(accessories.createdAt));
+}
+
+export async function getAccessoryById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(accessories).where(eq(accessories.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createAccessory(data: InsertAccessory) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(accessories).values(data);
+  return result;
+}
+
+export async function updateAccessory(id: number, data: Partial<InsertAccessory>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.update(accessories).set(data).where(eq(accessories.id, id));
+}
+
+export async function deleteAccessory(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.delete(accessories).where(eq(accessories.id, id));
+}
+
+export async function getAllTablets() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(tablets).orderBy(desc(tablets.createdAt));
+}
+
+export async function getTabletById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(tablets).where(eq(tablets.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createTablet(data: InsertTablet) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(tablets).values(data);
+  return result;
+}
+
+export async function updateTablet(id: number, data: Partial<InsertTablet>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.update(tablets).set(data).where(eq(tablets.id, id));
+}
+
+export async function deleteTablet(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.delete(tablets).where(eq(tablets.id, id));
+}
+
+export async function getAllSmartDevices() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(smartDevices).orderBy(desc(smartDevices.createdAt));
+}
+
+export async function getSmartDeviceById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(smartDevices).where(eq(smartDevices.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createSmartDevice(data: InsertSmartDevice) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(smartDevices).values(data);
+  return result;
+}
+
+export async function updateSmartDevice(id: number, data: Partial<InsertSmartDevice>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.update(smartDevices).set(data).where(eq(smartDevices.id, id));
+}
+
+export async function deleteSmartDevice(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.delete(smartDevices).where(eq(smartDevices.id, id));
 }
 
 // TODO: add feature queries here as your schema grows.
