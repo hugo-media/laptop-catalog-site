@@ -13,6 +13,9 @@ import {
 } from "@/components/ui/dialog";
 import { LaptopForm } from "@/components/LaptopForm";
 import MonitorForm from "@/components/MonitorForm";
+import { AccessoryForm } from "@/components/AccessoryForm";
+import { TabletForm } from "@/components/TabletForm";
+import { SmartDeviceForm } from "@/components/SmartDeviceForm";
 import { TabletFilters, type TabletFilterOptions } from "@/components/TabletFilters";
 import { SmartDeviceFilters, type SmartDeviceFilterOptions } from "@/components/SmartDeviceFilters";
 import {
@@ -83,11 +86,11 @@ export default function Admin() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [productType, setProductType] = useState<ProductType>("laptops");
-  const [laptopCategory, setLaptopCategory] = useState<LaptopCategory>("new");
-  const [monitorCategory, setMonitorCategory] = useState<MonitorCategory>("new");
-  const [accessoryCategory, setAccessoryCategory] = useState<AccessoryCategory>("new");
-  const [tabletCategory, setTabletCategory] = useState<TabletCategory>("new");
-  const [smartDeviceCategory, setSmartDeviceCategory] = useState<SmartDeviceCategory>("new");
+  const [laptopCategory, setLaptopCategory] = useState<LaptopCategory>("promotions");
+  const [monitorCategory, setMonitorCategory] = useState<MonitorCategory>("promotions");
+  const [accessoryCategory, setAccessoryCategory] = useState<AccessoryCategory>("promotions");
+  const [tabletCategory, setTabletCategory] = useState<TabletCategory>("promotions");
+  const [smartDeviceCategory, setSmartDeviceCategory] = useState<SmartDeviceCategory>("promotions");
 
   // Queries
   const { data: laptops, isLoading: laptopsLoading } = trpc.laptops.list.useQuery();
@@ -416,10 +419,38 @@ export default function Admin() {
                     onSuccess={() => setIsAddOpen(false)}
                   />
                 )}
-                {(productType === "accessories" || productType === "tablets" || productType === "smartDevices") && (
-                  <div className="text-center py-8 text-muted-foreground">
-                    Form for {getProductTypeLabel()} coming soon
-                  </div>
+                {productType === "accessories" && (
+                  <AccessoryForm
+                    onSubmit={(data) => {
+                      createMutation.mutate({
+                        ...data,
+                        category: accessoryCategory,
+                      } as any);
+                    }}
+                    isLoading={createMutation.isPending}
+                  />
+                )}
+                {productType === "tablets" && (
+                  <TabletForm
+                    onSubmit={(data) => {
+                      createMutation.mutate({
+                        ...data,
+                        category: tabletCategory,
+                      } as any);
+                    }}
+                    isLoading={createMutation.isPending}
+                  />
+                )}
+                {productType === "smartDevices" && (
+                  <SmartDeviceForm
+                    onSubmit={(data) => {
+                      createMutation.mutate({
+                        ...data,
+                        category: smartDeviceCategory,
+                      } as any);
+                    }}
+                    isLoading={createMutation.isPending}
+                  />
                 )}
               </div>
             </DialogContent>
