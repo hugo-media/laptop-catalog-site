@@ -355,71 +355,54 @@ export default function Catalog() {
         </div>
       </div>
 
-      {/* Main Categories Navigation */}
+      {/* Main Categories Navigation with Subcategory Dropdown */}
       <div className="border-b border-border/40 bg-background/50">
         <div className="container py-6">
           <p className="text-sm text-muted-foreground mb-4">Перейти до категорії:</p>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             {PRODUCT_TYPES.map((type) => (
-              <Button
-                key={type.value}
-                onClick={() => navigate(`/catalog/${type.value}`)}
-                variant={productType === type.value ? "default" : "outline"}
-                className={`w-full justify-between ${
-                  productType === type.value
-                    ? "border-accent bg-accent/10 text-accent"
-                    : "border-border/40 hover:border-accent/50"
-                }`}
-              >
-                <span>{type.label}</span>
-                {productType === type.value && <ArrowRight className="h-4 w-4" />}
-              </Button>
+              <div key={type.value} className="relative inline-block">
+                <Button
+                  onClick={() => navigate(`/catalog/${type.value}`)}
+                  variant={productType === type.value ? "default" : "outline"}
+                  className={`justify-between ${
+                    productType === type.value
+                      ? "border-accent bg-accent/10 text-accent"
+                      : "border-border/40 hover:border-accent/50"
+                  }`}
+                >
+                  <span>{type.label}</span>
+                  {productType === type.value && getCategoryListForProductType().length > 0 && (
+                    <ArrowRight className={`h-4 w-4 ml-2 transition-transform ${showSubcategoryAccordion ? 'rotate-90' : ''}`} />
+                  )}
+                </Button>
+                
+                {/* Subcategory Dropdown - Only show for selected category */}
+                {productType === type.value && getCategoryListForProductType().length > 0 && (
+                  <div className="absolute top-full left-0 mt-1 bg-white border border-border/40 rounded-lg shadow-lg z-50 min-w-max">
+                    {getCategoryListForProductType().map((cat) => (
+                      <button
+                        key={cat.value}
+                        onClick={() => {
+                          setSelectedCategory(cat.value);
+                          setLaptopFilters({});
+                          setMonitorFilters({});
+                          setTabletFilters({});
+                          setSmartDeviceFilters({});
+                          setSearchQuery("");
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm text-foreground hover:bg-accent/10 transition-colors first:rounded-t-lg last:rounded-b-lg"
+                      >
+                        {cat.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             ))}
           </div>
         </div>
       </div>
-
-      {/* Subcategory Dropdown Menu - Only show when product type is selected */}
-      {getCategoryListForProductType().length > 0 && (
-        <div className="border-b border-border/40 bg-background/30">
-          <div className="container py-3">
-            <div className="relative inline-block">
-              <Button
-                onClick={() => setShowSubcategoryAccordion(!showSubcategoryAccordion)}
-                variant="outline"
-                size="sm"
-                className="justify-between gap-2"
-              >
-                <span>Підкатегорії</span>
-                <ArrowRight className={`h-4 w-4 transition-transform ${showSubcategoryAccordion ? 'rotate-90' : ''}`} />
-              </Button>
-              
-              {/* Dropdown Menu */}
-              {showSubcategoryAccordion && (
-                <div className="absolute top-full left-0 mt-1 bg-white border border-border/40 rounded-lg shadow-lg z-50 min-w-max">
-                  {getCategoryListForProductType().map((cat) => (
-                    <button
-                      key={cat.value}
-                      onClick={() => {
-                        setSelectedCategory(cat.value);
-                        setLaptopFilters({});
-                        setMonitorFilters({});
-                        setTabletFilters({});
-                        setSmartDeviceFilters({});
-                        setSearchQuery("");
-                        setShowSubcategoryAccordion(false);
-                      }}
-                      className="block w-full text-left px-4 py-2 text-sm text-foreground hover:bg-accent/10 transition-colors first:rounded-t-lg last:rounded-b-lg"
-                    >
-                      {cat.label}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Trust Signals */}
       <div className="border-b border-border/40 bg-background/30">
