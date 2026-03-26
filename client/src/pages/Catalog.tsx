@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { useLocation } from "wouter";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Loader2, Shield, Truck, RotateCcw, Star, Search, X, ChevronLeft, ArrowRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import type { Laptop as LaptopType } from "../../../drizzle/schema";
@@ -85,6 +85,20 @@ export default function Catalog() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLaptop, setSelectedLaptop] = useState<LaptopType | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+
+  // Sync productType state with URL parameter
+  useEffect(() => {
+    const type = params?.split('/').pop();
+    if (type && ['promotions', 'laptops', 'monitors', 'accessories', 'tablets', 'smartDevices'].includes(type)) {
+      setProductType(type as ProductType);
+      setSelectedCategory("new");
+      setLaptopFilters({});
+      setMonitorFilters({});
+      setTabletFilters({});
+      setSmartDeviceFilters({});
+      setSearchQuery("");
+    }
+  }, [params]);
 
   // Queries for all product types
   const { data: laptops, isLoading: laptopsLoading } = trpc.laptops.list.useQuery();
