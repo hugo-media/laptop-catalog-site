@@ -303,3 +303,10 @@
 - [x] Move header back to top of page (sticky top-0)
 - [x] Center category navigation items in header
 - [x] Ensure header stays fixed during scroll
+
+
+## Subcategory Accordion/Popup
+- [x] Replace subcategory row with accordion that expands on main category click
+- [x] Show subcategories (Акції, Ноутбуки після оренди, Нові ноутбуки, Пропозиція для компаній) in popup/accordion
+- [x] Filter products when subcategory is selected
+- [x] Close accordion when subcategory is selected

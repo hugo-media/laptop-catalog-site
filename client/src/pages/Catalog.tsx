@@ -87,6 +87,7 @@ export default function Catalog() {
   const [selectedLaptop, setSelectedLaptop] = useState<LaptopType | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [sortBy, setSortBy] = useState<'price-asc' | 'price-desc' | 'popularity' | 'newest'>('newest');
+  const [showSubcategoryAccordion, setShowSubcategoryAccordion] = useState(false);
 
   // Sync productType state with URL parameter
   useEffect(() => {
@@ -377,32 +378,46 @@ export default function Catalog() {
         </div>
       </div>
 
-      {/* Subcategory Navigation - Only show when product type is selected */}
+      {/* Subcategory Accordion - Only show when product type is selected */}
       {getCategoryListForProductType().length > 0 && (
-        <nav className="border-b border-border/40 bg-background/30 backdrop-blur-sm z-39">
-          <div className="container">
-            <div className="flex justify-center overflow-x-auto gap-1 py-2 -mx-4 px-4 md:mx-0 md:px-0">
-              {getCategoryListForProductType().map((cat) => (
-                <Button
-                  key={cat.value}
-                  onClick={() => {
-                    setSelectedCategory(cat.value);
-                    setLaptopFilters({});
-                    setMonitorFilters({});
-                    setTabletFilters({});
-                    setSmartDeviceFilters({});
-                    setSearchQuery("");
-                  }}
-                  variant={selectedCategory === cat.value ? "default" : "ghost"}
-                  size="sm"
-                  className="whitespace-nowrap text-xs"
-                >
-                  {cat.label}
-                </Button>
-              ))}
-            </div>
+        <div className="border-b border-border/40 bg-background/30">
+          <div className="container py-3">
+            <Button
+              onClick={() => setShowSubcategoryAccordion(!showSubcategoryAccordion)}
+              variant="outline"
+              size="sm"
+              className="w-full md:w-auto justify-between"
+            >
+              <span>Підкатегорії: {getCategoryListForProductType().find(c => c.value === selectedCategory)?.label}</span>
+              <ArrowRight className={`h-4 w-4 transition-transform ${showSubcategoryAccordion ? 'rotate-90' : ''}`} />
+            </Button>
+            
+            {/* Accordion Content */}
+            {showSubcategoryAccordion && (
+              <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2">
+                {getCategoryListForProductType().map((cat) => (
+                  <Button
+                    key={cat.value}
+                    onClick={() => {
+                      setSelectedCategory(cat.value);
+                      setLaptopFilters({});
+                      setMonitorFilters({});
+                      setTabletFilters({});
+                      setSmartDeviceFilters({});
+                      setSearchQuery("");
+                      setShowSubcategoryAccordion(false);
+                    }}
+                    variant={selectedCategory === cat.value ? "default" : "outline"}
+                    size="sm"
+                    className="text-xs"
+                  >
+                    {cat.label}
+                  </Button>
+                ))}
+              </div>
+            )}
           </div>
-        </nav>
+        </div>
       )}
 
       {/* Trust Signals */}
