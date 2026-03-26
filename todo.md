@@ -244,3 +244,8 @@
 - [x] Fix carousel width to full page
 - [x] Reduce carousel height
 - [x] Make category navigation bar sticky/fixed at top
+
+
+## Layout Reordering
+- [x] Move carousel below category navigation
+- [x] Ensure category bar stays fixed at top while scrolling
