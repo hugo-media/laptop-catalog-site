@@ -128,7 +128,7 @@ export function AccessoryForm({ initialData, onSubmit, isLoading = false }: Acce
       </div>
 
       <Button type="submit" disabled={isLoading} className="w-full">
-        {isLoading ? "Adding..." : "Add Accessory"}
+        {isLoading ? (initialData ? "Updating..." : "Adding...") : (initialData ? "Update Accessory" : "Add Accessory")}
       </Button>
     </form>
   );

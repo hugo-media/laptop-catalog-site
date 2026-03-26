@@ -143,7 +143,7 @@ export function SmartDeviceForm({ initialData, onSubmit, isLoading = false }: Sm
       </div>
 
       <Button type="submit" disabled={isLoading} className="w-full">
-        {isLoading ? "Adding..." : "Add Smart Device"}
+        {isLoading ? (initialData ? "Updating..." : "Adding...") : (initialData ? "Update Smart Device" : "Add Smart Device")}
       </Button>
     </form>
   );

@@ -154,7 +154,7 @@ export function TabletForm({ initialData, onSubmit, isLoading = false }: TabletF
       </div>
 
       <Button type="submit" disabled={isLoading} className="w-full">
-        {isLoading ? "Adding..." : "Add Tablet"}
+        {isLoading ? (initialData ? "Updating..." : "Adding...") : (initialData ? "Update Tablet" : "Add Tablet")}
       </Button>
     </form>
   );

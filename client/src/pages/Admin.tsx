@@ -211,6 +211,56 @@ export default function Admin() {
     onError: (error) => toast.error(error.message || "Failed"),
   });
 
+  const updateLaptopMutation = trpc.laptops.update.useMutation({
+    onSuccess: () => {
+      toast.success("Laptop updated");
+      setIsAddOpen(false);
+      setEditingId(null);
+      utils.laptops.list.invalidate();
+    },
+    onError: (error) => toast.error(error.message || "Failed"),
+  });
+
+  const updateMonitorMutation = trpc.monitors.update.useMutation({
+    onSuccess: () => {
+      toast.success("Monitor updated");
+      setIsAddOpen(false);
+      setEditingId(null);
+      utils.monitors.list.invalidate();
+    },
+    onError: (error) => toast.error(error.message || "Failed"),
+  });
+
+  const updateAccessoryMutation = trpc.accessories.update.useMutation({
+    onSuccess: () => {
+      toast.success("Accessory updated");
+      setIsAddOpen(false);
+      setEditingId(null);
+      utils.accessories.list.invalidate();
+    },
+    onError: (error) => toast.error(error.message || "Failed"),
+  });
+
+  const updateTabletMutation = trpc.tablets.update.useMutation({
+    onSuccess: () => {
+      toast.success("Tablet updated");
+      setIsAddOpen(false);
+      setEditingId(null);
+      utils.tablets.list.invalidate();
+    },
+    onError: (error) => toast.error(error.message || "Failed"),
+  });
+
+  const updateSmartDeviceMutation = trpc.smartDevices.update.useMutation({
+    onSuccess: () => {
+      toast.success("Smart device updated");
+      setIsAddOpen(false);
+      setEditingId(null);
+      utils.smartDevices.list.invalidate();
+    },
+    onError: (error) => toast.error(error.message || "Failed"),
+  });
+
   const deleteLaptopMutation = trpc.laptops.delete.useMutation({
     onSuccess: () => {
       toast.success("Laptop deleted");
@@ -275,6 +325,17 @@ export default function Admin() {
       case "accessories": return createAccessoryMutation;
       case "tablets": return createTabletMutation;
       case "smartDevices": return createSmartDeviceMutation;
+    }
+  };
+
+  const getUpdateMutation = () => {
+    switch (productType) {
+      case "promotions": return null;
+      case "laptops": return updateLaptopMutation;
+      case "monitors": return updateMonitorMutation;
+      case "accessories": return updateAccessoryMutation;
+      case "tablets": return updateTabletMutation;
+      case "smartDevices": return updateSmartDeviceMutation;
     }
   };
 
@@ -390,66 +451,111 @@ export default function Admin() {
                 Add New {getProductTypeLabel()}
               </Button>
             </DialogTrigger>
-            <DialogContent key={`add-${productType}`} className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogContent key={`${editingId ? 'edit' : 'add'}-${productType}`} className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>Add New {getProductTypeLabel()}</DialogTitle>
+                <DialogTitle>{editingId ? `Edit ${getProductTypeLabel()}` : `Add New ${getProductTypeLabel()}`}</DialogTitle>
               </DialogHeader>
               <div className="overflow-y-auto pr-4">
                 {productType === "laptops" && (
                   <LaptopForm
+                    initialData={editingId ? currentItems.find((item: any) => item.id === editingId) : undefined}
                     onSubmit={(data) => {
-                      createMutation.mutate({
-                        ...data,
-                        category: laptopCategory,
-                      } as any);
+                      if (editingId) {
+                        getUpdateMutation()?.mutate({
+                          id: editingId,
+                          ...data,
+                          category: laptopCategory,
+                        } as any);
+                      } else {
+                        createMutation.mutate({
+                          ...data,
+                          category: laptopCategory,
+                        } as any);
+                      }
                     }}
-                    isLoading={createMutation.isPending}
+                    isLoading={editingId ? getUpdateMutation()?.isPending : createMutation.isPending}
                   />
                 )}
                 {productType === "monitors" && (
                   <MonitorForm
+                    initialData={editingId ? currentItems.find((item: any) => item.id === editingId) : undefined}
                     selectedCategory={monitorCategory}
                     onSubmit={(data) => {
-                      createMutation.mutate({
-                        ...data,
-                        category: monitorCategory,
-                      });
+                      if (editingId) {
+                        getUpdateMutation()?.mutate({
+                          id: editingId,
+                          ...data,
+                          category: monitorCategory,
+                        } as any);
+                      } else {
+                        createMutation.mutate({
+                          ...data,
+                          category: monitorCategory,
+                        });
+                      }
                     }}
-                    isLoading={createMutation.isPending}
+                    isLoading={editingId ? getUpdateMutation()?.isPending : createMutation.isPending}
                     onSuccess={() => setIsAddOpen(false)}
                   />
                 )}
                 {productType === "accessories" && (
                   <AccessoryForm
+                    initialData={editingId ? currentItems.find((item: any) => item.id === editingId) : undefined}
                     onSubmit={(data) => {
-                      createMutation.mutate({
-                        ...data,
-                        category: accessoryCategory,
-                      } as any);
+                      if (editingId) {
+                        getUpdateMutation()?.mutate({
+                          id: editingId,
+                          ...data,
+                          category: accessoryCategory,
+                        } as any);
+                      } else {
+                        createMutation.mutate({
+                          ...data,
+                          category: accessoryCategory,
+                        } as any);
+                      }
                     }}
-                    isLoading={createMutation.isPending}
+                    isLoading={editingId ? getUpdateMutation()?.isPending : createMutation.isPending}
                   />
                 )}
                 {productType === "tablets" && (
                   <TabletForm
+                    initialData={editingId ? currentItems.find((item: any) => item.id === editingId) : undefined}
                     onSubmit={(data) => {
-                      createMutation.mutate({
-                        ...data,
-                        category: tabletCategory,
-                      } as any);
+                      if (editingId) {
+                        getUpdateMutation()?.mutate({
+                          id: editingId,
+                          ...data,
+                          category: tabletCategory,
+                        } as any);
+                      } else {
+                        createMutation.mutate({
+                          ...data,
+                          category: tabletCategory,
+                        } as any);
+                      }
                     }}
-                    isLoading={createMutation.isPending}
+                    isLoading={editingId ? getUpdateMutation()?.isPending : createMutation.isPending}
                   />
                 )}
                 {productType === "smartDevices" && (
                   <SmartDeviceForm
+                    initialData={editingId ? currentItems.find((item: any) => item.id === editingId) : undefined}
                     onSubmit={(data) => {
-                      createMutation.mutate({
-                        ...data,
-                        category: smartDeviceCategory,
-                      } as any);
+                      if (editingId) {
+                        getUpdateMutation()?.mutate({
+                          id: editingId,
+                          ...data,
+                          category: smartDeviceCategory,
+                        } as any);
+                      } else {
+                        createMutation.mutate({
+                          ...data,
+                          category: smartDeviceCategory,
+                        } as any);
+                      }
                     }}
-                    isLoading={createMutation.isPending}
+                    isLoading={editingId ? getUpdateMutation()?.isPending : createMutation.isPending}
                   />
                 )}
               </div>
@@ -489,7 +595,14 @@ export default function Admin() {
                         <TableCell>{item.price} zł</TableCell>
                         <TableCell>{item.condition}</TableCell>
                         <TableCell className="space-x-2">
-                          <Button variant="outline" size="sm" disabled>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setEditingId(item.id);
+                              setIsAddOpen(true);
+                            }}
+                          >
                             <Edit2 className="h-4 w-4" />
                           </Button>
                           <Button

@@ -9,6 +9,7 @@ import { Upload } from "lucide-react";
 import { useEffect } from "react";
 
 interface MonitorFormProps {
+  initialData?: any;
   monitorId?: number;
   onSuccess?: () => void;
   selectedCategory?: string;
@@ -16,31 +17,31 @@ interface MonitorFormProps {
   onSubmit?: (data: any) => void;
 }
 
-export default function MonitorForm({ monitorId, onSuccess, selectedCategory, isLoading: externalLoading, onSubmit }: MonitorFormProps) {
+export default function MonitorForm({ initialData, monitorId, onSuccess, selectedCategory, isLoading: externalLoading, onSubmit }: MonitorFormProps) {
   const [formData, setFormData] = useState({
-    name: "",
-    resolution: "",
-    panelType: "",
-    refreshRate: "",
-    brightness: "",
-    contrast: "",
-    responseTime: "",
-    connectivity: "",
-    size: "",
-    condition: "",
-    warranty: "",
-    price: 0,
-    imageUrl: "",
-    description: "",
-    category: "new" as const,
+    name: initialData?.name || "",
+    resolution: initialData?.resolution || "",
+    panelType: initialData?.panelType || "",
+    refreshRate: initialData?.refreshRate || "",
+    brightness: initialData?.brightness || "",
+    contrast: initialData?.contrast || "",
+    responseTime: initialData?.responseTime || "",
+    connectivity: initialData?.connectivity || "",
+    size: initialData?.size || "",
+    condition: initialData?.condition || "",
+    warranty: initialData?.warranty || "",
+    price: initialData?.price || 0,
+    imageUrl: initialData?.imageUrl || "",
+    description: initialData?.description || "",
+    category: (initialData?.category || "new") as "new",
   });
 
   const [isLoading, setIsLoading] = useState(false);
 
-  // Fetch monitor data if editing
+  // Fetch monitor data if editing (legacy support)
   const { data: monitor } = trpc.monitors.getById.useQuery(
     { id: monitorId! },
-    { enabled: !!monitorId }
+    { enabled: !!monitorId && !initialData }
   );
 
   // Update form when monitor data is loaded
