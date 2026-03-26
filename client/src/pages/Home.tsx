@@ -65,12 +65,57 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-premium">
-      {/* Premium Header with Logo */}
+      {/* Hero Carousel */}
+      <div className="w-full py-0">
+        <Carousel
+          slides={carouselSlides}
+          autoplay={true}
+          autoplayInterval={6000}
+        />
+      </div>
+
+      {/* Trust Signals */}
+      <div className="border-b border-border/40 bg-background/30">
+        <div className="container py-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="flex items-center gap-3">
+              <Shield className="h-5 w-5 text-accent flex-shrink-0" />
+              <div className="text-sm">
+                <p className="font-semibold text-foreground">{t("trustSignals.warranty")}</p>
+                <p className="text-xs text-muted-foreground">{t("trustSignals.warrantyDesc")}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Truck className="h-5 w-5 text-accent flex-shrink-0" />
+              <div className="text-sm">
+                <p className="font-semibold text-foreground">{t("trustSignals.delivery")}</p>
+                <p className="text-xs text-muted-foreground">{t("trustSignals.deliveryDesc")}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <RotateCcw className="h-5 w-5 text-accent flex-shrink-0" />
+              <div className="text-sm">
+                <p className="font-semibold text-foreground">{t("trustSignals.returns")}</p>
+                <p className="text-xs text-muted-foreground">{t("trustSignals.returnsDesc")}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Star className="h-5 w-5 text-accent flex-shrink-0" />
+              <div className="text-sm">
+                <p className="font-semibold text-foreground">{t("trustSignals.trusted")}</p>
+                <p className="text-xs text-muted-foreground">{t("trustSignals.trustedDesc")}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Premium Header with Logo - Sticky */}
       <header className="sticky top-0 border-b border-border/40 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/80 z-50">
         <div className="container py-4">
           <div className="flex justify-between items-center">
             {/* Hugo Media Logo & Branding */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 cursor-pointer" onClick={() => navigate("/")}>
               <img 
                 src="https://d2xsxph8kpxj0f.cloudfront.net/310519663402378754/DMLwym6Zv6yd8JHAqkjkFj/hugo-media-logo_da9d05f5.jpg" 
                 alt="Hugo Media" 
@@ -144,51 +189,6 @@ export default function Home() {
           </div>
         </div>
       </header>
-
-      {/* Hero Carousel */}
-      <div className="w-full py-0">
-        <Carousel
-          slides={carouselSlides}
-          autoplay={true}
-          autoplayInterval={6000}
-        />
-      </div>
-
-      {/* Trust Signals */}
-      <div className="border-b border-border/40 bg-background/30">
-        <div className="container py-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="flex items-center gap-3">
-              <Shield className="h-5 w-5 text-accent flex-shrink-0" />
-              <div className="text-sm">
-                <p className="font-semibold text-foreground">{t("trustSignals.warranty")}</p>
-                <p className="text-xs text-muted-foreground">{t("trustSignals.warrantyDesc")}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Truck className="h-5 w-5 text-accent flex-shrink-0" />
-              <div className="text-sm">
-                <p className="font-semibold text-foreground">{t("trustSignals.delivery")}</p>
-                <p className="text-xs text-muted-foreground">{t("trustSignals.deliveryDesc")}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <RotateCcw className="h-5 w-5 text-accent flex-shrink-0" />
-              <div className="text-sm">
-                <p className="font-semibold text-foreground">{t("trustSignals.returns")}</p>
-                <p className="text-xs text-muted-foreground">{t("trustSignals.returnsDesc")}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Star className="h-5 w-5 text-accent flex-shrink-0" />
-              <div className="text-sm">
-                <p className="font-semibold text-foreground">{t("trustSignals.trusted")}</p>
-                <p className="text-xs text-muted-foreground">{t("trustSignals.trustedDesc")}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* Promotions Section */}
       <section className="border-b border-border/40 bg-gradient-to-r from-accent/5 to-accent/10">

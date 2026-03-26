@@ -290,3 +290,10 @@
 - [x] Display all categories in single horizontal row
 - [x] Remove categories section from home page
 - [x] Ensure responsive design for mobile devices
+
+
+## Layout & Header Adjustments
+- [x] Reduce product card size to fit 4-5 cards per row
+- [x] Move header to between promotions and trust signals on home page
+- [x] Make header sticky (fixed at top during scroll)
+- [x] Ensure proper spacing and alignment
