@@ -176,9 +176,3 @@
 - [x] Add gradient or pattern background to catalog page
 - [x] Improve visual hierarchy with background elements
 - [x] Ensure text readability with proper contrast
-
-
-## Admin Panel Reorganization
-- [x] Separate main product categories (Laptops, Monitors, Accessories) from special categories
-- [x] Move special categories (Promotions, Refurbished, Business Offers) below main categories
-- [x] Update admin panel layout to show two-level navigation
