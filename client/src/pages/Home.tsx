@@ -64,9 +64,9 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-premium">
-      {/* Premium Header with Logo - Sticky at Top */}
-      <header className="sticky top-0 border-b border-border/40 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/80 z-50">
+    <>
+      {/* Premium Header with Logo - Fixed at Top */}
+      <header className="fixed top-0 left-0 right-0 border-b border-border/40 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/80 z-50">
         <div className="container py-4">
           <div className="flex justify-between items-center">
             {/* Hugo Media Logo & Branding */}
@@ -145,6 +145,7 @@ export default function Home() {
         </div>
       </header>
 
+      <div className="min-h-screen bg-premium pt-[140px]">
       {/* Hero Carousel */}
       <div className="w-full py-0">
         <Carousel
@@ -381,6 +382,7 @@ export default function Home() {
           </div>
         </div>
       </footer>
-    </div>
+      </div>
+    </>
   );
 }
