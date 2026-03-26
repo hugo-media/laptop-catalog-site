@@ -267,3 +267,4 @@
 - [x] Add main category navigation block on catalog page (same as home page)
 - [x] Allow users to switch between categories without returning to home
 - [x] Display category buttons below category header on catalog page
+- [x] Fix category navigation buttons (replaced button elements with Button components)

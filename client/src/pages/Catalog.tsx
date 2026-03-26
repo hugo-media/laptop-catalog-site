@@ -325,20 +325,19 @@ export default function Catalog() {
           <p className="text-sm text-muted-foreground mb-4">Перейти до категорії:</p>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             {PRODUCT_TYPES.map((type) => (
-              <button
+              <Button
                 key={type.value}
                 onClick={() => navigate(`/catalog/${type.value}`)}
-                className={`group relative overflow-hidden rounded-lg border p-4 text-center transition-all duration-300 ${
+                variant={productType === type.value ? "default" : "outline"}
+                className={`w-full justify-between ${
                   productType === type.value
-                    ? "border-accent bg-accent/10 text-accent font-semibold"
-                    : "border-border/40 bg-background/50 text-foreground hover:border-accent/50 hover:bg-accent/5"
+                    ? "border-accent bg-accent/10 text-accent"
+                    : "border-border/40 hover:border-accent/50"
                 }`}
               >
-                <div className="text-sm font-medium flex items-center justify-between">
-                  <span>{type.label}</span>
-                  {productType === type.value && <ArrowRight className="h-4 w-4" />}
-                </div>
-              </button>
+                <span>{type.label}</span>
+                {productType === type.value && <ArrowRight className="h-4 w-4" />}
+              </Button>
             ))}
           </div>
         </div>
