@@ -35,12 +35,14 @@ import { toast } from "sonner";
 type Category = "promotions" | "refurbished" | "new" | "monitors" | "accessories" | "business";
 type ProductType = "laptops" | "monitors";
 
-const CATEGORIES: { value: Category; label: string }[] = [
-  { value: "promotions", label: "Акції" },
-  { value: "refurbished", label: "Ноутбуки після оренди" },
+const MAIN_CATEGORIES: { value: Category; label: string }[] = [
   { value: "new", label: "Нові ноутбуки" },
-  { value: "monitors", label: "Монітори" },
+  { value: "refurbished", label: "Ноутбуки після оренди" },
   { value: "accessories", label: "Аксесуари" },
+];
+
+const SPECIAL_CATEGORIES: { value: Category; label: string }[] = [
+  { value: "promotions", label: "Акції" },
   { value: "business", label: "Пропозиція для компаній" },
 ];
 
@@ -187,9 +189,10 @@ export default function Admin() {
       {/* Category Navigation */}
       <nav className="border-b border-border/40 bg-background/50 backdrop-blur-sm sticky top-16 z-40">
         <div className="container">
-          <div className="flex overflow-x-auto gap-1 py-3 -mx-4 px-4 md:mx-0 md:px-0">
+          {/* Main Categories */}
+          <div className="flex overflow-x-auto gap-1 py-3 -mx-4 px-4 md:mx-0 md:px-0 border-b border-border/20">
             {productType === "laptops" ? (
-              CATEGORIES.map((cat) => (
+              MAIN_CATEGORIES.map((cat) => (
                 <Button
                   key={cat.value}
                   onClick={() => setSelectedCategory(cat.value)}
@@ -201,7 +204,36 @@ export default function Admin() {
                 </Button>
               ))
             ) : (
-              MONITOR_CATEGORIES.map((cat) => (
+              MONITOR_CATEGORIES.slice(0, 5).map((cat) => (
+                <Button
+                  key={cat.value}
+                  onClick={() => setSelectedMonitorCategory(cat.value)}
+                  variant={selectedMonitorCategory === cat.value ? "default" : "ghost"}
+                  size="sm"
+                  className="whitespace-nowrap text-sm"
+                >
+                  {cat.label}
+                </Button>
+              ))
+            )}
+          </div>
+          
+          {/* Special Categories */}
+          <div className="flex overflow-x-auto gap-1 py-3 -mx-4 px-4 md:mx-0 md:px-0">
+            {productType === "laptops" ? (
+              SPECIAL_CATEGORIES.map((cat) => (
+                <Button
+                  key={cat.value}
+                  onClick={() => setSelectedCategory(cat.value)}
+                  variant={selectedCategory === cat.value ? "default" : "ghost"}
+                  size="sm"
+                  className="whitespace-nowrap text-sm"
+                >
+                  {cat.label}
+                </Button>
+              ))
+            ) : (
+              MONITOR_CATEGORIES.slice(5).map((cat) => (
                 <Button
                   key={cat.value}
                   onClick={() => setSelectedMonitorCategory(cat.value)}
@@ -263,7 +295,7 @@ export default function Admin() {
           <CardHeader>
             <CardTitle>
               {productType === "laptops" 
-                ? CATEGORIES.find((c) => c.value === selectedCategory)?.label 
+                ? (MAIN_CATEGORIES.find((c) => c.value === selectedCategory) || SPECIAL_CATEGORIES.find((c) => c.value === selectedCategory))?.label 
                 : MONITOR_CATEGORIES.find((c) => c.value === selectedMonitorCategory)?.label} ({currentItems.length})
             </CardTitle>
           </CardHeader>
