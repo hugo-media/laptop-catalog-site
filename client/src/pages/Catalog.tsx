@@ -365,12 +365,10 @@ export default function Catalog() {
               <div key={type.value} className="relative inline-block">
                 <Button
                   onClick={() => {
-                    if (productType !== type.value) {
-                      // If clicking a different category, navigate to it
-                      navigate(`/catalog/${type.value}`);
-                    } else if (getCategoryListForProductType().length > 0) {
-                      // If clicking the same category with subcategories, toggle dropdown
-                      setExpandedCategory(expandedCategory === type.value ? null : type.value);
+                    navigate(`/catalog/${type.value}`);
+                    // Always open dropdown if this category has subcategories
+                    if (getCategoryListForProductType().length > 0) {
+                      setExpandedCategory(type.value);
                     }
                   }}
                   variant={productType === type.value ? "default" : "outline"}
@@ -382,7 +380,7 @@ export default function Catalog() {
                 >
                   <span>{type.label}</span>
                   {productType === type.value && getCategoryListForProductType().length > 0 && (
-                    <ArrowRight className={`h-4 w-4 ml-2 transition-transform ${expandedCategory === type.value ? 'rotate-180' : ''}`} />
+                    <ArrowRight className={`h-4 w-4 ml-2 transition-transform ${expandedCategory === type.value ? 'rotate-90' : ''}`} />
                   )}
                 </Button>
                 
