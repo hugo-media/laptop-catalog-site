@@ -88,6 +88,7 @@ export default function Catalog() {
   const [modalOpen, setModalOpen] = useState(false);
   const [sortBy, setSortBy] = useState<'price-asc' | 'price-desc' | 'popularity' | 'newest'>('newest');
   const [showSubcategoryAccordion, setShowSubcategoryAccordion] = useState(false);
+  const [selectedSubcategories, setSelectedSubcategories] = useState<CategoryType[]>([]);
 
   // Sync productType state with URL parameter
   useEffect(() => {
@@ -378,44 +379,80 @@ export default function Catalog() {
         </div>
       </div>
 
-      {/* Subcategory Accordion - Only show when product type is selected */}
+      {/* Subcategory Checkbox Filter - Only show when product type is selected */}
       {getCategoryListForProductType().length > 0 && (
         <div className="border-b border-border/40 bg-background/30">
-          <div className="container py-3">
-            <Button
-              onClick={() => setShowSubcategoryAccordion(!showSubcategoryAccordion)}
-              variant="outline"
-              size="sm"
-              className="w-full md:w-auto justify-between"
-            >
-              <span>Підкатегорії: {getCategoryListForProductType().find(c => c.value === selectedCategory)?.label}</span>
-              <ArrowRight className={`h-4 w-4 transition-transform ${showSubcategoryAccordion ? 'rotate-90' : ''}`} />
-            </Button>
-            
-            {/* Accordion Content */}
-            {showSubcategoryAccordion && (
-              <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2">
-                {getCategoryListForProductType().map((cat) => (
+          <div className="container py-4">
+            <div className="bg-white border border-border/40 rounded-lg p-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-foreground">Марк</h3>
+                <button
+                  onClick={() => setShowSubcategoryAccordion(!showSubcategoryAccordion)}
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <ArrowRight className={`h-5 w-5 transition-transform ${showSubcategoryAccordion ? 'rotate-180' : ''}`} />
+                </button>
+              </div>
+              
+              {/* Checkbox List */}
+              {showSubcategoryAccordion && (
+                <div className="space-y-3 mb-4">
+                  {getCategoryListForProductType().map((cat) => (
+                    <label key={cat.value} className="flex items-center gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={selectedSubcategories.includes(cat.value)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedSubcategories([...selectedSubcategories, cat.value]);
+                          } else {
+                            setSelectedSubcategories(selectedSubcategories.filter(c => c !== cat.value));
+                          }
+                        }}
+                        className="w-4 h-4 rounded border-border/40 cursor-pointer"
+                      />
+                      <span className="text-sm text-foreground">{cat.label}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
+              
+              {/* Expand/Collapse Link */}
+              {!showSubcategoryAccordion && (
+                <button
+                  onClick={() => setShowSubcategoryAccordion(true)}
+                  className="text-sm text-accent hover:text-accent/80 font-medium mb-4"
+                >
+                  + Розгорнути
+                </button>
+              )}
+              
+              {/* Filter & Clear Buttons */}
+              {showSubcategoryAccordion && (
+                <div className="space-y-2">
                   <Button
-                    key={cat.value}
                     onClick={() => {
-                      setSelectedCategory(cat.value);
-                      setLaptopFilters({});
-                      setMonitorFilters({});
-                      setTabletFilters({});
-                      setSmartDeviceFilters({});
-                      setSearchQuery("");
+                      if (selectedSubcategories.length > 0) {
+                        setSelectedCategory(selectedSubcategories[0]);
+                      }
                       setShowSubcategoryAccordion(false);
                     }}
-                    variant={selectedCategory === cat.value ? "default" : "outline"}
-                    size="sm"
-                    className="text-xs"
+                    className="w-full bg-accent hover:bg-accent/90 text-white"
                   >
-                    {cat.label}
+                    Фільтр
                   </Button>
-                ))}
-              </div>
-            )}
+                  <button
+                    onClick={() => {
+                      setSelectedSubcategories([]);
+                      setSelectedCategory("new");
+                    }}
+                    className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
+                  >
+                    Очистити фільтри
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
