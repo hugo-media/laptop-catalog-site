@@ -189,3 +189,9 @@
 - [x] Update catalog page to display all 5 product types
 - [x] Implement proper filtering logic for each product type
 - [ ] Test all product types in admin and catalog
+
+
+## Subcategory Bar Dynamic Display
+- [x] Fix Catalog.tsx to show only relevant subcategories for selected product type
+- [x] Fix Admin.tsx to show only relevant subcategories for selected product type
+- [x] Test subcategory switching for all 5 product types

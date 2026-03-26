@@ -62,6 +62,17 @@ export default function Catalog() {
     }
   };
 
+  // Get category list for current product type
+  const getCategoryListForProductType = () => {
+    switch (productType) {
+      case "laptops": return getCATEGORIES(t);
+      case "monitors": return getCATEGORIES(t);
+      case "accessories": return getCATEGORIES(t);
+      case "tablets": return getCATEGORIES(t);
+      case "smartDevices": return getCATEGORIES(t);
+    }
+  };
+
   const getCurrentLoading = () => {
     switch (productType) {
       case "laptops": return laptopsLoading;
@@ -212,11 +223,11 @@ export default function Catalog() {
         </div>
       </nav>
 
-      {/* Category Navigation */}
+      {/* Category Navigation - Only show when product type is selected */}
       <nav className="border-b border-border/40 bg-background/30 backdrop-blur-sm sticky top-[68px] z-39">
         <div className="container">
           <div className="flex justify-center overflow-x-auto gap-1 py-2 -mx-4 px-4 md:mx-0 md:px-0">
-            {getCATEGORIES(t).map((cat) => (
+            {getCategoryListForProductType().map((cat) => (
               <Button
                 key={cat.value}
                 onClick={() => {

@@ -338,24 +338,26 @@ export default function Admin() {
         </div>
       </header>
 
-      {/* Category Navigation */}
-      <nav className="border-b border-border/40 bg-background/50 backdrop-blur-sm sticky top-16 z-40">
-        <div className="container">
-          <div className="flex overflow-x-auto gap-1 py-3 -mx-4 px-4 md:mx-0 md:px-0">
-            {currentCategoryList.map((cat) => (
-              <Button
-                key={cat.value}
-                onClick={() => setCurrentCategory(cat.value)}
-                variant={currentCategory === cat.value ? "default" : "ghost"}
-                size="sm"
-                className="whitespace-nowrap text-sm"
-              >
-                {cat.label}
-              </Button>
-            ))}
+      {/* Category Navigation - Show subcategories for selected product type */}
+      {productType && (
+        <nav className="border-b border-border/40 bg-background/50 backdrop-blur-sm sticky top-16 z-40">
+          <div className="container">
+            <div className="flex overflow-x-auto gap-1 py-3 -mx-4 px-4 md:mx-0 md:px-0">
+              {currentCategoryList.map((cat) => (
+                <Button
+                  key={cat.value}
+                  onClick={() => setCurrentCategory(cat.value)}
+                  variant={currentCategory === cat.value ? "default" : "ghost"}
+                  size="sm"
+                  className="whitespace-nowrap text-sm"
+                >
+                  {cat.label}
+                </Button>
+              ))}
+            </div>
           </div>
-        </div>
-      </nav>
+        </nav>
+      )}
 
       {/* Main Content */}
       <main className="container py-8">
