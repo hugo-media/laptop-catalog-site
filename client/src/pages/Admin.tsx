@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/dialog";
 import { LaptopForm } from "@/components/LaptopForm";
 import MonitorForm from "@/components/MonitorForm";
+import { TabletFilters, type TabletFilterOptions } from "@/components/TabletFilters";
+import { SmartDeviceFilters, type SmartDeviceFilterOptions } from "@/components/SmartDeviceFilters";
 import {
   Table,
   TableBody,

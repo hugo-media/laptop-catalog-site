@@ -2,6 +2,8 @@ import { trpc } from "@/lib/trpc";
 import { LaptopCard } from "@/components/LaptopCard";
 import { LaptopFilters, type LaptopFilterOptions } from "@/components/LaptopFilters";
 import { MonitorFilters, type MonitorFilterOptions } from "@/components/MonitorFilters";
+import { TabletFilters, type TabletFilterOptions } from "@/components/TabletFilters";
+import { SmartDeviceFilters, type SmartDeviceFilterOptions } from "@/components/SmartDeviceFilters";
 import { ProductDetailModal } from "@/components/ProductDetailModal";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
@@ -65,9 +67,11 @@ export default function Catalog() {
   const { user } = useAuth();
   const [, navigate] = useLocation();
   const [productType, setProductType] = useState<ProductType>("laptops");
-  const [selectedCategory, setSelectedCategory] = useState<CategoryType>("new");
+  const [selectedCategory, setSelectedCategory] = useState<CategoryType>("promotions");
   const [laptopFilters, setLaptopFilters] = useState<LaptopFilterOptions>({});
   const [monitorFilters, setMonitorFilters] = useState<MonitorFilterOptions>({});
+  const [tabletFilters, setTabletFilters] = useState<TabletFilterOptions>({});
+  const [smartDeviceFilters, setSmartDeviceFilters] = useState<SmartDeviceFilterOptions>({});
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLaptop, setSelectedLaptop] = useState<LaptopType | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -122,6 +126,44 @@ export default function Catalog() {
         const searchableText = `${p.name} ${p.brand || ""} ${p.type || ""}`.toLowerCase();
         return searchableText.includes(query);
       });
+    }
+
+    // Apply tablet-specific filters
+    if (productType === "tablets") {
+      if (tabletFilters.minPrice !== undefined) {
+        filtered = filtered.filter((t: any) => t.price >= tabletFilters.minPrice!);
+      }
+      if (tabletFilters.maxPrice !== undefined) {
+        filtered = filtered.filter((t: any) => t.price <= tabletFilters.maxPrice!);
+      }
+      if (tabletFilters.displaySize) {
+        filtered = filtered.filter((t: any) => t.display === tabletFilters.displaySize);
+      }
+      if (tabletFilters.ram) {
+        filtered = filtered.filter((t: any) => t.ram === tabletFilters.ram);
+      }
+      if (tabletFilters.processor) {
+        filtered = filtered.filter((t: any) => t.processor === tabletFilters.processor);
+      }
+      if (tabletFilters.brand) {
+        filtered = filtered.filter((t: any) => t.brand === tabletFilters.brand);
+      }
+    }
+
+    // Apply smart device-specific filters
+    if (productType === "smartDevices") {
+      if (smartDeviceFilters.minPrice !== undefined) {
+        filtered = filtered.filter((s: any) => s.price >= smartDeviceFilters.minPrice!);
+      }
+      if (smartDeviceFilters.maxPrice !== undefined) {
+        filtered = filtered.filter((s: any) => s.price <= smartDeviceFilters.maxPrice!);
+      }
+      if (smartDeviceFilters.deviceType) {
+        filtered = filtered.filter((s: any) => s.deviceType === smartDeviceFilters.deviceType);
+      }
+      if (smartDeviceFilters.brand) {
+        filtered = filtered.filter((s: any) => s.brand === smartDeviceFilters.brand);
+      }
     }
 
     // Apply laptop-specific filters
@@ -262,6 +304,8 @@ export default function Catalog() {
                   setSelectedCategory(cat.value);
                   setLaptopFilters({});
                   setMonitorFilters({});
+                  setTabletFilters({});
+                  setSmartDeviceFilters({});
                   setSearchQuery("");
                 }}
                 variant={selectedCategory === cat.value ? "default" : "ghost"}
@@ -316,9 +360,19 @@ export default function Catalog() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Filters Sidebar */}
           <div className="lg:col-span-1">
-            {productType === "monitors" ? (
+            {productType === "monitors" && (
               <MonitorFilters onFilterChange={setMonitorFilters} />
-            ) : (
+            )}
+            {productType === "laptops" && (
+              <LaptopFilters onFilterChange={setLaptopFilters} />
+            )}
+            {productType === "tablets" && (
+              <TabletFilters onFilterChange={setTabletFilters} />
+            )}
+            {productType === "smartDevices" && (
+              <SmartDeviceFilters onFilterChange={setSmartDeviceFilters} />
+            )}
+            {productType === "accessories" && (
               <LaptopFilters onFilterChange={setLaptopFilters} />
             )}
           </div>

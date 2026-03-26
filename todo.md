@@ -196,3 +196,13 @@
 - [x] Fix Admin.tsx to show only relevant subcategories for selected product type
 - [x] Test subcategory switching for all 5 product types
 - [x] Verified: Each product type shows its own subcategories
+
+
+## Promotions Category & Advanced Filters
+- [x] Change default category to "Акції" (Promotions) for laptops on main page
+- [x] Create TabletFilters component with display size, RAM, processor, brand filters
+- [x] Create SmartDeviceFilters component with device type (smartwatch, smart glasses, etc.)
+- [x] Update Catalog page to use new filter components for tablets and smart devices
+- [ ] Update Admin panel to use new filter components for tablets and smart devices
+- [ ] Test tablet and smart device filters work correctly in Catalog
+- [ ] Test tablet and smart device filters work correctly in Admin panel
