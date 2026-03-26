@@ -269,3 +269,10 @@
 - [x] Display category buttons below category header on catalog page
 - [x] Fix category navigation buttons (replaced button elements with Button components)
 - [x] Fix category navigation routing (added useEffect to sync URL with state)
+
+
+## Sticky Header & Sorting
+- [x] Make header sticky when scrolling (logo, menu, search always visible)
+- [x] Add sorting dropdown to catalog page (price ascending, price descending, popularity, newest)
+- [x] Implement sorting logic for all product types
+- [x] Display current sort option in dropdown

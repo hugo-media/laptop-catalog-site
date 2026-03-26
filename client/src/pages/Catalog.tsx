@@ -12,7 +12,8 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { useLocation } from "wouter";
 import { useState, useMemo, useEffect } from "react";
-import { Loader2, Shield, Truck, RotateCcw, Star, Search, X, ChevronLeft, ArrowRight } from "lucide-react";
+import { Loader2, Shield, Truck, RotateCcw, Star, Search, X, ChevronLeft, ArrowRight, ArrowUpDown } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useTranslation } from "react-i18next";
 import type { Laptop as LaptopType } from "../../../drizzle/schema";
 
@@ -85,6 +86,7 @@ export default function Catalog() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLaptop, setSelectedLaptop] = useState<LaptopType | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [sortBy, setSortBy] = useState<'price-asc' | 'price-desc' | 'popularity' | 'newest'>('newest');
 
   // Sync productType state with URL parameter
   useEffect(() => {
@@ -234,8 +236,26 @@ export default function Catalog() {
       }
     }
 
-    return filtered;
-  }, [getCurrentData(), selectedCategory, laptopFilters, monitorFilters, searchQuery, productType]);
+    // Apply sorting
+    const sorted = [...filtered];
+    switch (sortBy) {
+      case 'price-asc':
+        sorted.sort((a: any, b: any) => (a.price || 0) - (b.price || 0));
+        break;
+      case 'price-desc':
+        sorted.sort((a: any, b: any) => (b.price || 0) - (a.price || 0));
+        break;
+      case 'popularity':
+        sorted.sort((a: any, b: any) => (b.rating || 0) - (a.rating || 0));
+        break;
+      case 'newest':
+      default:
+        sorted.sort((a: any, b: any) => (b.id || 0) - (a.id || 0));
+        break;
+    }
+
+    return sorted;
+  }, [getCurrentData(), selectedCategory, laptopFilters, monitorFilters, searchQuery, productType, sortBy]);
 
   const isLoading = getCurrentLoading();
 
@@ -465,9 +485,23 @@ export default function Catalog() {
                   </button>
                 )}
               </div>
-              <p className="text-sm text-muted-foreground">
-                {filteredProducts.length} {filteredProducts.length === 1 ? "товар" : "товарів"}
-              </p>
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-muted-foreground">
+                  {filteredProducts.length} {filteredProducts.length === 1 ? "товар" : "товарів"}
+                </p>
+                <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
+                  <SelectTrigger className="w-48">
+                    <ArrowUpDown className="h-4 w-4 mr-2" />
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="newest">Новинки</SelectItem>
+                    <SelectItem value="price-asc">Ціна: від меншої до більшої</SelectItem>
+                    <SelectItem value="price-desc">Ціна: від більшої до меншої</SelectItem>
+                    <SelectItem value="popularity">Популярність</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             {/* Products */}

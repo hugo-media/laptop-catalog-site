@@ -66,7 +66,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-premium">
       {/* Premium Header with Logo */}
-      <header className="border-b border-border/40 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/80 z-50">
+      <header className="sticky top-0 border-b border-border/40 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/80 z-50">
         <div className="container py-4">
           <div className="flex justify-between items-center">
             {/* Hugo Media Logo & Branding */}
