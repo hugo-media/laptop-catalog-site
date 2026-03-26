@@ -248,4 +248,4 @@
 
 ## Layout Reordering
 - [x] Move carousel below category navigation
-- [x] Ensure category bar stays fixed at top while scrolling
+- [x] Fix category bar scrolling (removed sticky positioning so it scrolls with page)

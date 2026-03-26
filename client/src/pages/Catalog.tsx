@@ -292,7 +292,7 @@ export default function Catalog() {
       </header>
 
       {/* Product Type Navigation */}
-      <nav className="border-b border-border/40 bg-background sticky top-0 z-40">
+      <nav className="border-b border-border/40 bg-background z-40">
         <div className="container">
           <div className="flex justify-center overflow-x-auto gap-1 py-3 -mx-4 px-4 md:mx-0 md:px-0">
             {PRODUCT_TYPES.map((type) => (
@@ -361,7 +361,7 @@ export default function Catalog() {
       )}
 
       {/* Subcategory Navigation - Only show when product type is selected */}
-      <nav className="border-b border-border/40 bg-background/30 backdrop-blur-sm sticky top-[68px] z-39">
+      <nav className="border-b border-border/40 bg-background/30 backdrop-blur-sm z-39">
         <div className="container">
           <div className="flex justify-center overflow-x-auto gap-1 py-2 -mx-4 px-4 md:mx-0 md:px-0">
             {getCategoryListForProductType().map((cat) => (
