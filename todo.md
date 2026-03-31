@@ -333,3 +333,15 @@
 - [x] Run vitest tests for discount functionality (15 tests passing)
 - [x] Fix discountPercent validation error in LaptopForm (Number conversion)
 - [ ] Save checkpoint with discount system complete and bug fix
+
+
+## Multiple Categories System
+- [x] Update database schema to support categories as JSON array
+- [x] Update LaptopForm with checkboxes for multiple categories
+- [x] Update MonitorForm with checkboxes for multiple categories
+- [x] Update tRPC routers to handle categories array
+- [x] Update Admin.tsx filtering logic for categories array
+- [x] Update Catalog.tsx filtering logic for categories array
+- [x] Fix TypeScript type errors for categories
+- [x] Test multiple categories selection
+- [ ] Save checkpoint with multiple categories system complete

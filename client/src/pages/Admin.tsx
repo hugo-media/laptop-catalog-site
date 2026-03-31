@@ -117,18 +117,48 @@ export default function Admin() {
     switch (productType as ProductType) {
       case "promotions": {
         const allPromos: any[] = [];
-        if (laptops) allPromos.push(...laptops.filter(l => l.category === "promotions"));
-        if (monitors) allPromos.push(...monitors.filter(m => m.category === "promotions"));
-        if (accessories) allPromos.push(...accessories.filter(a => a.category === "promotions"));
-        if (tablets) allPromos.push(...tablets.filter(t => t.category === "promotions"));
-        if (smartDevices) allPromos.push(...smartDevices.filter(s => s.category === "promotions"));
+        if (laptops) allPromos.push(...laptops.filter(l => {
+          const cats = Array.isArray(l.categories) ? l.categories : (l.categories ? JSON.parse(l.categories) : []);
+          return cats.includes("promotions") || (l.discountPercent && Number(l.discountPercent) > 0);
+        }));
+        if (monitors) allPromos.push(...monitors.filter(m => {
+          const cats = Array.isArray(m.categories) ? m.categories : (m.categories ? JSON.parse(m.categories) : []);
+          return cats.includes("promotions") || (m.discountPercent && Number(m.discountPercent) > 0);
+        }));
+        if (accessories) allPromos.push(...accessories.filter(a => {
+          const cats = Array.isArray(a.categories) ? a.categories : (a.categories ? JSON.parse(a.categories) : []);
+          return cats.includes("promotions") || (a.discountPercent && Number(a.discountPercent) > 0);
+        }));
+        if (tablets) allPromos.push(...tablets.filter(t => {
+          const cats = Array.isArray(t.categories) ? t.categories : (t.categories ? JSON.parse(t.categories) : []);
+          return cats.includes("promotions") || (t.discountPercent && Number(t.discountPercent) > 0);
+        }));
+        if (smartDevices) allPromos.push(...smartDevices.filter(s => {
+          const cats = Array.isArray(s.categories) ? s.categories : (s.categories ? JSON.parse(s.categories) : []);
+          return cats.includes("promotions") || (s.discountPercent && Number(s.discountPercent) > 0);
+        }));
         return allPromos;
       }
-      case "laptops": return laptops?.filter((l) => l.category === category) || [];
-      case "monitors": return monitors?.filter((m) => m.category === category) || [];
-      case "accessories": return accessories?.filter((a) => a.category === category) || [];
-      case "tablets": return tablets?.filter((t) => t.category === category) || [];
-      case "smartDevices": return smartDevices?.filter((s) => s.category === category) || [];
+      case "laptops": return laptops?.filter((l) => {
+        const cats = Array.isArray(l.categories) ? l.categories : (l.categories ? JSON.parse(l.categories) : []);
+        return cats.includes(category);
+      }) || [];
+      case "monitors": return monitors?.filter((m) => {
+        const cats = Array.isArray(m.categories) ? m.categories : (m.categories ? JSON.parse(m.categories) : []);
+        return cats.includes(category);
+      }) || [];
+      case "accessories": return accessories?.filter((a) => {
+        const cats = Array.isArray(a.categories) ? a.categories : (a.categories ? JSON.parse(a.categories) : []);
+        return cats.includes(category);
+      }) || [];
+      case "tablets": return tablets?.filter((t) => {
+        const cats = Array.isArray(t.categories) ? t.categories : (t.categories ? JSON.parse(t.categories) : []);
+        return cats.includes(category);
+      }) || [];
+      case "smartDevices": return smartDevices?.filter((s) => {
+        const cats = Array.isArray(s.categories) ? s.categories : (s.categories ? JSON.parse(s.categories) : []);
+        return cats.includes(category);
+      }) || [];
     }
   };
 

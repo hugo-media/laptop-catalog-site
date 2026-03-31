@@ -112,7 +112,11 @@ export async function createLaptop(data: InsertLaptop) {
 export async function updateLaptop(id: number, data: Partial<InsertLaptop>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return db.update(laptops).set(data).where(eq(laptops.id, id));
+  const processedData = { ...data };
+  if (typeof processedData.categories === 'string' && !processedData.categories.startsWith('[')) {
+    processedData.categories = JSON.stringify([processedData.categories]);
+  }
+  return db.update(laptops).set(processedData).where(eq(laptops.id, id));
 }
 
 export async function deleteLaptop(id: number) {
@@ -144,7 +148,11 @@ export async function createMonitor(data: InsertMonitor) {
 export async function updateMonitor(id: number, data: Partial<InsertMonitor>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return db.update(monitors).set(data).where(eq(monitors.id, id));
+  const processedData = { ...data };
+  if (Array.isArray(processedData.categories)) {
+    processedData.categories = JSON.stringify(processedData.categories) as any;
+  }
+  return db.update(monitors).set(processedData).where(eq(monitors.id, id));
 }
 
 export async function deleteMonitor(id: number) {
@@ -176,7 +184,11 @@ export async function createAccessory(data: InsertAccessory) {
 export async function updateAccessory(id: number, data: Partial<InsertAccessory>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return db.update(accessories).set(data).where(eq(accessories.id, id));
+  const processedData = { ...data };
+  if (Array.isArray(processedData.categories)) {
+    processedData.categories = JSON.stringify(processedData.categories) as any;
+  }
+  return db.update(accessories).set(processedData).where(eq(accessories.id, id));
 }
 
 export async function deleteAccessory(id: number) {
@@ -208,7 +220,11 @@ export async function createTablet(data: InsertTablet) {
 export async function updateTablet(id: number, data: Partial<InsertTablet>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return db.update(tablets).set(data).where(eq(tablets.id, id));
+  const processedData = { ...data };
+  if (Array.isArray(processedData.categories)) {
+    processedData.categories = JSON.stringify(processedData.categories) as any;
+  }
+  return db.update(tablets).set(processedData).where(eq(tablets.id, id));
 }
 
 export async function deleteTablet(id: number) {
@@ -240,7 +256,11 @@ export async function createSmartDevice(data: InsertSmartDevice) {
 export async function updateSmartDevice(id: number, data: Partial<InsertSmartDevice>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return db.update(smartDevices).set(data).where(eq(smartDevices.id, id));
+  const processedData = { ...data };
+  if (Array.isArray(processedData.categories)) {
+    processedData.categories = JSON.stringify(processedData.categories) as any;
+  }
+  return db.update(smartDevices).set(processedData).where(eq(smartDevices.id, id));
 }
 
 export async function deleteSmartDevice(id: number) {

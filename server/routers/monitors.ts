@@ -19,7 +19,7 @@ const monitorSchema = z.object({
   discountPercent: z.number().min(0).max(100).optional().default(0),
   imageUrl: z.string().optional(),
   description: z.string().optional(),
-  category: z.enum(["promotions", "refurbished", "new", "gaming", "professional", "budget"]).default("new"),
+  categories: z.array(z.enum(["promotions", "refurbished", "new", "gaming", "professional", "budget"])).default(["new"]),
 });
 
 export const monitorsRouter = router({
@@ -54,7 +54,7 @@ export const monitorsRouter = router({
     .mutation(async ({ input }) => {
       return createMonitor({
         ...input,
-        category: input.category || "new",
+        categories: JSON.stringify(input.categories),
       });
     }),
 
@@ -86,12 +86,15 @@ export const monitorsRouter = router({
         discountPercent: z.number().min(0).max(100).optional(),
         imageUrl: z.string().optional(),
         description: z.string().optional(),
-        category: z.enum(["promotions", "refurbished", "new", "gaming", "professional", "budget"]).optional(),
+        categories: z.array(z.enum(["promotions", "refurbished", "new", "gaming", "professional", "budget"])).optional(),
       })
     )
     .mutation(async ({ input }) => {
       const { id, ...data } = input;
-      return updateMonitor(id, data);
+      if (data.categories) {
+        data.categories = JSON.stringify(data.categories) as any;
+      }
+      return updateMonitor(id, data as any);
     }),
 
   delete: protectedProcedure

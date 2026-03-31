@@ -18,7 +18,7 @@ const tabletSchema = z.object({
   discountPercent: z.number().min(0).max(100).optional().default(0),
   imageUrl: z.string().optional(),
   description: z.string().optional(),
-  category: z.enum(["promotions", "refurbished", "new", "business"]).default("new"),
+  categories: z.array(z.enum(["promotions", "refurbished", "new", "business"])).default(["new"]),
 });
 
 export const tabletsRouter = router({
@@ -53,7 +53,7 @@ export const tabletsRouter = router({
     .mutation(async ({ input }) => {
       return createTablet({
         ...input,
-        category: input.category || "new",
+        categories: JSON.stringify(input.categories),
       });
     }),
 
@@ -84,12 +84,15 @@ export const tabletsRouter = router({
         discountPercent: z.number().min(0).max(100).optional(),
         imageUrl: z.string().optional(),
         description: z.string().optional(),
-        category: z.enum(["promotions", "refurbished", "new", "business"]).optional(),
+        categories: z.array(z.enum(["promotions", "refurbished", "new", "business"])).optional(),
       })
     )
     .mutation(async ({ input }) => {
       const { id, ...data } = input;
-      return updateTablet(id, data);
+      if (data.categories) {
+        data.categories = JSON.stringify(data.categories) as any;
+      }
+      return updateTablet(id, data as any);
     }),
 
   delete: protectedProcedure

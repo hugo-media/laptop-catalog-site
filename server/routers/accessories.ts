@@ -15,7 +15,7 @@ const accessorySchema = z.object({
   discountPercent: z.number().min(0).max(100).optional().default(0),
   imageUrl: z.string().optional(),
   description: z.string().optional(),
-  category: z.enum(["promotions", "refurbished", "new", "business"]).default("new"),
+  categories: z.array(z.enum(["promotions", "refurbished", "new", "business"])).default(["new"]),
 });
 
 export const accessoriesRouter = router({
@@ -50,7 +50,7 @@ export const accessoriesRouter = router({
     .mutation(async ({ input }) => {
       return createAccessory({
         ...input,
-        category: input.category || "new",
+        categories: JSON.stringify(input.categories),
       });
     }),
 
@@ -78,12 +78,15 @@ export const accessoriesRouter = router({
         discountPercent: z.number().min(0).max(100).optional(),
         imageUrl: z.string().optional(),
         description: z.string().optional(),
-        category: z.enum(["promotions", "refurbished", "new", "business"]).optional(),
+        categories: z.array(z.enum(["promotions", "refurbished", "new", "business"])).optional(),
       })
     )
     .mutation(async ({ input }) => {
       const { id, ...data } = input;
-      return updateAccessory(id, data);
+      if (data.categories) {
+        data.categories = JSON.stringify(data.categories) as any;
+      }
+      return updateAccessory(id, data as any);
     }),
 
   delete: protectedProcedure

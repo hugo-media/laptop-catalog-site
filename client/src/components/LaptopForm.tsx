@@ -1,15 +1,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { ImageUpload } from "./ImageUpload";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import type { Laptop } from "../../../drizzle/schema";
 
 type Category = "promotions" | "refurbished" | "new" | "business";
@@ -30,7 +25,7 @@ interface LaptopFormProps {
     discountPercent?: number;
     imageUrl?: string;
     description?: string;
-    category: Category;
+    categories: Category[];
   }) => void;
   isLoading?: boolean;
 }
@@ -50,22 +45,34 @@ export function LaptopForm({ initialData, onSubmit, isLoading = false }: LaptopF
     discountPercent: initialData?.discountPercent || 0,
     imageUrl: initialData?.imageUrl || "",
     description: initialData?.description || "",
-    category: (initialData?.category || "new") as Category,
+    categories: initialData?.categories ? JSON.parse(initialData.categories as any) : ["new"],
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: (name === "price" || name === "discountPercent") ? Number(value) : value,
+      [name]: (name === "price" || name === "discountPercent") ? (Number(value) || 0) : value,
     }));
   };
 
-  const handleCategoryChange = (value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      category: value as Category,
-    }));
+  const handleCategoryChange = (categoryValue: string) => {
+    setFormData((prev) => {
+      const currentCategories = prev.categories as Category[];
+      const isChecked = currentCategories.includes(categoryValue as Category);
+      
+      if (isChecked) {
+        return {
+          ...prev,
+          categories: currentCategories.filter(c => c !== categoryValue),
+        };
+      } else {
+        return {
+          ...prev,
+          categories: [...currentCategories, categoryValue as Category],
+        };
+      }
+    });
   };
 
   const handleImageUrl = (url: string) => {
@@ -77,7 +84,10 @@ export function LaptopForm({ initialData, onSubmit, isLoading = false }: LaptopF
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    onSubmit({
+      ...formData,
+      categories: formData.categories,
+    });
   };
 
   const fields = [
@@ -121,22 +131,28 @@ export function LaptopForm({ initialData, onSubmit, isLoading = false }: LaptopF
           </div>
         ))}
 
-        {/* Category Select */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Category</label>
-          <Select value={formData.category} onValueChange={handleCategoryChange}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="promotions">Акції</SelectItem>
-              <SelectItem value="refurbished">Ноутбуки після оренди</SelectItem>
-              <SelectItem value="new">Нові ноутбуки</SelectItem>
-              <SelectItem value="monitors">Монітори</SelectItem>
-              <SelectItem value="accessories">Аксесуари</SelectItem>
-              <SelectItem value="business">Пропозиція для компаній</SelectItem>
-            </SelectContent>
-          </Select>
+        {/* Categories Checkboxes */}
+        <div className="space-y-3">
+          <label className="text-sm font-medium">Категорії (виберіть декілька)</label>
+          <div className="space-y-2">
+            {[
+              { value: "new", label: "Нові ноутбуки" },
+              { value: "refurbished", label: "Ноутбуки після оренди" },
+              { value: "business", label: "Пропозиція для компаній" },
+              { value: "promotions", label: "Акції" },
+            ].map((cat) => (
+              <div key={cat.value} className="flex items-center space-x-2">
+                <Checkbox
+                  id={cat.value}
+                  checked={(formData.categories as Category[]).includes(cat.value as Category)}
+                  onCheckedChange={() => handleCategoryChange(cat.value)}
+                />
+                <Label htmlFor={cat.value} className="font-normal cursor-pointer">
+                  {cat.label}
+                </Label>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 

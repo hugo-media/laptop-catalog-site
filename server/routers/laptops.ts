@@ -17,7 +17,7 @@ const laptopSchema = z.object({
   discountPercent: z.number().min(0).max(100).optional().default(0),
   imageUrl: z.string().optional(),
   description: z.string().optional(),
-  category: z.enum(["promotions", "refurbished", "new", "monitors", "accessories", "business"]).default("new"),
+  categories: z.array(z.enum(["promotions", "refurbished", "new", "business"])).default(["new"]),
 });
 
 export const laptopsRouter = router({
@@ -52,7 +52,7 @@ export const laptopsRouter = router({
     .mutation(async ({ input }) => {
       return createLaptop({
         ...input,
-        category: input.category || "new",
+        categories: JSON.stringify(input.categories),
       });
     }),
 
@@ -82,12 +82,15 @@ export const laptopsRouter = router({
         discountPercent: z.number().min(0).max(100).optional(),
         imageUrl: z.string().optional(),
         description: z.string().optional(),
-        category: z.enum(["promotions", "refurbished", "new", "monitors", "accessories", "business"]).optional(),
+        categories: z.array(z.enum(["promotions", "refurbished", "new", "business"])).optional(),
       })
     )
     .mutation(async ({ input }) => {
       const { id, ...data } = input;
-      return updateLaptop(id, data);
+      if (data.categories) {
+        data.categories = JSON.stringify(data.categories) as any;
+      }
+      return updateLaptop(id, data as any);
     }),
 
   delete: protectedProcedure

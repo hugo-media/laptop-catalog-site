@@ -1,0 +1,45 @@
+{
+  "query": "SELECT id, name, price, discountPercent, category FROM laptops ORDER BY id DESC LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway05.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3jhysCCZCwr2c72.root --database DMLwym6Zv6yd8JHAqkjkFj --execute SELECT id, name, price, discountPercent, category FROM laptops ORDER BY id DESC LIMIT 5;",
+  "rows": [
+    {
+      "id": "8",
+      "name": "Dell Pro Max 18 Plus MB18250",
+      "price": "17999",
+      "discountPercent": "0",
+      "category": "new"
+    },
+    {
+      "id": "7",
+      "name": "Dell Pro 14 Premium (2025)",
+      "price": "4299",
+      "discountPercent": "0",
+      "category": "new"
+    },
+    {
+      "id": "6",
+      "name": "Dell Pro 14 Plus (Ultrabook)",
+      "price": "4199",
+      "discountPercent": "0",
+      "category": "new"
+    },
+    {
+      "id": "5",
+      "name": "HP ZBook Power 16 G11 (2025)",
+      "price": "8499",
+      "discountPercent": "0",
+      "category": "new"
+    },
+    {
+      "id": "4",
+      "name": "Dell Pro 14 Plus (Transformer)",
+      "price": "3900",
+      "discountPercent": "0",
+      "category": "new"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tprice\tdiscountPercent\tcategory\n8\tDell Pro Max 18 Plus MB18250\t17999\t0\tnew\n7\tDell Pro 14 Premium (2025)\t4299\t0\tnew\n6\tDell Pro 14 Plus (Ultrabook)\t4199\t0\tnew\n5\tHP ZBook Power 16 G11 (2025)\t8499\t0\tnew\n4\tDell Pro 14 Plus (Transformer)\t3900\t0\tnew\n",
+  "stderr": "",
+  "execution_time_ms": 52
+}

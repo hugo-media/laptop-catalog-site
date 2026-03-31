@@ -34,7 +34,9 @@ export default function MonitorForm({ initialData, monitorId, onSuccess, selecte
     discountPercent: initialData?.discountPercent || 0,
     imageUrl: initialData?.imageUrl || "",
     description: initialData?.description || "",
-    category: (initialData?.category || "new") as "new",
+    categories: Array.isArray(initialData?.categories) 
+      ? initialData.categories 
+      : (initialData?.categories ? JSON.parse(initialData.categories) : ["new"]),
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -64,7 +66,9 @@ export default function MonitorForm({ initialData, monitorId, onSuccess, selecte
         discountPercent: monitor.discountPercent || 0,
         imageUrl: monitor.imageUrl || "",
         description: monitor.description || "",
-        category: monitor.category as any,
+        categories: Array.isArray(monitor.categories) 
+          ? monitor.categories 
+          : (monitor.categories ? JSON.parse(monitor.categories) : ["new"]),
       });
     }
   }, [monitor]);
@@ -82,7 +86,7 @@ export default function MonitorForm({ initialData, monitorId, onSuccess, selecte
         // Use custom onSubmit callback (for admin form with category)
         onSubmit({
           ...formData,
-          category: selectedCategory || formData.category,
+          categories: formData.categories,
         });
       } else if (monitorId) {
         await updateMutation.mutateAsync({
@@ -109,7 +113,7 @@ export default function MonitorForm({ initialData, monitorId, onSuccess, selecte
           discountPercent: 0,
           imageUrl: "",
           description: "",
-          category: "new",
+          categories: ["new"],
         });
       }
       await utils.monitors.list.invalidate();
@@ -312,22 +316,35 @@ export default function MonitorForm({ initialData, monitorId, onSuccess, selecte
         </div>
       </div>
 
-      {/* Category */}
-      <div>
-        <label className="block font-semibold mb-2">Category</label>
-        <Select value={formData.category} onValueChange={(value: any) => setFormData({ ...formData, category: value })}>
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="new">New</SelectItem>
-            <SelectItem value="refurbished">Refurbished</SelectItem>
-            <SelectItem value="promotions">Promotions</SelectItem>
-            <SelectItem value="gaming">Gaming</SelectItem>
-            <SelectItem value="professional">Professional</SelectItem>
-            <SelectItem value="budget">Budget</SelectItem>
-          </SelectContent>
-        </Select>
+      {/* Categories Checkboxes */}
+      <div className="space-y-3">
+        <label className="block font-semibold mb-2">Categories (select multiple)</label>
+        <div className="space-y-2">
+          {[
+            { value: "new", label: "New" },
+            { value: "refurbished", label: "Refurbished" },
+            { value: "gaming", label: "Gaming" },
+            { value: "professional", label: "Professional" },
+            { value: "budget", label: "Budget" },
+            { value: "promotions", label: "Promotions" },
+          ].map((cat) => (
+            <div key={cat.value} className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id={cat.value}
+                checked={formData.categories.includes(cat.value)}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setFormData({ ...formData, categories: [...formData.categories, cat.value] });
+                  } else {
+                    setFormData({ ...formData, categories: formData.categories.filter((c: string) => c !== cat.value) });
+                  }
+                }}
+              />
+              <label htmlFor={cat.value} className="cursor-pointer">{cat.label}</label>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Description */}

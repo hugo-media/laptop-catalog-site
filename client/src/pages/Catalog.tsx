@@ -180,11 +180,26 @@ export default function Catalog() {
     switch (productType) {
       case "promotions": {
         const allPromos: any[] = [];
-        if (laptops) allPromos.push(...laptops.filter(l => l.category === "promotions" || (l.discountPercent && l.discountPercent > 0)));
-        if (monitors) allPromos.push(...monitors.filter(m => m.category === "promotions" || (m.discountPercent && m.discountPercent > 0)));
-        if (accessories) allPromos.push(...accessories.filter(a => a.category === "promotions" || (a.discountPercent && a.discountPercent > 0)));
-        if (tablets) allPromos.push(...tablets.filter(t => t.category === "promotions" || (t.discountPercent && t.discountPercent > 0)));
-        if (smartDevices) allPromos.push(...smartDevices.filter(s => s.category === "promotions" || (s.discountPercent && s.discountPercent > 0)));
+        if (laptops) allPromos.push(...laptops.filter(l => {
+          const cats = Array.isArray(l.categories) ? l.categories : (l.categories ? JSON.parse(l.categories) : []);
+          return cats.includes("promotions") || (l.discountPercent && l.discountPercent > 0);
+        }));
+        if (monitors) allPromos.push(...monitors.filter(m => {
+          const cats = Array.isArray(m.categories) ? m.categories : (m.categories ? JSON.parse(m.categories) : []);
+          return cats.includes("promotions") || (m.discountPercent && m.discountPercent > 0);
+        }));
+        if (accessories) allPromos.push(...accessories.filter(a => {
+          const cats = Array.isArray(a.categories) ? a.categories : (a.categories ? JSON.parse(a.categories) : []);
+          return cats.includes("promotions") || (a.discountPercent && a.discountPercent > 0);
+        }));
+        if (tablets) allPromos.push(...tablets.filter(t => {
+          const cats = Array.isArray(t.categories) ? t.categories : (t.categories ? JSON.parse(t.categories) : []);
+          return cats.includes("promotions") || (t.discountPercent && t.discountPercent > 0);
+        }));
+        if (smartDevices) allPromos.push(...smartDevices.filter(s => {
+          const cats = Array.isArray(s.categories) ? s.categories : (s.categories ? JSON.parse(s.categories) : []);
+          return cats.includes("promotions") || (s.discountPercent && s.discountPercent > 0);
+        }));
         return allPromos;
       }
       case "laptops": return laptops || [];
@@ -225,7 +240,10 @@ export default function Catalog() {
     let filtered = getCurrentData() || [];
     
     if (productType !== "promotions" && selectedCategory !== null) {
-      filtered = filtered.filter((p: any) => p.category === selectedCategory);
+      filtered = filtered.filter((p: any) => {
+        const cats = Array.isArray(p.categories) ? p.categories : (p.categories ? JSON.parse(p.categories) : []);
+        return cats.includes(selectedCategory);
+      });
     }
 
     if (searchQuery.trim()) {

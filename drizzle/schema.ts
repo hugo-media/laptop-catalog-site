@@ -40,7 +40,7 @@ export const laptops = mysqlTable("laptops", {
   discountPercent: int("discountPercent").default(0).notNull(),
   imageUrl: text("imageUrl"),
   description: text("description"),
-  category: mysqlEnum("category", ["promotions", "refurbished", "new", "monitors", "accessories", "business"]).default("new").notNull(),
+  categories: text("categories").default(JSON.stringify(["new"])).notNull(), // JSON array of categories
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -65,7 +65,7 @@ export const monitors = mysqlTable("monitors", {
   discountPercent: int("discountPercent").default(0).notNull(),
   imageUrl: text("imageUrl"),
   description: text("description"),
-  category: mysqlEnum("category", ["promotions", "refurbished", "new", "gaming", "professional", "budget"]).default("new").notNull(),
+  categories: text("categories").default(JSON.stringify(["new"])).notNull(), // JSON array of categories
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -86,7 +86,7 @@ export const accessories = mysqlTable("accessories", {
   discountPercent: int("discountPercent").default(0).notNull(),
   imageUrl: text("imageUrl"),
   description: text("description"),
-  category: mysqlEnum("category", ["promotions", "refurbished", "new", "business"]).default("new").notNull(),
+  categories: text("categories").default(JSON.stringify(["new"])).notNull(), // JSON array of categories
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -110,7 +110,7 @@ export const tablets = mysqlTable("tablets", {
   discountPercent: int("discountPercent").default(0).notNull(),
   imageUrl: text("imageUrl"),
   description: text("description"),
-  category: mysqlEnum("category", ["promotions", "refurbished", "new", "business"]).default("new").notNull(),
+  categories: text("categories").default(JSON.stringify(["new"])).notNull(), // JSON array of categories
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -133,7 +133,7 @@ export const smartDevices = mysqlTable("smartDevices", {
   discountPercent: int("discountPercent").default(0).notNull(),
   imageUrl: text("imageUrl"),
   description: text("description"),
-  category: mysqlEnum("category", ["promotions", "refurbished", "new", "business"]).default("new").notNull(),
+  categories: text("categories").default(JSON.stringify(["new"])).notNull(), // JSON array of categories
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

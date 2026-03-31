@@ -1,0 +1,17 @@
+{
+  "query": "SELECT id, name, price, discountPercent, category FROM laptops WHERE price = 18000;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway05.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3jhysCCZCwr2c72.root --database DMLwym6Zv6yd8JHAqkjkFj --execute SELECT id, name, price, discountPercent, category FROM laptops WHERE price = 18000;",
+  "rows": [
+    {
+      "id": "2",
+      "name": "Dell Precision 7680 (2025)",
+      "price": "18000",
+      "discountPercent": "41",
+      "category": "new"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tprice\tdiscountPercent\tcategory\n2\tDell Precision 7680 (2025)\t18000\t41\tnew\n",
+  "stderr": "",
+  "execution_time_ms": 48
+}
