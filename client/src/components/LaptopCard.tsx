@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Laptop, Send } from "lucide-react";
 import { useLocation } from "wouter";
+import { WishlistButton } from "./WishlistButton";
 
 interface LaptopCardProps {
   laptop: LaptopType;
@@ -38,6 +39,9 @@ export function LaptopCard({ laptop }: LaptopCardProps) {
             -{laptop.discountPercent}%
           </div>
         )}
+        <div className="absolute top-3 left-3" onClick={(e) => e.stopPropagation()}>
+          <WishlistButton productType="laptops" productId={laptop.id} />
+        </div>
       </div>
 
       {/* Content Area */}

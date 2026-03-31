@@ -1,6 +1,6 @@
-import { eq, desc } from "drizzle-orm";
+import { eq, and, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertLaptop, InsertUser, InsertMonitor, InsertAccessory, InsertTablet, InsertSmartDevice, laptops, users, monitors, accessories, tablets, smartDevices } from "../drizzle/schema";
+import { InsertLaptop, InsertUser, InsertMonitor, InsertAccessory, InsertTablet, InsertSmartDevice, InsertProductRating, InsertWishlist, laptops, users, monitors, accessories, tablets, smartDevices, productRatings, wishlist } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -267,6 +267,100 @@ export async function deleteSmartDevice(id: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   return db.delete(smartDevices).where(eq(smartDevices.id, id));
+}
+
+// Ratings and Reviews
+export async function getProductRatings(productType: string, productId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(productRatings).where(and(eq(productRatings.productType, productType), eq(productRatings.productId, productId))).orderBy(desc(productRatings.createdAt));
+}
+
+export async function getProductRatingStats(productType: string, productId: number) {
+  const db = await getDb();
+  if (!db) return { averageRating: 0, totalRatings: 0, distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 } };
+  
+  const ratings = await db.select().from(productRatings).where(and(eq(productRatings.productType, productType), eq(productRatings.productId, productId)));
+  
+  if (ratings.length === 0) {
+    return { averageRating: 0, totalRatings: 0, distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 } };
+  }
+  
+  const distribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+  let totalRating = 0;
+  
+  ratings.forEach(r => {
+    totalRating += r.rating;
+    distribution[r.rating as keyof typeof distribution]++;
+  });
+  
+  return {
+    averageRating: Math.round((totalRating / ratings.length) * 10) / 10,
+    totalRatings: ratings.length,
+    distribution
+  };
+}
+
+export async function addProductRating(data: InsertProductRating) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.insert(productRatings).values(data);
+}
+
+// Wishlist
+export async function getWishlistItems(sessionId?: string, userId?: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  if (userId) {
+    return db.select().from(wishlist).where(eq(wishlist.userId, userId)).orderBy(desc(wishlist.createdAt));
+  } else if (sessionId) {
+    return db.select().from(wishlist).where(eq(wishlist.sessionId, sessionId)).orderBy(desc(wishlist.createdAt));
+  }
+  return [];
+}
+
+export async function addToWishlist(data: InsertWishlist) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  // Check if already in wishlist
+  const existing = await db.select().from(wishlist).where(
+    and(
+      eq(wishlist.productType, data.productType),
+      eq(wishlist.productId, data.productId),
+      data.userId ? eq(wishlist.userId, data.userId) : eq(wishlist.sessionId, data.sessionId || '')
+    )
+  ).limit(1);
+  
+  if (existing.length > 0) {
+    return existing[0];
+  }
+  
+  return db.insert(wishlist).values(data);
+}
+
+export async function removeFromWishlist(productType: string, productId: number, sessionId?: string, userId?: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  if (userId) {
+    return db.delete(wishlist).where(
+      and(
+        eq(wishlist.productType, productType),
+        eq(wishlist.productId, productId),
+        eq(wishlist.userId, userId)
+      )
+    );
+  } else if (sessionId) {
+    return db.delete(wishlist).where(
+      and(
+        eq(wishlist.productType, productType),
+        eq(wishlist.productId, productId),
+        eq(wishlist.sessionId, sessionId)
+      )
+    );
+  }
 }
 
 // TODO: add feature queries here as your schema grows.

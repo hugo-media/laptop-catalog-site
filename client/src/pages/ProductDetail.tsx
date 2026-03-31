@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { ArrowLeft, Heart, Send } from "lucide-react";
+import { ProductRatings } from "@/components/ProductRatings";
+import { WishlistButton } from "@/components/WishlistButton";
 
 export default function ProductDetail() {
   const [match, params] = useRoute("/product/:type/:id");
@@ -206,11 +208,15 @@ export default function ProductDetail() {
                 <Send className="w-4 h-4 mr-2" />
                 Замовити в Telegram
               </Button>
-              <Button variant="outline" size="lg" className="px-6 h-12">
-                <Heart className="w-5 h-5" />
-              </Button>
+              <WishlistButton productType={type} productId={productId} className="h-12 px-6" />
             </div>
           </div>
+        </div>
+
+        {/* Ratings Section */}
+        <div className="border-t pt-8">
+          <h2 className="text-2xl font-bold mb-6">Відгуки та оцінки</h2>
+          <ProductRatings productType={type} productId={productId} />
         </div>
 
         {/* Description - Full Width */}

@@ -141,4 +141,31 @@ export const smartDevices = mysqlTable("smartDevices", {
 export type SmartDevice = typeof smartDevices.$inferSelect;
 export type InsertSmartDevice = typeof smartDevices.$inferInsert;
 
+// Ratings and Reviews
+export const productRatings = mysqlTable("product_ratings", {
+  id: int("id").autoincrement().primaryKey(),
+  productType: varchar("product_type", { length: 50 }).notNull(), // 'laptops', 'monitors', etc
+  productId: int("product_id").notNull(),
+  userId: int("user_id"), // Optional - for logged in users
+  rating: int("rating").notNull(), // 1-5
+  review: text("review"), // Optional review text
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ProductRating = typeof productRatings.$inferSelect;
+export type InsertProductRating = typeof productRatings.$inferInsert;
+
+// Wishlist
+export const wishlist = mysqlTable("wishlist", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("user_id"), // Optional - for logged in users
+  sessionId: varchar("session_id", { length: 255 }), // For anonymous users
+  productType: varchar("product_type", { length: 50 }).notNull(), // 'laptops', 'monitors', etc
+  productId: int("product_id").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Wishlist = typeof wishlist.$inferSelect;
+export type InsertWishlist = typeof wishlist.$inferInsert;
+
 // TODO: Add your tables here

@@ -7,6 +7,7 @@ import { monitorsRouter } from "./routers/monitors";
 import { accessoriesRouter } from "./routers/accessories";
 import { tabletsRouter } from "./routers/tablets";
 import { smartDevicesRouter } from "./routers/smartdevices";
+import { ratingsRouter } from "./routers/ratings";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -27,6 +28,7 @@ export const appRouter = router({
   accessories: accessoriesRouter,
   tablets: tabletsRouter,
   smartDevices: smartDevicesRouter,
+  ratings: ratingsRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({
