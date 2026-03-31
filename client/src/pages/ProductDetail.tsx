@@ -6,6 +6,7 @@ import { Link } from "wouter";
 import { ArrowLeft, Heart, Send } from "lucide-react";
 import { ProductRatings } from "@/components/ProductRatings";
 import { WishlistButton } from "@/components/WishlistButton";
+import { ImageCarousel } from "@/components/ImageCarousel";
 
 export default function ProductDetail() {
   const [match, params] = useRoute("/product/:type/:id");
@@ -69,19 +70,25 @@ export default function ProductDetail() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
           {/* Product Image - Left Column */}
           <div className="lg:col-span-1">
-            <div className="relative bg-gray-100 rounded-lg overflow-hidden aspect-square flex items-center justify-center sticky top-24">
-              {product.imageUrl ? (
-                <img
-                  src={product.imageUrl}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                />
+            <div className="sticky top-24">
+              {product.imageUrl || (product as any).imageUrls ? (
+                <>
+                  <ImageCarousel 
+                    images={[
+                      product.imageUrl,
+                      ...((product as any).imageUrls ? JSON.parse((product as any).imageUrls) : [])
+                    ].filter(Boolean)}
+                    alt={product.name}
+                  />
+                  {discountPercent > 0 && (
+                    <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full font-bold text-sm">
+                      -{discountPercent}%
+                    </div>
+                  )}
+                </>
               ) : (
-                <div className="text-gray-400">Зображення недоступне</div>
-              )}
-              {discountPercent > 0 && (
-                <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full font-bold text-sm">
-                  -{discountPercent}%
+                <div className="bg-gray-100 rounded-lg aspect-square flex items-center justify-center">
+                  <div className="text-gray-400">Зображення недоступне</div>
                 </div>
               )}
             </div>
