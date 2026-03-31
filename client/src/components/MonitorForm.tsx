@@ -31,6 +31,7 @@ export default function MonitorForm({ initialData, monitorId, onSuccess, selecte
     condition: initialData?.condition || "",
     warranty: initialData?.warranty || "",
     price: initialData?.price || 0,
+    discountPercent: initialData?.discountPercent || 0,
     imageUrl: initialData?.imageUrl || "",
     description: initialData?.description || "",
     category: (initialData?.category || "new") as "new",
@@ -60,6 +61,7 @@ export default function MonitorForm({ initialData, monitorId, onSuccess, selecte
         condition: monitor.condition,
         warranty: monitor.warranty,
         price: monitor.price,
+        discountPercent: monitor.discountPercent || 0,
         imageUrl: monitor.imageUrl || "",
         description: monitor.description || "",
         category: monitor.category as any,
@@ -104,6 +106,7 @@ export default function MonitorForm({ initialData, monitorId, onSuccess, selecte
           condition: "",
           warranty: "",
           price: 0,
+          discountPercent: 0,
           imageUrl: "",
           description: "",
           category: "new",
@@ -286,16 +289,27 @@ export default function MonitorForm({ initialData, monitorId, onSuccess, selecte
         </div>
       </div>
 
-      {/* Price */}
-      <div>
-        <label className="block font-semibold mb-2">Price (zł)</label>
-        <Input
-          type="number"
-          placeholder="0"
-          value={formData.price}
-          onChange={(e) => setFormData({ ...formData, price: parseInt(e.target.value) || 0 })}
-          required
-        />
+      {/* Price and Discount */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block font-semibold mb-2">Price (zł)</label>
+          <Input
+            type="number"
+            placeholder="0"
+            value={formData.price}
+            onChange={(e) => setFormData({ ...formData, price: parseInt(e.target.value) || 0 })}
+            required
+          />
+        </div>
+        <div>
+          <label className="block font-semibold mb-2">Discount (%)</label>
+          <Input
+            type="number"
+            placeholder="0"
+            value={formData.discountPercent}
+            onChange={(e) => setFormData({ ...formData, discountPercent: parseInt(e.target.value) || 0 })}
+          />
+        </div>
       </div>
 
       {/* Category */}

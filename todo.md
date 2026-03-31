@@ -311,3 +311,24 @@
 - [x] Display subcategories as list items
 - [x] Navigate to subcategory on click
 - [x] Close dropdown after selection
+
+## Discount System Implementation
+- [x] Add discount field to MonitorForm component
+- [x] Add discount field to AccessoryForm component
+- [x] Add discount field to TabletForm component
+- [x] Add discount field to SmartDeviceForm component
+- [x] Update tRPC laptop router to accept discountPercent
+- [x] Update tRPC monitor router to accept discountPercent
+- [x] Update tRPC accessory router to accept discountPercent
+- [x] Update tRPC tablet router to accept discountPercent
+- [x] Update tRPC smart device router to accept discountPercent
+- [x] Implement auto-duplication logic for Promotions category
+- [x] Update LaptopCard component to display discount badge
+- [x] Update MonitorCard component to display discount badge (uses LaptopCard)
+- [x] Update AccessoryCard component to display discount badge (uses LaptopCard)
+- [x] Update TabletCard component to display discount badge (uses LaptopCard)
+- [x] Update SmartDeviceCard component to display discount badge (uses LaptopCard)
+- [x] Update Catalog.tsx to show discounted products in Promotions
+- [ ] Test discount display across all categories
+- [x] Run vitest tests for discount functionality (15 tests passing)
+- [ ] Save checkpoint with discount system complete

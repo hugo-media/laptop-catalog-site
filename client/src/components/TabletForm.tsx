@@ -17,6 +17,7 @@ interface TabletFormProps {
     condition: string;
     warranty: string;
     price: number;
+    discountPercent?: number;
     imageUrl?: string;
     description?: string;
   }) => void;
@@ -34,6 +35,7 @@ export function TabletForm({ initialData, onSubmit, isLoading = false }: TabletF
     condition: initialData?.condition || "",
     warranty: initialData?.warranty || "",
     price: initialData?.price || 0,
+    discountPercent: initialData?.discountPercent || 0,
     imageUrl: initialData?.imageUrl || "",
     description: initialData?.description || "",
   });
@@ -132,6 +134,16 @@ export function TabletForm({ initialData, onSubmit, isLoading = false }: TabletF
           onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
           placeholder="Price"
           required
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium mb-1">Discount (%)</label>
+        <Input
+          type="number"
+          value={formData.discountPercent}
+          onChange={(e) => setFormData({ ...formData, discountPercent: parseInt(e.target.value) || 0 })}
+          placeholder="Discount percentage"
         />
       </div>
 

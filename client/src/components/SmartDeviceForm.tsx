@@ -16,6 +16,7 @@ interface SmartDeviceFormProps {
     condition: string;
     warranty: string;
     price: number;
+    discountPercent?: number;
     imageUrl?: string;
     description?: string;
   }) => void;
@@ -32,6 +33,7 @@ export function SmartDeviceForm({ initialData, onSubmit, isLoading = false }: Sm
     condition: initialData?.condition || "",
     warranty: initialData?.warranty || "",
     price: initialData?.price || 0,
+    discountPercent: initialData?.discountPercent || 0,
     imageUrl: initialData?.imageUrl || "",
     description: initialData?.description || "",
   });
@@ -121,6 +123,16 @@ export function SmartDeviceForm({ initialData, onSubmit, isLoading = false }: Sm
           onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
           placeholder="Price"
           required
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium mb-1">Discount (%)</label>
+        <Input
+          type="number"
+          value={formData.discountPercent}
+          onChange={(e) => setFormData({ ...formData, discountPercent: parseInt(e.target.value) || 0 })}
+          placeholder="Discount percentage"
         />
       </div>
 

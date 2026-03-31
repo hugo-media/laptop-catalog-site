@@ -27,6 +27,7 @@ interface LaptopFormProps {
     condition: string;
     warranty: string;
     price: number;
+    discountPercent?: number;
     imageUrl?: string;
     description?: string;
     category: Category;
@@ -46,6 +47,7 @@ export function LaptopForm({ initialData, onSubmit, isLoading = false }: LaptopF
     condition: initialData?.condition || "",
     warranty: initialData?.warranty || "",
     price: initialData?.price || 0,
+    discountPercent: initialData?.discountPercent || 0,
     imageUrl: initialData?.imageUrl || "",
     description: initialData?.description || "",
     category: (initialData?.category || "new") as Category,
@@ -89,6 +91,7 @@ export function LaptopForm({ initialData, onSubmit, isLoading = false }: LaptopF
     { label: "Condition", name: "condition", placeholder: "e.g., New" },
     { label: "Warranty", name: "warranty", placeholder: "e.g., 2 years official" },
     { label: "Price (zł)", name: "price", placeholder: "e.g., 5999", type: "number" },
+    { label: "Discount (%)", name: "discountPercent", placeholder: "e.g., 15", type: "number" },
   ];
 
   return (

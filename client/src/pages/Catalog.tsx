@@ -180,11 +180,11 @@ export default function Catalog() {
     switch (productType) {
       case "promotions": {
         const allPromos: any[] = [];
-        if (laptops) allPromos.push(...laptops.filter(l => l.category === "promotions"));
-        if (monitors) allPromos.push(...monitors.filter(m => m.category === "promotions"));
-        if (accessories) allPromos.push(...accessories.filter(a => a.category === "promotions"));
-        if (tablets) allPromos.push(...tablets.filter(t => t.category === "promotions"));
-        if (smartDevices) allPromos.push(...smartDevices.filter(s => s.category === "promotions"));
+        if (laptops) allPromos.push(...laptops.filter(l => l.category === "promotions" || (l.discountPercent && l.discountPercent > 0)));
+        if (monitors) allPromos.push(...monitors.filter(m => m.category === "promotions" || (m.discountPercent && m.discountPercent > 0)));
+        if (accessories) allPromos.push(...accessories.filter(a => a.category === "promotions" || (a.discountPercent && a.discountPercent > 0)));
+        if (tablets) allPromos.push(...tablets.filter(t => t.category === "promotions" || (t.discountPercent && t.discountPercent > 0)));
+        if (smartDevices) allPromos.push(...smartDevices.filter(s => s.category === "promotions" || (s.discountPercent && s.discountPercent > 0)));
         return allPromos;
       }
       case "laptops": return laptops || [];

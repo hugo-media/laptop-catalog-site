@@ -24,6 +24,11 @@ export function LaptopCard({ laptop }: LaptopCardProps) {
             <Laptop className="h-24 w-24 text-muted-foreground/25 group-hover:text-accent/35 transition-all duration-300 group-hover:scale-110" />
           </>
         )}
+        {laptop.discountPercent && laptop.discountPercent > 0 && (
+          <div className="absolute top-3 right-3 bg-red-600 text-white px-3 py-1 rounded-full font-bold text-sm shadow-lg">
+            -{laptop.discountPercent}%
+          </div>
+        )}
       </div>
 
       {/* Content Area */}
@@ -108,12 +113,29 @@ export function LaptopCard({ laptop }: LaptopCardProps) {
 
         {/* Price Section - Premium Styling */}
         <div className="space-y-4 pt-2 mt-auto">
-          <div className="flex items-baseline gap-1">
-            <span className="text-4xl font-bold text-accent tracking-tight">
-              {laptop.price.toLocaleString('pl-PL')}
-            </span>
-            <span className="text-sm font-semibold text-muted-foreground">zł</span>
-          </div>
+          {laptop.discountPercent && laptop.discountPercent > 0 ? (
+            <div className="space-y-2">
+              <div className="flex items-baseline gap-1">
+                <span className="text-lg font-semibold text-muted-foreground line-through">
+                  {laptop.price.toLocaleString('pl-PL')}
+                </span>
+                <span className="text-xs font-semibold text-muted-foreground">zł</span>
+              </div>
+              <div className="flex items-baseline gap-1">
+                <span className="text-4xl font-bold text-red-600 tracking-tight">
+                  {Math.round(laptop.price * (1 - laptop.discountPercent / 100)).toLocaleString('pl-PL')}
+                </span>
+                <span className="text-sm font-semibold text-muted-foreground">zł</span>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-baseline gap-1">
+              <span className="text-4xl font-bold text-accent tracking-tight">
+                {laptop.price.toLocaleString('pl-PL')}
+              </span>
+              <span className="text-sm font-semibold text-muted-foreground">zł</span>
+            </div>
+          )}
 
           {/* Call-to-Action Button */}
           <Button
