@@ -2,14 +2,23 @@ import type { Laptop as LaptopType } from "../../../drizzle/schema";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Laptop, ArrowRight } from "lucide-react";
+import { useLocation } from "wouter";
 
 interface LaptopCardProps {
   laptop: LaptopType;
 }
 
 export function LaptopCard({ laptop }: LaptopCardProps) {
+  const [, setLocation] = useLocation();
+  // Determine product type from context - default to laptops
+  const productType = "laptops";
+  
+  const handleCardClick = () => {
+    setLocation(`/product/${productType}/${laptop.id}`);
+  };
+  
   return (
-    <div className="group h-full flex flex-col bg-card rounded-lg border border-border/60 hover:border-accent/40 hover:shadow-xl transition-all duration-300 overflow-hidden">
+    <div onClick={handleCardClick} className="group h-full flex flex-col bg-card rounded-lg border border-border/60 hover:border-accent/40 hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer">
       {/* Premium Image Area */}
       <div className="relative w-full h-56 bg-gradient-to-br from-secondary/50 via-secondary/30 to-secondary/20 flex items-center justify-center border-b border-border/40 overflow-hidden">
         {laptop.imageUrl ? (
@@ -139,6 +148,10 @@ export function LaptopCard({ laptop }: LaptopCardProps) {
 
           {/* Call-to-Action Button */}
           <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              setLocation(`/product/${productType}/${laptop.id}`);
+            }}
             className="w-full group/btn gap-2 bg-accent hover:bg-accent/90 text-accent-foreground font-semibold h-11 transition-all duration-300"
             size="sm"
           >

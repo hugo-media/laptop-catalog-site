@@ -4,10 +4,12 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { Footer } from "./components/Footer";
 import Home from "./pages/Home";
 import Catalog from "./pages/Catalog";
 import Admin from "./pages/Admin";
 import About from "./pages/About";
+import ProductDetail from "./pages/ProductDetail";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -15,6 +17,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/catalog/:productType" component={Catalog} />
+      <Route path="/product/:type/:id" component={ProductDetail} />
       <Route path="/admin" component={Admin} />
       <Route path="/about" component={About} />
       <Route path="/404" component={NotFound} />
@@ -38,7 +41,10 @@ function App() {
       >
         <TooltipProvider>
           <Toaster />
-          <Router />
+          <div className="flex flex-col min-h-screen">
+            <Router />
+            <Footer />
+          </div>
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

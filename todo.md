@@ -345,3 +345,18 @@
 - [x] Fix TypeScript type errors for categories
 - [x] Test multiple categories selection
 - [ ] Save checkpoint with multiple categories system complete
+
+
+## Product Detail Page
+- [ ] Create ProductDetail.tsx page component
+- [ ] Add product detail route in App.tsx
+- [ ] Update LaptopCard to link to product detail page
+- [ ] Test product detail page navigation
+- [ ] Save checkpoint with product detail page
+
+
+## Navigation & Footer Improvements
+- [x] Додати компактний футер з інформацією про компанію
+- [x] Зробити футер sticky внизу сторінки
+- [x] Переставити порядок на ProductDetail: спочатку характеристики, потім опис
+- [x] Виправити навігацію на сторінку деталей товару (замінити window.location.href на useLocation)
