@@ -102,8 +102,66 @@ export default function ProductDetail() {
               </div>
             </div>
 
+            {/* Laptop Specifications */}
+            {type === "laptops" && product && "processor" in product && (
+              <div>
+                <h2 className="text-2xl font-bold mb-6">Характеристики</h2>
+                <div className="grid grid-cols-2 gap-6">
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium mb-1">Процесор</p>
+                    <p className="font-semibold text-foreground">{product.processor}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium mb-1">Відеокарта</p>
+                    <p className="font-semibold text-foreground">{(product as any).graphicsCard}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium mb-1">ОЗУ</p>
+                    <p className="font-semibold text-foreground">{product.ram}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium mb-1">Сховище</p>
+                    <p className="font-semibold text-foreground">{product.storage}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium mb-1">Дисплей</p>
+                    <p className="font-semibold text-foreground">{product.display}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium mb-1">ОС</p>
+                    <p className="font-semibold text-foreground">{product.operatingSystem}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Monitor Specifications */}
+            {type === "monitors" && product && "resolution" in product && (
+              <div>
+                <h2 className="text-2xl font-bold mb-6">Характеристики</h2>
+                <div className="grid grid-cols-2 gap-6">
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium mb-1">Дозвіл</p>
+                    <p className="font-semibold text-foreground">{product.resolution}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium mb-1">Діагональ</p>
+                    <p className="font-semibold text-foreground">{(product as any).diagonal}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium mb-1">Тип матриці</p>
+                    <p className="font-semibold text-foreground">{product.panelType}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium mb-1">Частота оновлення</p>
+                    <p className="font-semibold text-foreground">{product.refreshRate}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Condition */}
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-2 gap-6 border-t pt-8">
               <div>
                 <p className="text-sm text-muted-foreground mb-2">Стан</p>
                 <p className="text-lg font-medium">{product.condition}</p>
@@ -143,64 +201,6 @@ export default function ProductDetail() {
                 <Heart className="w-5 h-5" />
               </Button>
             </div>
-
-            {/* Laptop Specifications */}
-            {type === "laptops" && product && "processor" in product && (
-              <div className="border-t pt-8">
-                <h2 className="text-2xl font-bold mb-6">Характеристики</h2>
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <p className="text-sm text-muted-foreground font-medium mb-1">Процесор</p>
-                    <p className="font-semibold text-foreground">{product.processor}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground font-medium mb-1">Відеокарта</p>
-                    <p className="font-semibold text-foreground">{(product as any).graphicsCard}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground font-medium mb-1">ОЗУ</p>
-                    <p className="font-semibold text-foreground">{product.ram}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground font-medium mb-1">Сховище</p>
-                    <p className="font-semibold text-foreground">{product.storage}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground font-medium mb-1">Дисплей</p>
-                    <p className="font-semibold text-foreground">{product.display}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground font-medium mb-1">ОС</p>
-                    <p className="font-semibold text-foreground">{product.operatingSystem}</p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Monitor Specifications */}
-            {type === "monitors" && product && "resolution" in product && (
-              <div className="border-t pt-8">
-                <h2 className="text-2xl font-bold mb-6">Характеристики</h2>
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <p className="text-sm text-muted-foreground font-medium mb-1">Дозвіл</p>
-                    <p className="font-semibold text-foreground">{product.resolution}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground font-medium mb-1">Діагональ</p>
-                    <p className="font-semibold text-foreground">{(product as any).diagonal}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground font-medium mb-1">Тип матриці</p>
-                    <p className="font-semibold text-foreground">{product.panelType}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground font-medium mb-1">Частота оновлення</p>
-                    <p className="font-semibold text-foreground">{product.refreshRate}</p>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
 
