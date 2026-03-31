@@ -329,6 +329,7 @@
 - [x] Update TabletCard component to display discount badge (uses LaptopCard)
 - [x] Update SmartDeviceCard component to display discount badge (uses LaptopCard)
 - [x] Update Catalog.tsx to show discounted products in Promotions
-- [ ] Test discount display across all categories
+- [x] Test discount display across all categories
 - [x] Run vitest tests for discount functionality (15 tests passing)
-- [ ] Save checkpoint with discount system complete
+- [x] Fix discountPercent validation error in LaptopForm (Number conversion)
+- [ ] Save checkpoint with discount system complete and bug fix

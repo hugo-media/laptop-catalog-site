@@ -57,7 +57,7 @@ export function LaptopForm({ initialData, onSubmit, isLoading = false }: LaptopF
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "price" ? Number(value) : value,
+      [name]: (name === "price" || name === "discountPercent") ? Number(value) : value,
     }));
   };
 
