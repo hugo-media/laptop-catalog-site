@@ -63,10 +63,11 @@ export default function ProductDetail() {
           Назад до каталогу
         </Link>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Product Image */}
-          <div className="flex flex-col gap-4">
-            <div className="relative bg-gray-100 rounded-lg overflow-hidden aspect-square flex items-center justify-center">
+        {/* Main Content - Image Left, Info + Specs Right */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+          {/* Product Image - Left Column */}
+          <div className="lg:col-span-1">
+            <div className="relative bg-gray-100 rounded-lg overflow-hidden aspect-square flex items-center justify-center sticky top-24">
               {product.imageUrl ? (
                 <img
                   src={product.imageUrl}
@@ -84,11 +85,11 @@ export default function ProductDetail() {
             </div>
           </div>
 
-          {/* Product Info */}
-          <div className="flex flex-col gap-6">
+          {/* Product Info + Specs - Right Columns */}
+          <div className="lg:col-span-2 space-y-8">
             {/* Title and badges */}
             <div>
-              <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
+              <h1 className="text-4xl font-bold mb-4">{product.name}</h1>
               <div className="flex flex-wrap gap-2">
                 {product.categories && Array.isArray(product.categories) && (product.categories as string[]).map((cat: string) => (
                   <Badge key={cat} variant="secondary">
@@ -102,117 +103,117 @@ export default function ProductDetail() {
             </div>
 
             {/* Condition */}
-            <div>
-              <p className="text-sm text-muted-foreground mb-1">Стан</p>
-              <p className="text-lg font-medium">{product.condition}</p>
+            <div className="grid grid-cols-2 gap-6">
+              <div>
+                <p className="text-sm text-muted-foreground mb-2">Стан</p>
+                <p className="text-lg font-medium">{product.condition}</p>
+              </div>
+              {product.warranty && (
+                <div>
+                  <p className="text-sm text-muted-foreground mb-2">Гарантія</p>
+                  <p className="text-lg font-medium">{product.warranty}</p>
+                </div>
+              )}
             </div>
 
             {/* Price */}
-            <div className="bg-gray-50 p-6 rounded-lg">
-              <p className="text-sm text-muted-foreground mb-2">Ціна</p>
-              <div className="flex items-center gap-3">
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-lg border border-blue-200">
+              <p className="text-sm text-muted-foreground mb-3">Ціна</p>
+              <div className="flex items-baseline gap-3 mb-2">
                 {discountPercent > 0 && (
-                  <span className="text-2xl font-bold text-red-500">{discountedPrice} zł</span>
+                  <span className="text-4xl font-bold text-red-600">{discountedPrice} zł</span>
                 )}
-                <span className={`text-2xl font-bold ${discountPercent > 0 ? "line-through text-muted-foreground" : ""}`}>
+                <span className={`text-3xl font-bold ${discountPercent > 0 ? "line-through text-muted-foreground" : ""}`}>
                   {originalPrice} zł
                 </span>
               </div>
               {discountPercent > 0 && (
-                <p className="text-sm text-green-600 mt-2">
-                  Економія: {originalPrice - discountedPrice} zł
+                <p className="text-sm text-green-600 font-semibold">
+                  ✓ Економія: {originalPrice - discountedPrice} zł
                 </p>
               )}
             </div>
 
-            {/* Warranty */}
-            {product.warranty && (
-              <div>
-                <p className="text-sm text-muted-foreground mb-1">Гарантія</p>
-                <p className="text-lg font-medium">{product.warranty}</p>
-              </div>
-            )}
-
             {/* Action buttons */}
-            <div className="flex gap-3 pt-4">
-              <Button className="flex-1" size="lg">
+            <div className="flex gap-3">
+              <Button className="flex-1 h-12 text-base" size="lg">
                 Додати в кошик
               </Button>
-              <Button variant="outline" size="lg" className="px-4">
+              <Button variant="outline" size="lg" className="px-6 h-12">
                 <Heart className="w-5 h-5" />
               </Button>
             </div>
+
+            {/* Laptop Specifications */}
+            {type === "laptops" && product && "processor" in product && (
+              <div className="border-t pt-8">
+                <h2 className="text-2xl font-bold mb-6">Характеристики</h2>
+                <div className="grid grid-cols-2 gap-6">
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium mb-1">Процесор</p>
+                    <p className="font-semibold text-foreground">{product.processor}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium mb-1">Відеокарта</p>
+                    <p className="font-semibold text-foreground">{(product as any).graphicsCard}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium mb-1">ОЗУ</p>
+                    <p className="font-semibold text-foreground">{product.ram}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium mb-1">Сховище</p>
+                    <p className="font-semibold text-foreground">{product.storage}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium mb-1">Дисплей</p>
+                    <p className="font-semibold text-foreground">{product.display}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium mb-1">ОС</p>
+                    <p className="font-semibold text-foreground">{product.operatingSystem}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Monitor Specifications */}
+            {type === "monitors" && product && "resolution" in product && (
+              <div className="border-t pt-8">
+                <h2 className="text-2xl font-bold mb-6">Характеристики</h2>
+                <div className="grid grid-cols-2 gap-6">
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium mb-1">Дозвіл</p>
+                    <p className="font-semibold text-foreground">{product.resolution}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium mb-1">Діагональ</p>
+                    <p className="font-semibold text-foreground">{(product as any).diagonal}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium mb-1">Тип матриці</p>
+                    <p className="font-semibold text-foreground">{product.panelType}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium mb-1">Частота оновлення</p>
+                    <p className="font-semibold text-foreground">{product.refreshRate}</p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Laptop Specifications */}
-        {type === "laptops" && product && "processor" in product && (
-          <div className="mt-12 pt-8 border-t">
-            <h2 className="text-2xl font-bold mb-6">Характеристики</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="flex justify-between items-start pb-4 border-b">
-                <span className="text-muted-foreground font-medium">Процесор</span>
-                <span className="font-semibold text-right">{product.processor}</span>
-              </div>
-              <div className="flex justify-between items-start pb-4 border-b">
-                <span className="text-muted-foreground font-medium">Відеокарта</span>
-                <span className="font-semibold text-right">{(product as any).graphicsCard}</span>
-              </div>
-              <div className="flex justify-between items-start pb-4 border-b">
-                <span className="text-muted-foreground font-medium">ОЗУ</span>
-                <span className="font-semibold text-right">{product.ram}</span>
-              </div>
-              <div className="flex justify-between items-start pb-4 border-b">
-                <span className="text-muted-foreground font-medium">Сховище</span>
-                <span className="font-semibold text-right">{product.storage}</span>
-              </div>
-              <div className="flex justify-between items-start pb-4 border-b">
-                <span className="text-muted-foreground font-medium">Дисплей</span>
-                <span className="font-semibold text-right">{product.display}</span>
-              </div>
-              <div className="flex justify-between items-start pb-4 border-b">
-                <span className="text-muted-foreground font-medium">ОС</span>
-                <span className="font-semibold text-right">{product.operatingSystem}</span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Description */}
+        {/* Description - Full Width */}
         {product.description && (
-          <div className="mt-12 pt-8 border-t">
-            <h2 className="text-2xl font-bold mb-4">Опис</h2>
+          <div className="border-t pt-8">
+            <h2 className="text-2xl font-bold mb-6">Опис</h2>
             <div className="prose prose-sm max-w-none text-foreground">
               {(product.description || "").split("\n").map((paragraph: string, idx: number) => (
                 <p key={idx} className="mb-4 text-base leading-relaxed">
                   {paragraph}
                 </p>
               ))}
-            </div>
-          </div>
-        )}
-
-        {/* Monitor Specifications */}
-        {type === "monitors" && product && "resolution" in product && (
-          <div className="mt-12 pt-8 border-t">
-            <h2 className="text-2xl font-bold mb-6">Характеристики</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="flex justify-between items-start pb-4 border-b">
-                <span className="text-muted-foreground font-medium">Дозвіл</span>
-                <span className="font-semibold text-right">{product.resolution}</span>
-              </div>
-              <div className="flex justify-between items-start pb-4 border-b">
-                <span className="text-muted-foreground font-medium">Діагональ</span>
-                <span className="font-semibold text-right">{(product as any).diagonal}</span>
-              </div>
-              <div className="flex justify-between items-start pb-4 border-b">
-                <span className="text-muted-foreground font-medium">Тип матриці</span>
-                <span className="font-semibold text-right">{product.panelType}</span>
-              </div>
-              <div className="flex justify-between items-start pb-4 border-b">
-                <span className="text-muted-foreground font-medium">Частота оновлення</span>
-                <span className="font-semibold text-right">{product.refreshRate}</span>
-              </div>
             </div>
           </div>
         )}
