@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { useLocation } from "wouter";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { Loader2, Shield, Truck, RotateCcw, Star, Search, X, ChevronLeft, ArrowRight, ArrowUpDown } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useTranslation } from "react-i18next";
@@ -89,7 +89,21 @@ export default function Catalog() {
   const [sortBy, setSortBy] = useState<'price-asc' | 'price-desc' | 'popularity' | 'newest'>('newest');
   const [showSubcategoryAccordion, setShowSubcategoryAccordion] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState<ProductType | null>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setExpandedCategory(null);
+      }
+    };
+
+    if (expandedCategory) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [expandedCategory]);
 
   // Sync productType state with URL parameter
   useEffect(() => {
@@ -360,7 +374,7 @@ export default function Catalog() {
       <div className="border-b border-border/40 bg-background/50">
         <div className="container py-6">
           <p className="text-sm text-muted-foreground mb-4">Перейти до категорії:</p>
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3" ref={dropdownRef}>
             {PRODUCT_TYPES.map((type) => (
               <div key={type.value} className="relative inline-block">
                 <Button
