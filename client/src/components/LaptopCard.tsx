@@ -57,12 +57,15 @@ export function LaptopCard({ laptop }: LaptopCardProps) {
           >
             {laptop.condition}
           </Badge>
-          <Badge 
-            variant="default" 
-            className="text-xs font-semibold px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white"
+          <a 
+            href="https://t.me/hugo_media_shop" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="inline-block text-xs font-semibold px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors cursor-pointer"
           >
             Спеціальні ціни в Telegram
-          </Badge>
+          </a>
           {laptop.warranty && (
             <Badge 
               variant="outline" 
