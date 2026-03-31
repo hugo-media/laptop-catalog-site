@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useLocation } from "wouter";
-import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin, Send } from "lucide-react";
 
 export function Footer() {
   const { t } = useTranslation();
@@ -23,6 +23,9 @@ export function Footer() {
               </a>
               <a href="#" className="hover:opacity-70 transition">
                 <Linkedin className="w-4 h-4" />
+              </a>
+              <a href="https://t.me/hugo_media_shop" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition">
+                <Send className="w-4 h-4" />
               </a>
             </div>
           </div>
@@ -81,7 +84,7 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Contact & Telegram */}
           <div className="space-y-3">
             <h4 className="font-semibold text-sm uppercase tracking-wide">Контакти</h4>
             <ul className="space-y-2 text-sm opacity-80">
@@ -100,6 +103,12 @@ export function Footer() {
               <li className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
                 <span>Варшава, Польща</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <Send className="w-4 h-4" />
+                <a href="https://t.me/hugo_media_shop" target="_blank" rel="noopener noreferrer" className="hover:opacity-100 transition">
+                  Офіційний канал
+                </a>
               </li>
             </ul>
           </div>

@@ -3,7 +3,7 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
-import { ArrowLeft, Heart } from "lucide-react";
+import { ArrowLeft, Heart, Send } from "lucide-react";
 
 export default function ProductDetail() {
   const [match, params] = useRoute("/product/:type/:id");
@@ -194,8 +194,17 @@ export default function ProductDetail() {
 
             {/* Action buttons */}
             <div className="flex gap-3">
-              <Button className="flex-1 h-12 text-base" size="lg">
-                Додати в кошик
+              <Button 
+                onClick={() => {
+                  const message = `Цікавлюсь товаром: ${product.name}\nЦіна: ${discountedPrice} zł${discountPercent > 0 ? ` (дисконт ${discountPercent}%)` : ''}`;
+                  const encodedMessage = encodeURIComponent(message);
+                  window.open(`https://t.me/HUGO_Medi?text=${encodedMessage}`, '_blank');
+                }}
+                className="flex-1 h-12 text-base bg-blue-600 hover:bg-blue-700" 
+                size="lg"
+              >
+                <Send className="w-4 h-4 mr-2" />
+                Замовити в Telegram
               </Button>
               <Button variant="outline" size="lg" className="px-6 h-12">
                 <Heart className="w-5 h-5" />

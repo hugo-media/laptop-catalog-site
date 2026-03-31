@@ -1,7 +1,7 @@
 import type { Laptop as LaptopType } from "../../../drizzle/schema";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Laptop, ArrowRight } from "lucide-react";
+import { Laptop, Send } from "lucide-react";
 import { useLocation } from "wouter";
 
 interface LaptopCardProps {
@@ -56,6 +56,12 @@ export function LaptopCard({ laptop }: LaptopCardProps) {
             className="text-xs font-semibold px-3 py-1 bg-secondary/80 text-foreground/80"
           >
             {laptop.condition}
+          </Badge>
+          <Badge 
+            variant="default" 
+            className="text-xs font-semibold px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            Спеціальні ціни в Telegram
           </Badge>
           {laptop.warranty && (
             <Badge 
@@ -146,17 +152,19 @@ export function LaptopCard({ laptop }: LaptopCardProps) {
             </div>
           )}
 
-          {/* Call-to-Action Button */}
+          {/* Call-to-Action Button - Telegram */}
           <Button
             onClick={(e) => {
               e.stopPropagation();
-              setLocation(`/product/${productType}/${laptop.id}`);
+              const message = `Цікавлюсь товаром: ${laptop.name}\nЦіна: ${laptop.price.toLocaleString('pl-PL')} zł${laptop.discountPercent ? ` (дисконт ${laptop.discountPercent}%)` : ''}`;
+              const encodedMessage = encodeURIComponent(message);
+              window.open(`https://t.me/HUGO_Medi?text=${encodedMessage}`, '_blank');
             }}
-            className="w-full group/btn gap-2 bg-accent hover:bg-accent/90 text-accent-foreground font-semibold h-9 text-sm transition-all duration-300"
+            className="w-full group/btn gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold h-9 text-sm transition-all duration-300"
             size="sm"
           >
-            Ask About This Item
-            <ArrowRight className="h-3 w-3 group-hover/btn:translate-x-1 transition-transform duration-300" />
+            Замовити в Telegram
+            <Send className="h-3 w-3 group-hover/btn:translate-x-1 transition-transform duration-300" />
           </Button>
         </div>
       </div>
