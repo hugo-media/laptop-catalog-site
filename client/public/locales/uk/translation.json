@@ -9,7 +9,12 @@
     "aboutUs": "Про нас",
     "adminPanel": "Адмін-панель",
     "signIn": "Вхід",
-    "admin": "Адмін"
+    "admin": "Адмін",
+    "laptops": "Ноутбуки",
+    "monitors": "Монітори",
+    "accessories": "Аксесуари",
+    "tablets": "Планшети",
+    "smartDevices": "Смарт девайси"
   },
   "categories": {
     "promotions": "Акції",

@@ -9,7 +9,12 @@
     "aboutUs": "O nas",
     "adminPanel": "Panel Administracyjny",
     "signIn": "Zaloguj się",
-    "admin": "Admin"
+    "admin": "Admin",
+    "laptops": "Laptopy",
+    "monitors": "Monitory",
+    "accessories": "Akcesoria",
+    "tablets": "Tablety",
+    "smartDevices": "Urządzenia Smart"
   },
   "categories": {
     "promotions": "Promocje",
