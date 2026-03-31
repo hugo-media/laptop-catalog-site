@@ -18,7 +18,7 @@ import { useTranslation } from "react-i18next";
 import type { Laptop as LaptopType } from "../../../drizzle/schema";
 
 type ProductType = "promotions" | "laptops" | "monitors" | "accessories" | "tablets" | "smartDevices";
-type CategoryType = "promotions" | "refurbished" | "new" | "business";
+type CategoryType = "promotions" | "refurbished" | "new" | "business" | null;
 
 const PRODUCT_TYPES: { value: ProductType; label: string }[] = [
   { value: "promotions", label: "Акції" },
@@ -185,7 +185,7 @@ export default function Catalog() {
   const filteredProducts = useMemo(() => {
     let filtered = getCurrentData() || [];
     
-    if (productType !== "promotions") {
+    if (productType !== "promotions" && selectedCategory !== null) {
       filtered = filtered.filter((p: any) => p.category === selectedCategory);
     }
 
@@ -430,7 +430,7 @@ export default function Catalog() {
                     ))}
                     <button
                       onClick={() => {
-                        setSelectedCategory("new");
+                        setSelectedCategory(null);
                         setLaptopFilters({});
                         setMonitorFilters({});
                         setTabletFilters({});
