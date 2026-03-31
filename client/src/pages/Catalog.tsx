@@ -91,7 +91,7 @@ export default function Catalog() {
   const [expandedCategory, setExpandedCategory] = useState<ProductType | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown when clicking outside
+  // Close dropdown when clicking outside or pressing Escape
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -99,9 +99,19 @@ export default function Catalog() {
       }
     };
 
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setExpandedCategory(null);
+      }
+    };
+
     if (expandedCategory) {
       document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleEscapeKey);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+        document.removeEventListener('keydown', handleEscapeKey);
+      };
     }
   }, [expandedCategory]);
 
@@ -400,7 +410,7 @@ export default function Catalog() {
                 
                 {/* Subcategory Dropdown - Only show for selected category */}
                 {productType === type.value && getCategoryListForProductType().length > 0 && expandedCategory === type.value && (
-                  <div className="absolute top-full left-0 mt-1 bg-white border border-border/40 rounded-lg shadow-lg z-50 min-w-max">
+                  <div className="absolute top-full left-0 mt-1 bg-white border border-border/40 rounded-lg shadow-lg z-50 min-w-max animate-in fade-in zoom-in-95 duration-100">
                     {getCategoryListForProductType().map((cat) => (
                       <button
                         key={cat.value}
@@ -413,11 +423,25 @@ export default function Catalog() {
                           setSearchQuery("");
                           setExpandedCategory(null);
                         }}
-                        className="block w-full text-left px-4 py-2 text-sm text-foreground hover:bg-accent/10 transition-colors first:rounded-t-lg last:rounded-b-lg"
+                        className="block w-full text-left px-4 py-2 text-sm text-foreground hover:bg-accent/10 transition-colors first:rounded-t-lg"
                       >
                         {cat.label}
                       </button>
                     ))}
+                    <button
+                      onClick={() => {
+                        setSelectedCategory("new");
+                        setLaptopFilters({});
+                        setMonitorFilters({});
+                        setTabletFilters({});
+                        setSmartDeviceFilters({});
+                        setSearchQuery("");
+                        setExpandedCategory(null);
+                      }}
+                      className="block w-full text-left px-4 py-2 text-sm text-accent font-medium hover:bg-accent/10 transition-colors rounded-b-lg border-t border-border/20"
+                    >
+                      Показати все
+                    </button>
                   </div>
                 )}
               </div>
