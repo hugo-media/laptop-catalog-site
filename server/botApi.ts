@@ -105,6 +105,7 @@ router.post("/product", verifyBotSecret, async (req: Request, res: Response) => 
           storage: specs.storage || "Not specified",
           display: specs.display || "Not specified",
           operatingSystem: specs.operatingSystem || "Not specified",
+          categories: JSON.stringify(["new"]),
         };
         result = await createLaptop(data);
         break;
@@ -126,6 +127,7 @@ router.post("/product", verifyBotSecret, async (req: Request, res: Response) => 
           responseTime: specs.responseTime || "Not specified",
           connectivity: specs.connectivity || "Not specified",
           size: specs.size || "Not specified",
+          categories: JSON.stringify(["new"]),
         };
         result = await createMonitor(data);
         break;
@@ -145,6 +147,7 @@ router.post("/product", verifyBotSecret, async (req: Request, res: Response) => 
           battery: specs.battery || "Not specified",
           features: specs.features || "Not specified",
           compatibility: specs.compatibility || "Not specified",
+          categories: JSON.stringify(["new"]),
         };
         result = await createSmartDevice(data);
         break;
@@ -165,6 +168,7 @@ router.post("/product", verifyBotSecret, async (req: Request, res: Response) => 
           operatingSystem: specs.operatingSystem || "Not specified",
           battery: specs.battery || "Not specified",
           camera: specs.camera || "Not specified",
+          categories: JSON.stringify(["new"]),
         };
         result = await createTablet(data);
         break;
