@@ -37,8 +37,8 @@ const verifyBotSecret = (req: Request, res: Response, next: Function) => {
 const ProductSchema = z.object({
   name: z.string().min(1, "Name is required"),
   price: z.number().positive("Price must be positive"),
-  description: z.string().min(1, "Description is required"),
-  imageUrl: z.string().url("Invalid image URL"),
+  description: z.string().optional().default(""),
+  imageUrl: z.string().url("Invalid image URL").optional().default(""),
   category: z.enum(["laptops", "monitors", "smartDevices", "tablets"]),
   warranty: z.string().optional().default("No warranty"),
   condition: z.string().optional().default("new"),
@@ -79,8 +79,8 @@ router.post("/product", verifyBotSecret, async (req: Request, res: Response) => 
     const {
       name,
       price,
-      description,
-      imageUrl,
+      description = "",
+      imageUrl = "",
       category,
       warranty,
       condition,
