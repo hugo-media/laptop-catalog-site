@@ -403,3 +403,7 @@
 - [x] Register botApi routes in server/_core/index.ts
 - [x] Test all CRUD operations for each product type
 - [x] Verify error handling for invalid data
+- [x] Add BOT_API_SECRET authentication middleware
+- [x] Support secret in X-Bot-Secret header and query parameter
+- [x] Write authentication tests (4 additional tests)
+- [x] Verify all 29 tests pass successfully

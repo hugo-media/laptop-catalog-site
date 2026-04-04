@@ -10,6 +10,29 @@ import { z } from "zod";
 
 const router = Router();
 
+// Middleware to verify BOT_API_SECRET
+const verifyBotSecret = (req: Request, res: Response, next: Function) => {
+  const secret = req.headers["x-bot-secret"] || req.query.secret;
+  const expectedSecret = process.env.BOT_API_SECRET;
+
+  if (!expectedSecret) {
+    console.error("BOT_API_SECRET is not configured");
+    return res.status(500).json({
+      error: "Server configuration error",
+      message: "BOT_API_SECRET is not set",
+    });
+  }
+
+  if (secret !== expectedSecret) {
+    return res.status(401).json({
+      error: "Unauthorized",
+      message: "Invalid or missing BOT_API_SECRET",
+    });
+  }
+
+  next();
+};
+
 // Validation schema for product data
 const ProductSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -48,7 +71,7 @@ const ProductSchema = z.object({
 type ProductInput = z.infer<typeof ProductSchema>;
 
 // POST /api/bot/product - Add product from Telegram bot
-router.post("/product", async (req: Request, res: Response) => {
+router.post("/product", verifyBotSecret, async (req: Request, res: Response) => {
   try {
     // Validate request body
     const validatedData = ProductSchema.parse(req.body);
