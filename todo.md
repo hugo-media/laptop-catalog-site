@@ -383,3 +383,23 @@
 - [x] Додати можливість збільшення фото (lightbox/modal)
 - [x] Інтегрувати карусель на сторінку ProductDetail
 - [x] Протестувати карусель на всіх типах товарів
+
+
+## Telegram Bot API Integration
+- [ ] Створити файл server/botApi.ts з POST /api/bot/product ендпоінтом
+- [ ] Зареєструвати роут в server/_core/index.ts
+- [ ] Додати валідацію та обробку помилок
+- [ ] Протестувати ендпоінт з Telegram бота
+
+
+## Telegram Bot API Integration
+- [x] Create server/botApi.ts with POST /api/bot/product endpoint
+- [x] Implement product validation with Zod schema
+- [x] Support all 4 product types (laptops, monitors, smartDevices, tablets)
+- [x] Handle optional fields with defaults
+- [x] Create comprehensive error handling with validation errors
+- [x] Add GET /api/bot/health endpoint for bot health checks
+- [x] Write vitest tests for Bot API (10 tests)
+- [x] Register botApi routes in server/_core/index.ts
+- [x] Test all CRUD operations for each product type
+- [x] Verify error handling for invalid data
