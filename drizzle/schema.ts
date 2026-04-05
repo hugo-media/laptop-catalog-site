@@ -1,32 +1,35 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { integer, pgEnum, pgTable, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
 
 /**
  * Core user table backing auth flow.
  * Extend this file with additional tables as your product grows.
  * Columns use camelCase to match both database fields and generated types.
  */
-export const users = mysqlTable("users", {
+
+export const roleEnum = pgEnum("role", ["user", "admin"]);
+
+export const users = pgTable("users", {
   /**
    * Surrogate primary key. Auto-incremented numeric value managed by the database.
    * Use this for relations between tables.
    */
-  id: int("id").autoincrement().primaryKey(),
+  id: serial("id").primaryKey(),
   /** Manus OAuth identifier (openId) returned from the OAuth callback. Unique per user. */
   openId: varchar("openId", { length: 64 }).notNull().unique(),
   name: text("name"),
   email: varchar("email", { length: 320 }),
   loginMethod: varchar("loginMethod", { length: 64 }),
-  role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
+  role: roleEnum("role").default("user").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
   lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull(),
 });
 
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
-export const laptops = mysqlTable("laptops", {
-  id: int("id").autoincrement().primaryKey(),
+export const laptops = pgTable("laptops", {
+  id: serial("id").primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
   processor: varchar("processor", { length: 255 }).notNull(),
   graphicsCard: varchar("graphicsCard", { length: 255 }).notNull(),
@@ -36,20 +39,20 @@ export const laptops = mysqlTable("laptops", {
   operatingSystem: varchar("operatingSystem", { length: 100 }).notNull(),
   condition: varchar("condition", { length: 50 }).notNull(),
   warranty: varchar("warranty", { length: 100 }).notNull(),
-  price: int("price").notNull(),
-  discountPercent: int("discountPercent").default(0).notNull(),
+  price: integer("price").notNull(),
+  discountPercent: integer("discountPercent").default(0).notNull(),
   imageUrl: text("imageUrl"),
   description: text("description"),
   categories: text("categories").default(JSON.stringify(["new"])).notNull(), // JSON array of categories
   createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
 });
 
 export type Laptop = typeof laptops.$inferSelect;
 export type InsertLaptop = typeof laptops.$inferInsert;
 
-export const monitors = mysqlTable("monitors", {
-  id: int("id").autoincrement().primaryKey(),
+export const monitors = pgTable("monitors", {
+  id: serial("id").primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
   resolution: varchar("resolution", { length: 100 }).notNull(), // e.g., "1920x1080", "2560x1440"
   panelType: varchar("panelType", { length: 100 }).notNull(), // e.g., "IPS", "VA", "TN", "OLED"
@@ -61,20 +64,20 @@ export const monitors = mysqlTable("monitors", {
   size: varchar("size", { length: 50 }).notNull(), // e.g., "27 inch", "32 inch"
   condition: varchar("condition", { length: 50 }).notNull(),
   warranty: varchar("warranty", { length: 100 }).notNull(),
-  price: int("price").notNull(),
-  discountPercent: int("discountPercent").default(0).notNull(),
+  price: integer("price").notNull(),
+  discountPercent: integer("discountPercent").default(0).notNull(),
   imageUrl: text("imageUrl"),
   description: text("description"),
   categories: text("categories").default(JSON.stringify(["new"])).notNull(), // JSON array of categories
   createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
 });
 
 export type Monitor = typeof monitors.$inferSelect;
 export type InsertMonitor = typeof monitors.$inferInsert;
 
-export const accessories = mysqlTable("accessories", {
-  id: int("id").autoincrement().primaryKey(),
+export const accessories = pgTable("accessories", {
+  id: serial("id").primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
   type: varchar("type", { length: 100 }).notNull(), // e.g., "Mouse", "Keyboard", "Charger", "Bag"
   brand: varchar("brand", { length: 100 }).notNull(),
@@ -82,20 +85,20 @@ export const accessories = mysqlTable("accessories", {
   color: varchar("color", { length: 100 }).notNull(),
   condition: varchar("condition", { length: 50 }).notNull(),
   warranty: varchar("warranty", { length: 100 }).notNull(),
-  price: int("price").notNull(),
-  discountPercent: int("discountPercent").default(0).notNull(),
+  price: integer("price").notNull(),
+  discountPercent: integer("discountPercent").default(0).notNull(),
   imageUrl: text("imageUrl"),
   description: text("description"),
   categories: text("categories").default(JSON.stringify(["new"])).notNull(), // JSON array of categories
   createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
 });
 
 export type Accessory = typeof accessories.$inferSelect;
 export type InsertAccessory = typeof accessories.$inferInsert;
 
-export const tablets = mysqlTable("tablets", {
-  id: int("id").autoincrement().primaryKey(),
+export const tablets = pgTable("tablets", {
+  id: serial("id").primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
   processor: varchar("processor", { length: 255 }).notNull(),
   ram: varchar("ram", { length: 100 }).notNull(),
@@ -106,20 +109,20 @@ export const tablets = mysqlTable("tablets", {
   camera: varchar("camera", { length: 100 }).notNull(), // e.g., "12MP"
   condition: varchar("condition", { length: 50 }).notNull(),
   warranty: varchar("warranty", { length: 100 }).notNull(),
-  price: int("price").notNull(),
-  discountPercent: int("discountPercent").default(0).notNull(),
+  price: integer("price").notNull(),
+  discountPercent: integer("discountPercent").default(0).notNull(),
   imageUrl: text("imageUrl"),
   description: text("description"),
   categories: text("categories").default(JSON.stringify(["new"])).notNull(), // JSON array of categories
   createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
 });
 
 export type Tablet = typeof tablets.$inferSelect;
 export type InsertTablet = typeof tablets.$inferInsert;
 
-export const smartDevices = mysqlTable("smartDevices", {
-  id: int("id").autoincrement().primaryKey(),
+export const smartDevices = pgTable("smartDevices", {
+  id: serial("id").primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
   type: varchar("type", { length: 100 }).notNull(), // e.g., "Smartwatch", "Headphones", "Speaker", "Smart Home"
   brand: varchar("brand", { length: 100 }).notNull(),
@@ -129,25 +132,25 @@ export const smartDevices = mysqlTable("smartDevices", {
   compatibility: varchar("compatibility", { length: 255 }).notNull(), // e.g., "iOS/Android"
   condition: varchar("condition", { length: 50 }).notNull(),
   warranty: varchar("warranty", { length: 100 }).notNull(),
-  price: int("price").notNull(),
-  discountPercent: int("discountPercent").default(0).notNull(),
+  price: integer("price").notNull(),
+  discountPercent: integer("discountPercent").default(0).notNull(),
   imageUrl: text("imageUrl"),
   description: text("description"),
   categories: text("categories").default(JSON.stringify(["new"])).notNull(), // JSON array of categories
   createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
 });
 
 export type SmartDevice = typeof smartDevices.$inferSelect;
 export type InsertSmartDevice = typeof smartDevices.$inferInsert;
 
 // Ratings and Reviews
-export const productRatings = mysqlTable("product_ratings", {
-  id: int("id").autoincrement().primaryKey(),
+export const productRatings = pgTable("product_ratings", {
+  id: serial("id").primaryKey(),
   productType: varchar("product_type", { length: 50 }).notNull(), // 'laptops', 'monitors', etc
-  productId: int("product_id").notNull(),
-  userId: int("user_id"), // Optional - for logged in users
-  rating: int("rating").notNull(), // 1-5
+  productId: integer("product_id").notNull(),
+  userId: integer("user_id"), // Optional - for logged in users
+  rating: integer("rating").notNull(), // 1-5
   review: text("review"), // Optional review text
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
@@ -156,12 +159,12 @@ export type ProductRating = typeof productRatings.$inferSelect;
 export type InsertProductRating = typeof productRatings.$inferInsert;
 
 // Wishlist
-export const wishlist = mysqlTable("wishlist", {
-  id: int("id").autoincrement().primaryKey(),
-  userId: int("user_id"), // Optional - for logged in users
+export const wishlist = pgTable("wishlist", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id"), // Optional - for logged in users
   sessionId: varchar("session_id", { length: 255 }), // For anonymous users
   productType: varchar("product_type", { length: 50 }).notNull(), // 'laptops', 'monitors', etc
-  productId: int("product_id").notNull(),
+  productId: integer("product_id").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 

@@ -1,1 +1,0 @@
-ALTER TABLE `laptops` ADD `imageUrl` text;
