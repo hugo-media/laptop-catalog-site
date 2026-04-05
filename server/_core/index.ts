@@ -3,6 +3,7 @@ import express from "express";
 import { createServer } from "http";
 import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
+import fileUpload from "express-fileupload";
 import { registerOAuthRoutes } from "./oauth";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
@@ -34,6 +35,8 @@ async function startServer() {
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
+  // File upload middleware
+  app.use(fileUpload({ limits: { fileSize: 50 * 1024 * 1024 } }));
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
   // Bot API for Telegram integration
@@ -50,6 +53,7 @@ async function startServer() {
   if (process.env.NODE_ENV === "development") {
     await setupVite(app, server);
   } else {
+    // Serve static files but keep API routes above
     serveStatic(app);
   }
 

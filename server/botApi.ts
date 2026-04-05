@@ -219,6 +219,44 @@ router.post("/product", verifyBotSecret, async (req: Request, res: Response) => 
   }
 });
 
+// POST /api/bot/upload - Upload photo from Telegram bot
+router.post("/upload", verifyBotSecret, async (req: any, res: Response) => {
+  try {
+    if (!req.files || !req.files.file) {
+      return res.status(400).json({
+        error: "No file provided",
+        message: "Please upload a file",
+      });
+    }
+
+    const file = req.files.file as any;
+    const filename = `bot-product-${Date.now()}-${Math.random().toString(36).substring(7)}.jpg`;
+
+    // Import storage helper
+    const { storagePut } = await import("./storage");
+
+    // Upload to S3
+    const { url } = await storagePut(
+      `bot-uploads/${filename}`,
+      file.data,
+      file.mimetype || "image/jpeg"
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "File uploaded successfully",
+      url: url,
+      filename: filename,
+    });
+  } catch (error) {
+    console.error("Bot upload error:", error);
+    return res.status(500).json({
+      error: "Upload failed",
+      message: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+});
+
 // GET /api/bot/health - Health check for bot
 router.get("/health", (req: Request, res: Response) => {
   res.status(200).json({

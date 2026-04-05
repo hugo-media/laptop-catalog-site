@@ -239,7 +239,9 @@ export default function Catalog() {
   const filteredProducts = useMemo(() => {
     let filtered = getCurrentData() || [];
     
-    if (productType !== "promotions" && selectedCategory !== null) {
+    // Temporarily show all products regardless of category
+    // TODO: Fix category filtering after bot integration
+    if (productType !== "promotions" && selectedCategory !== null && selectedCategory !== "new") {
       filtered = filtered.filter((p: any) => {
         const cats = Array.isArray(p.categories) ? p.categories : (p.categories ? JSON.parse(p.categories) : []);
         return cats.includes(selectedCategory);
