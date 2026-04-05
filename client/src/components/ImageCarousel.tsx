@@ -73,14 +73,11 @@ export function ImageCarousel({ images, alt = 'Product' }: ImageCarouselProps) {
             >
               <ChevronRight className="w-6 h-6" />
             </button>
+            {/* Image Counter */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 text-white px-3 py-1 rounded-full text-sm">
+              {currentIndex + 1} / {displayImages.length}
+            </div>
           </>
-        )}
-
-        {/* Image Counter */}
-        {displayImages.length > 1 && (
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 text-white px-3 py-1 rounded-full text-sm">
-            {currentIndex + 1} / {displayImages.length}
-          </div>
         )}
       </div>
 
