@@ -1,6 +1,7 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useLocation } from "wouter";
 import { useEffect, useState } from "react";
+import { Input } from "@/components/ui/input";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -369,12 +370,16 @@ export default function Admin() {
     }
   };
 
-  useEffect(() => {
-    if (authLoading) return;
-    if (!user || user.role !== "admin") {
-      navigate("/");
-    }
-  }, [user, authLoading, navigate]);
+  const [password, setPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
+  const loginMutation = trpc.auth.login.useMutation({
+    onSuccess: () => {
+      window.location.reload();
+    },
+    onError: () => {
+      setLoginError("Невірний пароль");
+    },
+  });
 
   if (authLoading) {
     return (
@@ -386,8 +391,31 @@ export default function Admin() {
 
   if (!user || user.role !== "admin") {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-muted-foreground">Access denied. Admin only.</p>
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <Card className="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle className="text-center">Адмін панель</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Input
+              type="password"
+              placeholder="Введіть пароль"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") loginMutation.mutate({ password });
+              }}
+            />
+            {loginError && <p className="text-sm text-destructive">{loginError}</p>}
+            <Button
+              className="w-full"
+              onClick={() => loginMutation.mutate({ password })}
+              disabled={loginMutation.isPending}
+            >
+              {loginMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Увійти"}
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     );
   }
